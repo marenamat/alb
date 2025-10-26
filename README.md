@@ -15,7 +15,7 @@ git locally, does code review and merges, and pushes into public repo.
 
 ## Initialization
 
-1. Fork this project
+1. Merge this project into your project
 2. Clone your project into your clanker enclosure
 3. Setup needed tools: `./clanker-setup`
 ```
