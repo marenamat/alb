@@ -53,3 +53,4 @@ class Command:
 # Import the classes here to modify Command
 from .Scan import Scan
 from .Init import Init
+from .GUI import GUI

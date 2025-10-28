@@ -27,7 +27,12 @@ class Index:
     def bad(self, info: str):
         raise IndexException(self.path, info)
 
-    async def load(self):
+    def __getattr__(self, attr):
+        return {
+                "data": self.load,
+                }[attr]()
+
+    def load(self):
         try:
             fp = self.path / 'index.yaml'
             logger.debug(f"Loading index from {fp}")
@@ -39,6 +44,8 @@ class Index:
             raise IndexNotFoundException(self.path) from e
         except Exception as e:
             raise IndexException(self.path, "malformed index") from e
+
+        return self.data
 
     async def store(self):
         try:
@@ -81,7 +88,7 @@ class Index:
                 logger.info(f"Ignoring {f}: detected as {t};encoding={e}")
                 continue
 
-            found[f] = True
+            found[f] = f"{t};encoding={e}" if e is not None else t
 
         for img in self.data["images"]:
             if self.path / img["orig"] in found:
@@ -90,6 +97,11 @@ class Index:
                 logger.warning(f"Found description for {self.path / img['orig']} which does not exist")
             
         for f in found:
-            self.data["images"].append({ "orig": str(f.relative_to(self.path)), "cs": "TODO", "en": "TODO" })
+            self.data["images"].append({
+                "orig": str(f.relative_to(self.path)),
+                "mime": found[f],
+                "cs": "TODO",
+                "en": "TODO",
+                })
 
         await self.store()

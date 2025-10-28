@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="{{ meta.author }}" />
+  <meta name="dcterms.date" content="{{ meta.date }}" />
+  <meta name="description" content="{{ meta['og-description'] }}" />
+  <meta property="og:title" content="{{ meta.title }}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="$og-prefix$index.html" />
+  <meta property="og:description" content="$og-description$" />
+  <meta property="og:site_name" content="Maria's photo dumps" />
+  <meta property="og:image" content="$og-prefix$$og-image$" />
+  <meta property="og:image:url" content="$og-prefix$$og-image$" />
+  <meta property="og:image:alt" content="$og-image-alt$" />
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="$og-prefix$index.html">
+  <meta name="twitter:title" content="$if(og-pagetitle)$$og-pagetitle$$else$$pagetitle$$endif$">
+  <meta name="twitter:description" content="$og-description$">
+  <meta name="twitter:image" content="$og-prefix$$og-image$">
+
+  <title>{{ meta.title }}</title>
+  <style>
+html {
+  line-height: 1.2;
+  font-family: serif;
+  font-size: 0.9em;
+  color: black; 
+  background-color: white;
+}
+body {
+  margin: 0 auto;
+/*  margin-right: auto; */
+  max-width: 76em;
+  padding: 1em;
+  padding-top: 0;
+  hyphens: auto;
+  overflow-wrap: break-word;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+}
+p {
+  margin: 0.7em 0;
+}
+a {
+  color: black;
+}
+a:visited {
+  color: black;
+}
+
+.img-tiles {
+  margin: 0.2em;
+  max-width: 24em;
+  max-height: 24em;
+  display: inline-block;
+  float: both;
+  cursor: pointer;
+}
+.display-none { display: none!important; }
+
+#showfoto-block {
+  display: block;
+  position: sticky;
+  top: 0;
+  padding: 0;
+  background: white;
+  height: calc(100vh);
+}
+
+#showfoto-left-cont, #showfoto-right-cont {
+  position: absolute;
+  top: 0;
+  /*  height: 100%;*/
+  width: 0;
+  z-index: 1;
+  height: 100%;
+}
+
+#showfoto-left-cont {
+  left: 0;
+}
+
+#showfoto-right-cont {
+  right: 0;
+}
+
+#showfoto-left:hover, #showfoto-right:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.8);
+}
+
+#showfoto-left, #showfoto-right {
+  position: absolute;
+  top: 0;
+  font-size: 800%;
+  font-weight: bold;
+  border: none;
+  width: 0.7em;
+  height: 100%;
+  padding: 0;
+  background: rgba(0, 0, 0, 0);
+  color: rgba(0, 0, 0, 0);
+}
+
+#showfoto-left {
+  left: 0;
+}
+
+#showfoto-right {
+  right: 0;
+}
+
+#showfoto-block-img {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-3.5em - 50%));
+  width: fit-content;
+  height: fit-content;
+}
+
+#showfoto-img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100vh - 8em);
+  border: 2px solid black;
+}
+
+#showfoto-title {
+  display: block;
+  position: absolute;
+  bottom: 1.4em;
+  width: 100%;
+  text-align: center;
+  font-size: 80%;
+  padding-bottom: 0;
+  margin: 0;
+}
+
+#showfoto-footer {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 60%;
+  padding-bottom: 0.2em;
+  margin: 0;
+}
+
+q { quotes: "„" "”" "»" "«"; }
+  </style>
+</head>
+<body>
+<div id="showfoto-block" class="display-none">
+  <div id="showfoto-block-img">
+    <div id="showfoto-left-cont">
+      <button id="showfoto-left">&lt;</button>
+    </div><img id="showfoto-img"><div id="showfoto-right-cont">
+      <button id="showfoto-right">&gt;</button>
+    </div>
+  </div>
+  <div id="showfoto-title"></div>
+  <p id="showfoto-footer">Photo ID: <span id="showfoto-id"></span> | <a href="mailto:photos@jmq.cz">Send me an e-mail</a> to request a photo in full quality.</p>
+</div>
+<header id="title-block-header">
+  <h1 class="title">E | {{ meta.title }}</h1>
+</header>
+<script>
+  var overlay = document.getElementById("showfoto-block")
+  var overlay_next = document.getElementById("showfoto-right")
+  var overlay_prev = document.getElementById("showfoto-left")
+  var overlayImg = document.getElementById("showfoto-img")
+  var overlay_Title = document.getElementById("showfoto-title")
+  var overlay_ID = document.getElementById("showfoto-id")
+
+  function showfoto_img(elem) {
+    console.log("showfoto_img", elem)
+    overlay.className = ""
+    overlayImg.src = elem.src
+    while (overlay_Title.hasChildNodes())
+      overlay_Title.firstChild.remove()
+
+    if (elem.dataset.langs.length > 0)
+      for (lang of elem.dataset.langs.split(","))
+      {
+	var p = document.createElement("p")
+	p.appendChild(document.createTextNode(elem.dataset["title" + lang]))
+	overlay_Title.appendChild(p)
+      }
+
+    while (overlay_ID.hasChildNodes())
+      overlay_ID.firstChild.remove()
+
+    overlay_ID.appendChild(document.createTextNode(elem.id.substring(4)))
+
+    if ("prev" in elem.dataset)
+    {
+      overlay_prev.className = ""
+      overlay_prev.dataset.target = elem.dataset.prev
+    }
+    else
+    {
+      overlay_prev.className = "display-none"
+      overlay_prev.dataset.target = ""
+    }
+
+    if ("next" in elem.dataset)
+    {
+      overlay_next.className = ""
+      overlay_next.dataset.target = elem.dataset.next
+    }
+    else
+    {
+      overlay_next.className = "display-none"
+      overlay_next.dataset.target = ""
+    }
+  }
+
+  function showfoto(e) {
+    showfoto_img(e.target)
+    e.stopPropagation()
+  }
+
+  function switchfoto(e) {
+    showfoto_img(document.getElementById(e.target.dataset.target))
+    e.stopPropagation()
+  }
+
+  function hidefoto()
+  {
+    overlay.className = "display-none"
+    overlay_prev.dataset.target = ""
+    overlay_next.dataset.target = ""
+  }
+
+  overlay_next.addEventListener("click", switchfoto)
+  overlay_prev.addEventListener("click", switchfoto)
+
+  function dispatchKey(e) {
+    console.log(e)
+    
+    if (e.key === "Escape") {
+      overlay.className = "display-none"
+    }
+
+    if (e.key === "ArrowLeft") {
+      if (!!overlay_prev.dataset.target)
+      {
+	console.log("target is", overlay_prev.dataset.target)
+	showfoto_img(document.getElementById(overlay_prev.dataset.target))
+      }
+    }
+
+    if (e.key === "ArrowRight") {
+      if (!!overlay_next.dataset.target)
+      {
+	console.log("target is", overlay_next.dataset.target)
+	showfoto_img(document.getElementById(overlay_next.dataset.target))
+      }
+    }
+  }
+
+  document.addEventListener("keyup", dispatchKey)
+
+  var tsX = null;
+  var tsY = null;
+
+  function getTouches(e) {
+    return e.touches ||             // browser API
+	   e.originalEvent.touches; // jQuery
+  }
+
+  function touchStart(e) {
+    const first = getTouches(e)[0]
+    tsX = first.clientX
+    tsY = first.clientY
+  }
+
+  function touchMove(e) {
+    if (!tsX || !tsY) return
+
+    const move = getTouches(e)[0]
+    var difX = move.clientX - tsX
+    var difY = move.clientY - tsY
+
+    var absX = Math.abs(difX)
+    var absY = Math.abs(difY)
+
+    if (absX > absY*2)
+    { // Certainly left-right
+      if (difX < 0)
+	showfoto_img(document.getElementById(overlay_next.dataset.target))
+      else
+	showfoto_img(document.getElementById(overlay_prev.dataset.target))
+    }
+
+    else if (absY > absX*2)
+    {
+      // Certainly up-down
+      if (difY < 0)
+	showfoto_img(document.getElementById(overlay_next.dataset.target))
+      else
+	showfoto_img(document.getElementById(overlay_prev.dataset.target))
+    }
+    
+    tsX = null
+    tsY = null
+  }
+
+  document.addEventListener("touchstart", touchStart, false)
+  document.addEventListener("touchmove", touchMove, false)
+
+</script>
+
+{% for img in images %}
+<img src="/img/{{ img.orig }}" class="img-tiles">
+{% endfor %}
+
+<script>
+  function dispatchClick(e) {
+    hidefoto()
+  }
+  document.addEventListener("click", dispatchClick)
+</script>
+</body>
+</html>
