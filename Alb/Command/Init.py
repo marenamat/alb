@@ -9,6 +9,8 @@ logger = logging.getLogger(__name__)
 
 class Init(Command):
     command = "init"
+    argdesc = "[dirs]"
+    helptext = "Initialize an index in the given directories. If not given, do it in the current directory. Reinitialization is not well tested; backup your original index.yaml beforehand."
 
     def __init__(self, cmd, *args):
         if len(args) == 0:

@@ -1,3 +1,8 @@
+import sys
+
+#ArgvZero = sys.argv[0]
+ArgvZero = "alb"
+
 class CommandException(Exception):
     pass
 
@@ -7,7 +12,7 @@ class CommandRuntimeException(Exception):
 class UnknownCommandException(CommandException):
     def __init__(self, cmd):
         self.cmd = cmd
-        super().__init__(f"Unknown command: {cmd}")
+        super().__init__(f"Unknown command: {cmd}\nFor help, call: {ArgvZero} help")
 
 class NoCommandException(CommandException):
     def __init__(self):
@@ -23,6 +28,7 @@ class InvalidArgumentsException(CommandException):
 
 class Command:
     kw = {}
+    order = []
 
     def __new__(cls, *args, **kwargs):
         if cls != Command:
@@ -47,10 +53,12 @@ class Command:
         try:
             cls.run(None).close() # This should create and delete an empty coroutine
             Command.kw[cls.command] = cls
+            Command.order.append(cls)
         except Exception as e:
             raise InvalidCommandException(cls) from e
 
 # Import the classes here to modify Command
+from .Help import Help
 from .Scan import Scan
 from .Init import Init
 from .GUI import GUI

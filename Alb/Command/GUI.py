@@ -10,6 +10,8 @@ logger = logging.getLogger(__name__)
 
 class GUI(Command):
     command = "gui"
+    argdesc = "[dirs]"
+    helptext = "Run the GUI for the given/current directories in your browser. Currently only one dir supported"
 
     def __init__(self, cmd, *args):
         if len(args) == 0:

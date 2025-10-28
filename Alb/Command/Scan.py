@@ -7,6 +7,7 @@ logger = logging.getLogger(__name__)
 
 class Scan(Command):
     command = "scan"
+    helptext = "Walk subdirectories and tell if there is an index by the new means, by Maria's old Perl scripts, or simply nothing. Does not check the index consistency."
 
     def __init__(self, cmd, *args):
         if len(args) != 0:
