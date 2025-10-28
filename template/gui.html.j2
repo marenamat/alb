@@ -28,7 +28,7 @@ html {
   line-height: 1.2;
   font-family: serif;
   font-size: 0.9em;
-  color: black; 
+  color: black;
   background-color: white;
 }
 body {
@@ -243,7 +243,7 @@ q { quotes: "„" "”" "»" "«"; }
 
   function dispatchKey(e) {
     console.log(e)
-    
+
     if (e.key === "Escape") {
       overlay.className = "display-none"
     }
@@ -307,7 +307,7 @@ q { quotes: "„" "”" "»" "«"; }
       else
 	showfoto_img(document.getElementById(overlay_prev.dataset.target))
     }
-    
+
     tsX = null
     tsY = null
   }
@@ -316,9 +316,10 @@ q { quotes: "„" "”" "»" "«"; }
   document.addEventListener("touchmove", touchMove, false)
 
 </script>
-
+<div id="log">
+</div>
 {% for img in images %}
-<img src="/img/{{ img.orig }}" class="img-tiles">
+<img id="img-{{ loop.index }}" src="/img/thumbnail-{{ loop.index }}" class="img-tiles">
 {% endfor %}
 
 <script>
@@ -326,6 +327,28 @@ q { quotes: "„" "”" "»" "«"; }
     hidefoto()
   }
   document.addEventListener("click", dispatchClick)
+
+  function logMsg(m) {
+    console.log(m)
+    document.getElementById("log").appendChild(document.createTextNode(m))
+  }
+
+  var socket
+  try {
+    socket = new WebSocket("ws://{{ app.host }}/controller/")
+    socket.onopen = function () {
+      logMsg("Connection succesful")
+    }
+    socket.onerror = function () {
+      logMsg("Connection failed. Reload to retry.")
+    }
+    socket.onmessage = function (m) {
+      logMsg("<" + m.data)
+    }
+  } catch (err) {
+    logMsg("Connection failed: " + err + " Reload to retry.")
+  }
+
 </script>
 </body>
 </html>

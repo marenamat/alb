@@ -12,7 +12,7 @@ class MainView(View):
         je = jinja2.Environment(loader=jinja2.FileSystemLoader(td))
         te = je.get_template("gui.html.j2")
 
-        rtext = te.render(**self.app.index.data).encode("utf8")
+        rtext = te.render(**self.app.index.data, app=self.app).encode("utf8")
 
         resp = web.StreamResponse()
         resp.content_length = len(rtext)
