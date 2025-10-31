@@ -4,10 +4,6 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="author" content="{{ meta.author }}" />
-  <meta name="dcterms.date" content="{{ meta.date }}" />
-  <meta name="description" content="{{ meta['og-description'] }}" />
-  <meta property="og:title" content="{{ meta.title }}" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="$og-prefix$index.html" />
   <meta property="og:description" content="$og-description$" />
@@ -22,7 +18,7 @@
   <meta name="twitter:description" content="$og-description$">
   <meta name="twitter:image" content="$og-prefix$$og-image$">
 
-  <title>{{ meta.title }}</title>
+  <title>E | {{ meta.title }}</title>
   <style>
 html {
   line-height: 1.2;
@@ -62,288 +58,178 @@ a:visited {
 }
 .display-none { display: none!important; }
 
-#showfoto-block {
-  display: block;
-  position: sticky;
-  top: 0;
-  padding: 0;
-  background: white;
-  height: calc(100vh);
-}
-
-#showfoto-left-cont, #showfoto-right-cont {
+#log {
+  font-family: monospace;
+  border: 1px solid black;
   position: absolute;
-  top: 0;
-  /*  height: 100%;*/
-  width: 0;
-  z-index: 1;
-  height: 100%;
+  left: 2em;
+  top: 1em;
+  padding: 0.6em;
 }
 
-#showfoto-left-cont {
-  left: 0;
-}
-
-#showfoto-right-cont {
-  right: 0;
-}
-
-#showfoto-left:hover, #showfoto-right:hover {
-  background: rgba(0, 0, 0, 0.05);
-  color: rgba(0, 0, 0, 0.8);
-}
-
-#showfoto-left, #showfoto-right {
+#metadata {
+  border: 1px solid black;
   position: absolute;
-  top: 0;
-  font-size: 800%;
-  font-weight: bold;
-  border: none;
-  width: 0.7em;
-  height: 100%;
-  padding: 0;
-  background: rgba(0, 0, 0, 0);
-  color: rgba(0, 0, 0, 0);
+  right: 2em;
+  top: 1em;
+  border-spacing: 0;
 }
 
-#showfoto-left {
-  left: 0;
+#metadata td, #metadata th {
+  padding: 0.3em 0.8em;
+  line-height: 120%;
+  border: 1px solid black;
+  max-width: 20em;
 }
 
-#showfoto-right {
-  right: 0;
+.editable-text:hover::after {
+  content: " ✏️";
 }
 
-#showfoto-block-img {
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, calc(-3.5em - 50%));
-  width: fit-content;
-  height: fit-content;
-}
-
-#showfoto-img {
-  display: block;
-  max-width: 100%;
-  max-height: calc(100vh - 8em);
-  border: 2px solid black;
-}
-
-#showfoto-title {
-  display: block;
-  position: absolute;
-  bottom: 1.4em;
-  width: 100%;
-  text-align: center;
-  font-size: 80%;
-  padding-bottom: 0;
-  margin: 0;
-}
-
-#showfoto-footer {
-  display: block;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  text-align: center;
-  font-size: 60%;
-  padding-bottom: 0.2em;
-  margin: 0;
-}
-
-q { quotes: "„" "”" "»" "«"; }
   </style>
 </head>
 <body>
-<div id="showfoto-block" class="display-none">
-  <div id="showfoto-block-img">
-    <div id="showfoto-left-cont">
-      <button id="showfoto-left">&lt;</button>
-    </div><img id="showfoto-img"><div id="showfoto-right-cont">
-      <button id="showfoto-right">&gt;</button>
-    </div>
-  </div>
-  <div id="showfoto-title"></div>
-  <p id="showfoto-footer">Photo ID: <span id="showfoto-id"></span> | <a href="mailto:photos@jmq.cz">Send me an e-mail</a> to request a photo in full quality.</p>
-</div>
 <header id="title-block-header">
-  <h1 class="title">E | {{ meta.title }}</h1>
+  <h1 class="title editable-text" data-source="meta.title"></h1>
 </header>
-<script>
-  var overlay = document.getElementById("showfoto-block")
-  var overlay_next = document.getElementById("showfoto-right")
-  var overlay_prev = document.getElementById("showfoto-left")
-  var overlayImg = document.getElementById("showfoto-img")
-  var overlay_Title = document.getElementById("showfoto-title")
-  var overlay_ID = document.getElementById("showfoto-id")
-
-  function showfoto_img(elem) {
-    console.log("showfoto_img", elem)
-    overlay.className = ""
-    overlayImg.src = elem.src
-    while (overlay_Title.hasChildNodes())
-      overlay_Title.firstChild.remove()
-
-    if (elem.dataset.langs.length > 0)
-      for (lang of elem.dataset.langs.split(","))
-      {
-	var p = document.createElement("p")
-	p.appendChild(document.createTextNode(elem.dataset["title" + lang]))
-	overlay_Title.appendChild(p)
-      }
-
-    while (overlay_ID.hasChildNodes())
-      overlay_ID.firstChild.remove()
-
-    overlay_ID.appendChild(document.createTextNode(elem.id.substring(4)))
-
-    if ("prev" in elem.dataset)
-    {
-      overlay_prev.className = ""
-      overlay_prev.dataset.target = elem.dataset.prev
-    }
-    else
-    {
-      overlay_prev.className = "display-none"
-      overlay_prev.dataset.target = ""
-    }
-
-    if ("next" in elem.dataset)
-    {
-      overlay_next.className = ""
-      overlay_next.dataset.target = elem.dataset.next
-    }
-    else
-    {
-      overlay_next.className = "display-none"
-      overlay_next.dataset.target = ""
-    }
-  }
-
-  function showfoto(e) {
-    showfoto_img(e.target)
-    e.stopPropagation()
-  }
-
-  function switchfoto(e) {
-    showfoto_img(document.getElementById(e.target.dataset.target))
-    e.stopPropagation()
-  }
-
-  function hidefoto()
-  {
-    overlay.className = "display-none"
-    overlay_prev.dataset.target = ""
-    overlay_next.dataset.target = ""
-  }
-
-  overlay_next.addEventListener("click", switchfoto)
-  overlay_prev.addEventListener("click", switchfoto)
-
-  function dispatchKey(e) {
-    console.log(e)
-
-    if (e.key === "Escape") {
-      overlay.className = "display-none"
-    }
-
-    if (e.key === "ArrowLeft") {
-      if (!!overlay_prev.dataset.target)
-      {
-	console.log("target is", overlay_prev.dataset.target)
-	showfoto_img(document.getElementById(overlay_prev.dataset.target))
-      }
-    }
-
-    if (e.key === "ArrowRight") {
-      if (!!overlay_next.dataset.target)
-      {
-	console.log("target is", overlay_next.dataset.target)
-	showfoto_img(document.getElementById(overlay_next.dataset.target))
-      }
-    }
-  }
-
-  document.addEventListener("keyup", dispatchKey)
-
-  var tsX = null;
-  var tsY = null;
-
-  function getTouches(e) {
-    return e.touches ||             // browser API
-	   e.originalEvent.touches; // jQuery
-  }
-
-  function touchStart(e) {
-    const first = getTouches(e)[0]
-    tsX = first.clientX
-    tsY = first.clientY
-  }
-
-  function touchMove(e) {
-    if (!tsX || !tsY) return
-
-    const move = getTouches(e)[0]
-    var difX = move.clientX - tsX
-    var difY = move.clientY - tsY
-
-    var absX = Math.abs(difX)
-    var absY = Math.abs(difY)
-
-    if (absX > absY*2)
-    { // Certainly left-right
-      if (difX < 0)
-	showfoto_img(document.getElementById(overlay_next.dataset.target))
-      else
-	showfoto_img(document.getElementById(overlay_prev.dataset.target))
-    }
-
-    else if (absY > absX*2)
-    {
-      // Certainly up-down
-      if (difY < 0)
-	showfoto_img(document.getElementById(overlay_next.dataset.target))
-      else
-	showfoto_img(document.getElementById(overlay_prev.dataset.target))
-    }
-
-    tsX = null
-    tsY = null
-  }
-
-  document.addEventListener("touchstart", touchStart, false)
-  document.addEventListener("touchmove", touchMove, false)
-
-</script>
-<div id="log">
-</div>
-{% for img in images %}
-<img id="img-{{ loop.index }}" src="/img/thumbnail-{{ loop.index }}" class="img-tiles">
-{% endfor %}
+<div id="log"></div>
+<table id="metadata">
+  <tbody>
+    <tr><th>Author: <td class="editable-text" data-source="meta.author">
+    <tr><th>Description: <td class="editable-text" data-source="meta.og-description">
+  </tbody>
+</table>
+<div id="img-container"></div>
 
 <script>
-  function dispatchClick(e) {
-    hidefoto()
+  var log_div = document.getElementById("log")
+  var img_container = document.getElementById("img-container")
+
+  var editables = document.getElementsByClassName("editable-text")
+
+  var index = {}
+  var response_handler = null
+  var socket = null
+
+  function TN(m) {
+    return document.createTextNode(m)
   }
-  document.addEventListener("click", dispatchClick)
+
+  function EL(t) {
+    return document.createElement(t)
+  }
+
+  function CL(e) {
+    while (e.firstChild)
+      e.removeChild(e.firstChild)
+  }
 
   function logMsg(m) {
     console.log(m)
-    document.getElementById("log").appendChild(document.createTextNode(m))
+    var d = EL("div")
+    d.appendChild(TN(m))
+    log_div.appendChild(d)
   }
 
-  var socket
+  function editableUpdate(e) {
+    CL(e)
+    e.appendChild(TN(e.dataset.text))
+  }
+
+  function editableSave(ev) {
+    let inp = ev.target
+    let e = inp.parentNode
+    e.dataset.text = inp.value
+    editableUpdate(e)
+    sendIndexUpdate(e.dataset.source, e.dataset.text)
+  }
+
+  function editableKey(ev) {
+ //   logMsg(ev.key)
+    if (ev.key == "Enter")
+      return editableSave(ev)
+
+    if (ev.key == "Escape")
+      return editableUpdate(ev.target.parentNode)
+  }
+
+  function editableEdit(ev) {
+    let e = ev.target
+    CL(e)
+    inp = EL("input")
+    inp.type = "text"
+    inp.value = e.dataset.text
+    inp.addEventListener("keydown", editableKey)
+    e.appendChild(inp)
+  }
+
+  for (let e of editables) {
+    e.addEventListener("click", editableEdit)
+  }
+
+  function sSend(data, rhandler) {
+    socket.send(JSON.stringify(data))
+    response_handler = rhandler
+  }
+
+  function receiveIndex(data) {
+    index = JSON.parse(data)
+
+    while (img_container.firstChild) {
+      img_container.removeChild(img_container.firstChild)
+    }
+
+    for (let i = 0; i < index.images.length; i++) {
+      var it = EL("img")
+      it.id = "img-" + i
+      it.src = "img/thumbnail-" + i
+      it.className = "img-tiles"
+      for (item in index.images[i])
+	it.dataset[item] = index.images[i][item]
+      img_container.appendChild(it)
+    }
+
+    for (elem of editables) {
+      var loc = index
+      for (spart of elem.dataset.source.split("."))
+	loc = loc[spart]
+
+      elem.dataset.text = loc
+      editableUpdate(elem)
+    }
+  }
+
+  function loadIndex() {
+    sSend({
+      "_": "index",
+    }, receiveIndex)
+  }
+
+  function sendIndexUpdate(path, value) {
+    sSend({
+      "_": "update",
+      "path": path,
+      "value": value,
+    }, receiveIndex)
+  }
+
   try {
     socket = new WebSocket("ws://{{ app.host }}/controller/")
     socket.onopen = function () {
       logMsg("Connection succesful")
+      loadIndex()
     }
     socket.onerror = function () {
       logMsg("Connection failed. Reload to retry.")
     }
     socket.onmessage = function (m) {
-      logMsg("<" + m.data)
+      if (response_handler === null)
+	logMsg("<" + m.data)
+      else
+      {
+	response_handler(m.data)
+	response_handler = null
+      }
     }
   } catch (err) {
     logMsg("Connection failed: " + err + " Reload to retry.")

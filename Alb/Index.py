@@ -70,7 +70,15 @@ class Index:
                         "og-description": "TODO",
                         "og-image": "TODO",
                         "og-image-alt": "TODO",
-                        }
+                        },
+                    "sizes": {
+                        "thumbnail": "public",
+                        "public": {
+                            "x": 1024,
+                            "y": 1024,
+                            "quality": 0.7,
+                            },
+                        },
                     }
 
         # Scan directory
@@ -84,7 +92,7 @@ class Index:
             t, e = mimetypes.guess_file_type(f)
             logger.debug(f"Found file {f}, type {t}, encoding {e}")
 
-            if not t.startswith("image/"):
+            if t is None or not t.startswith("image/"):
                 logger.info(f"Ignoring {f}: detected as {t};encoding={e}")
                 continue
 
