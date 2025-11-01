@@ -57,8 +57,18 @@ a:visited {
   padding: 0.6em;
 }
 
+#log button {
+  padding: 0.5em 1.5em;
+  margin-bottom: 1em;
+}
+
 .editable-text:hover::after {
   content: " ✏️";
+}
+
+.editable-text input, .editable-text textarea {
+  width: 76em;
+  height: 5rem;
 }
 
 #showfoto-left-cont, #showfoto-right-cont {
@@ -113,23 +123,31 @@ a:visited {
   height: fit-content;
 }
 
+.showfoto-img-reduced {
+  max-width: 100%;
+  max-height: calc(100vh - 13em);
+}
+
 #showfoto-img {
   display: block;
-  max-width: 100%;
-  max-height: calc(100vh - 8em);
   border: 2px solid black;
 }
 
 #showfoto-title {
   display: block;
   position: absolute;
-  bottom: 1.4em;
+  bottom: 1.9em;
   left: 0;
   width: 100%;
   text-align: center;
-  font-size: 80%;
-  padding-bottom: 0;
+/*  font-size: 80%;*/
+  padding: 0.8em;
   margin: 0;
+}
+
+#showfoto-title div {
+  padding: 0.8em;
+  border-top: 1px solid black;
 }
 
 #showfoto-footer {
@@ -139,37 +157,46 @@ a:visited {
   left: 0;
   width: 100%;
   text-align: center;
-  font-size: 60%;
+  /*  font-size: 60%;*/
   padding-bottom: 0.2em;
+  border-top: 1px solid black;
   margin: 0;
 }
 
   </style>
 </head>
 <body>
-<header id="title-block-header">
-  <h1 class="title editable-text" data-source="meta.title"></h1>
-</header>
-<div id="log"></div>
+<div id="log">
+  <button id="open-gimp">GIMP</button>
+</div>
 <div id="showfoto-block">
   <div id="showfoto-block-img">
     <div id="showfoto-left-cont">
-      <button id="showfoto-left">&lt;</button>
-    </div><img src="{{ imgurl }}" id="showfoto-img"><div id="showfoto-right-cont">
-      <button id="showfoto-right">&gt;</button>
+      <a><button id="showfoto-left">&lt;</button></a>
+    </div><img id="showfoto-img" class="showfoto-img-reduced" data-imgid="{{ img_id }}"><div id="showfoto-right-cont">
+      <a><button id="showfoto-right">&gt;</button></a>
     </div>
   </div>
 </div>
-<div id="showfoto-title">meow</div>
-<p id="showfoto-footer">Photo ID: <span id="showfoto-id"></span> | <a href="mailto:photos@jmq.cz">Send me an e-mail</a> to request a photo in full quality.</p>
+<div id="showfoto-title">
+  <div class="editable-text" data-source="this_image.cs">meow</div>
+  <div class="editable-text" data-source="this_image.en">meow</div>
+</div>
+<p id="showfoto-footer">Photo ID: <span id="showfoto-id">{{ img_id }}</span> | <a href="mailto:photos@jmq.cz">Send me an e-mail</a> to request a photo in full quality.</p>
 
 <script>
   var log_div = document.getElementById("log")
   var img_container = document.getElementById("img-container")
+  var img_element = document.getElementById("showfoto-img")
+  var img_id = Number(img_element.dataset.imgid)
+
+  var prev_a = document.getElementById("showfoto-left").parentNode
+  var next_a = document.getElementById("showfoto-right").parentNode
 
   var editables = document.getElementsByClassName("editable-text")
 
   var index = {}
+  var this_image = null
   var response_handler = null
   var socket = null
 
@@ -206,23 +233,26 @@ a:visited {
     sendIndexUpdate(e.dataset.source, e.dataset.text)
   }
 
-  function editableKey(ev) {
- //   logMsg(ev.key)
-    if (ev.key == "Enter")
+  function editableKey(ev) { 
+//    logMsg("editable!" + ev.key)
+    if (ev.key == "Enter" && !ev.ctrlKey && !ev.shiftKey && !ev.altKey)
       return editableSave(ev)
 
     if (ev.key == "Escape")
       return editableUpdate(ev.target.parentNode)
+
+    ev.stopPropagation()
   }
 
   function editableEdit(ev) {
     let e = ev.target
     CL(e)
-    inp = EL("input")
+    inp = EL("textarea")
     inp.type = "text"
     inp.value = e.dataset.text
     inp.addEventListener("keydown", editableKey)
     e.appendChild(inp)
+    inp.focus()
   }
 
   for (let e of editables) {
@@ -237,19 +267,14 @@ a:visited {
   function receiveIndex(data) {
     index = JSON.parse(data)
 
-    while (img_container.firstChild) {
-      img_container.removeChild(img_container.firstChild)
-    }
+    if (img_id > 0)
+      prev_a.href = "/single-" + (img_id - 1)
 
-    for (let i = 0; i < index.images.length; i++) {
-      var it = EL("img")
-      it.id = "img-" + i
-      it.src = "img/thumbnail-" + i
-      it.className = "img-tiles"
-      for (item in index.images[i])
-	it.dataset[item] = index.images[i][item]
-      img_container.appendChild(it)
-    }
+    if (img_id + 1 < index.images.length)
+      next_a.href = "/single-" + (img_id + 1)
+
+    index.this_image = index.images[img_id]
+    img_element.src = "/img/orig-" + img_id
 
     for (elem of editables) {
       var loc = index
@@ -268,6 +293,10 @@ a:visited {
   }
 
   function sendIndexUpdate(path, value) {
+    ss = path.split(".")
+    if (ss[0] == "this_image")
+      path = [ "images", img_id ].concat(ss.slice(1))
+
     sSend({
       "_": "update",
       "path": path,
@@ -297,31 +326,66 @@ a:visited {
     logMsg("Connection failed: " + err + " Reload to retry.")
   }
 
+  function prev_foto() {
+    prev_a.click()
+    /*
+    if (!!overlay_prev.dataset.target)
+    {
+      console.log("target is", overlay_prev.dataset.target)
+      showfoto_img(document.getElementById(overlay_prev.dataset.target))
+    }
+    */
+  }
+
+  function next_foto() {
+    next_a.click()
+    /*
+    if (!!overlay_next.dataset.target)
+    {
+      console.log("target is", overlay_next.dataset.target)
+      showfoto_img(document.getElementById(overlay_next.dataset.target))
+    }
+    */
+  }
+
+  function open_gimp() {
+    sSend({ "_": "gimp", "id": img_id })
+  }
+
+  document.getElementById("open-gimp").addEventListener("click", open_gimp)
+
   function dispatchKey(e) {
     console.log(e)
+
+    if (e.ctrlKey && e.key == "g") {
+      open_gimp()
+    }
+
+    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey)
+      return
     
     if (e.key === "Escape") {
       backlink.activate() // TODO
     }
 
+    if (e.key === "+") {
+      img_element.classList.remove("showfoto-img-reduced")
+    }
+
+    if (e.key === "-") {
+      img_element.classList.add("showfoto-img-reduced")
+    }
+
     if (e.key === "ArrowLeft") {
-      if (!!overlay_prev.dataset.target)
-      {
-	console.log("target is", overlay_prev.dataset.target)
-	showfoto_img(document.getElementById(overlay_prev.dataset.target))
-      }
+      prev_foto()
     }
 
     if (e.key === "ArrowRight") {
-      if (!!overlay_next.dataset.target)
-      {
-	console.log("target is", overlay_next.dataset.target)
-	showfoto_img(document.getElementById(overlay_next.dataset.target))
-      }
+      next_foto()
     }
   }
 
-  document.addEventListener("keyup", dispatchKey)
+  document.addEventListener("keydown", dispatchKey)
 
   var tsX = null;
   var tsY = null;

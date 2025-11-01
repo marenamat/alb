@@ -1,6 +1,7 @@
 from . import WebApp, View
 from aiohttp import web, WSMsgType as msgtype
 
+import asyncio
 import jinja2
 import json
 import logging
@@ -31,7 +32,7 @@ class Controller(View):
                     del data["_"]
                     await ws.send_str(json.dumps(await self.commands[cmd](self.app).run(**data)))
                 except KeyError:
-                    await ws.send_str("bad request!" + msg.data["_"])
+                    await ws.send_str("bad request!" + msg.data)
             elif msg.type == msgtype.ERROR:
                 logger.warn('ws connection closed with exception %s' %
                       ws.exception())
@@ -57,16 +58,26 @@ Controller.register(Index)
 class Update(CC):
     name = "update"
     async def run(self, path, value):
-        kk = path.split(".")
         ipos = self.app.index.data
-        while len(kk) > 1:
-            ipos = ipos[kk[0]]
-            kk = kk[1:]
-        ipos[kk[0]] = value
+        while len(path) > 1:
+            ipos = ipos[path[0]]
+            path = path[1:]
+        ipos[path[0]] = value
 
         await self.app.index.store()
         return self.app.index.data
 
 Controller.register(Update)
+
+class Gimp(CC):
+    name = "gimp"
+    async def run(self, id):
+        logger.info(f"Gimp for image {id}")
+        await asyncio.create_subprocess_exec(
+                "gimp", str(self.app.index.path / self.app.index.data["images"][id]["orig"])
+                )
+        return {}
+
+Controller.register(Gimp)
 
 WebApp.register(Controller)

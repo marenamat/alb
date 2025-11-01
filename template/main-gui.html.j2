@@ -141,7 +141,7 @@ a:visited {
     let e = inp.parentNode
     e.dataset.text = inp.value
     editableUpdate(e)
-    sendIndexUpdate(e.dataset.source, e.dataset.text)
+    sendIndexUpdate(e.dataset.source.split("."), e.dataset.text)
   }
 
   function editableKey(ev) {

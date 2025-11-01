@@ -52,7 +52,7 @@ class Index:
             fp = self.path / 'index.yaml'
             logger.debug(f"Storing index to {fp}")
             with open(fp, "w") as f:
-                yaml.safe_dump(self.data, f)
+                yaml.safe_dump(self.data, f, allow_unicode=True)
         finally:
             pass
 

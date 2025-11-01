@@ -11,7 +11,7 @@ class ImageServeView(View):
         img_id = request.match_info["id"]
         img_size = request.match_info["size"]
         try:
-            img_info = self.app.index.data["images"][int(img_id) - 1]
+            img_info = self.app.index.data["images"][int(img_id)]
         except IndexError as e:
             logger.info(f"Bad index {img_id}", e)
             raise web.HTTPNotFound() from e

@@ -8,7 +8,7 @@ class ImageSingleView(View):
     urlbase = "/single-{id}"
 
     async def get(self, request):
-        img_id = request.match_info["id"]
+        img_id = int(request.match_info["id"])
 
         td = pathlib.Path(__file__).absolute().parent.parent.parent / "template"
         je = jinja2.Environment(loader=jinja2.FileSystemLoader(td))
@@ -17,7 +17,7 @@ class ImageSingleView(View):
         rtext = te.render(
                 **self.app.index.data,
                 app=self.app,
-                imgurl=f"/img/orig-{img_id}",
+                img_id=img_id,
                 ).encode("utf8")
 
         resp = web.StreamResponse()
