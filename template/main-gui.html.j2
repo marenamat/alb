@@ -54,7 +54,7 @@ a:visited {
   max-height: 24em;
   display: inline-block;
   float: both;
-  cursor: pointer;
+/*  cursor: pointer; */
 }
 .display-none { display: none!important; }
 
@@ -186,7 +186,12 @@ a:visited {
       it.className = "img-tiles"
       for (item in index.images[i])
 	it.dataset[item] = index.images[i][item]
-      img_container.appendChild(it)
+
+      var a = EL("a")
+      a.appendChild(it)
+      a.href = "single-" + i
+
+      img_container.appendChild(a)
     }
 
     for (elem of editables) {

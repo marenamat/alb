@@ -54,5 +54,6 @@ class View:
 
 from .MainView import MainView
 from .ImageServeView import ImageServeView
+from .ImageSingleView import ImageSingleView
 
 from .Controller import Controller
