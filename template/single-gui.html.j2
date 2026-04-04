@@ -57,9 +57,16 @@ a:visited {
   padding: 0.6em;
 }
 
-#log button {
+/* Toolbar for action buttons, separate from the log output area */
+#controls {
+  position: absolute;
+  right: 2em;
+  top: 1em;
+  padding: 0.6em;
+}
+
+#controls button {
   padding: 0.5em 1.5em;
-  margin-bottom: 1em;
 }
 
 .editable-text:hover::after {
@@ -166,7 +173,8 @@ a:visited {
   </style>
 </head>
 <body>
-<div id="log">
+<div id="log"></div>
+<div id="controls">
   <button id="open-gimp">GIMP</button>
 </div>
 <div id="showfoto-block">
