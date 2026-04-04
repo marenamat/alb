@@ -1,68 +1,32 @@
-date: 2026-04-04
-workflow_step: maintenance_complete
+date: 2026-04-05
+workflow_step: in_progress
 
 maintenance:
   status: done
   notes:
-    - Fetched github/main; 4 new commits (ad14262..b73fc41) - all settings.json updates
-    - Rebased local main and feature/static-site-gen onto github/main
-    - No merged branches to prune
+    - github/main had feature/gui-improvements merged (Shift+G, ENTER editor, show-originals, album metadata)
+    - Deleted merged feature/gui-improvements branch
+    - Rebased fix/issue-1-gimp-button onto new main
 
 github_pipelines:
   status: done
   notes:
-    - No GitHub Actions workflows exist (design file confirms: no actions needed)
+    - No workflows configured
 
 github_issues:
-  status: done
+  status: in_progress
   notes:
-    - No open issues found via curl
+    - "#1: move GIMP button elsewhere - fix ready in fix/issue-1-gimp-button"
+    - "#2: Enter-to-edit weird behavior - cycling through CS/EN; click-to-edit never saves"
+    - "#3: Deletion in single view - show deleted state, add undelete button"
 
 design_check:
   status: done
-  design_file: claude/design/base.md
   notes:
-    - Design unchanged from last session
-    - Bootstrap 5.3.3 upgraded to 5.3.8 (latest release 2025-08-26)
-    - All outstanding GUI features from features_missing are now implemented
+    - No changes
 
 branches:
-  - main: up to date with github/main (b73fc41)
-  - feature/static-site-gen: rebased onto main
-  - feature/bootstrap-upgrade: branched from feature/static-site-gen; Bootstrap 5.3.8
-  - feature/gui-improvements: branched from feature/static-site-gen; GUI features
-
-features_implemented:
-  - DELETE key to mark/unmark photos for omission (toggle_delete WebSocket command)
-  - 5-minute auto-backup of index.yaml
-  - img click selects, dblclick navigates
-  - Deleted photos shown with red outline + low opacity
-  - Escape on single view returns to main view
-  - Bootstrap 5.3.8 vendored to static/vendor/ (upgraded from 5.3.3)
-  - Static site generator (Alb/Generator.py)
-  - generate CLI command (Alb/Command/Generate.py)
-  - Generate button + WebSocket command in GUI
-  - album-index.html.j2 + album-single.html.j2 templates (Bootstrap + Garamond)
-  - Makefile template (Makefile.j2)
-  - Landing page generator (Alb/Command/Landing.py)
-  - landing.html.j2 template
-  - GIMP file watcher (watches for <basename>-*.ext, marks original hidden)
-  - Fixed Resizer quality bug (0-1 float -> 0-100 int for ImageMagick)
-  - Shift+G to open GIMP in single view (was Ctrl+G) [feature/gui-improvements]
-  - ENTER key to open description editor in single view [feature/gui-improvements]
-  - Show originals toggle (show/hide hidden photos) in main view [feature/gui-improvements]
-  - Album metadata fields in main GUI: URL, thumbnail, access capabilities [feature/gui-improvements]
-  - T key sets selected photo as album thumbnail [feature/gui-improvements]
-  - Index.py: default url/thumbnail/access in new index metadata [feature/gui-improvements]
-
-features_missing:
-  - No CI/CD deployment workflow (design explicitly says no Github actions needed)
-
-packages_needed:
-  - py3-yaml
-  - py3-jinja2
-  - py3-aiohttp
-  - Asked in claude/questions.md
-
-questions_pending:
-  - Packages: py3-yaml, py3-jinja2, py3-aiohttp need to be installed (apk add)
+  - main: 4578c76 (all GUI features merged)
+  - fix/issue-1-gimp-button: GIMP button to #controls (issue #1)
+  - fix/issue-2-enter-edit: TBD
+  - fix/issue-3-single-delete: TBD
