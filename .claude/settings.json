@@ -5,7 +5,11 @@
       "Bash(curl *)",
       "Bash(git *)",
       "Bash(gh *)",
-      "Bash(python *)",
+      "Bash(python3:*)",
+      "Bash(python:*)",
+      "Bash(pip3 *:*)",
+      "Bash(apk list:*)",
+      "Bash(apk search:*)",
       "Update(Alb/*)",
       "Update(Alb/**)",
       "Update(Alb/**/*)"
