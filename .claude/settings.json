@@ -3,7 +3,8 @@
   "permissions": {
     "allow": [
       "Bash(curl *)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(gh *)"
     ],
     "deny": [
       "Bash(npm *)"
