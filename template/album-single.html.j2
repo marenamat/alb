@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="{{ lang | default('en') }}">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta property="og:type" content="website" />
+  <meta property="og:description" content="{{ img.get(lang, img.get('en', '')) }}" />
+  <meta property="og:image" content="public/{{ img.orig }}" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <title>{{ img.get(lang, img.get('en', img.orig)) }} | {{ meta.title }}</title>
+  <link rel="stylesheet" href="../bootstrap.min.css" />
+  <style>
+    body { font-family: Garamond, 'EB Garamond', serif; background: #111; color: #eee; }
+    .photo-container { text-align: center; }
+    .photo-img { max-width: 100%; max-height: 85vh; object-fit: contain; }
+    .nav-btn { font-size: 2rem; color: #eee; text-decoration: none; padding: 0.3em 0.6em; }
+    .nav-btn:hover { color: white; background: rgba(255,255,255,0.1); border-radius: 4px; }
+    .caption { font-size: 1.1rem; margin-top: 0.5rem; }
+    .caption-cs { font-style: italic; color: #bbb; font-size: 0.95rem; }
+    footer { border-top: 1px solid #444; margin-top: 1rem; padding-top: 0.5rem; font-size: 0.8rem; color: #888; }
+    a { color: #adf; }
+  </style>
+</head>
+<body>
+<div class="container-fluid py-3">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <a href="../index.html" class="nav-btn" title="Back to album">&larr;</a>
+    <span class="text-muted small">{{ img_id + 1 }} / {{ total }}</span>
+    <div>
+      {% if prev_id is not none %}
+      <a href="{{ prev_id }}.html" class="nav-btn" title="Previous">&laquo;</a>
+      {% endif %}
+      {% if next_id is not none %}
+      <a href="{{ next_id }}.html" class="nav-btn" title="Next">&raquo;</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="photo-container">
+    <img src="../public/{{ img.orig }}" alt="{{ img.get(lang, '') }}" class="photo-img" />
+  </div>
+
+  {% set en_caption = img.get('en', '') %}
+  {% set cs_caption = img.get('cs', '') %}
+  {% if en_caption and en_caption != 'TODO' %}
+  <div class="caption text-center mt-2">{{ en_caption }}</div>
+  {% endif %}
+  {% if cs_caption and cs_caption != 'TODO' and cs_caption != en_caption %}
+  <div class="caption-cs text-center">{{ cs_caption }}</div>
+  {% endif %}
+
+  <footer class="text-center">
+    <p>{{ meta.author }} &mdash; <a href="mailto:photos@jmq.cz">Request full quality</a></p>
+  </footer>
+</div>
+
+<script src="../bootstrap.bundle.min.js"></script>
+<script>
+  // Keyboard navigation
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+      {% if prev_id is not none %}
+      if (e.key === "ArrowLeft") window.location.href = "{{ prev_id }}.html";
+      {% endif %}
+      {% if next_id is not none %}
+      if (e.key === "ArrowRight") window.location.href = "{{ next_id }}.html";
+      {% endif %}
+    }
+    if (e.key === "Escape") window.location.href = "../index.html";
+  });
+
+  // Swipe navigation
+  var tsX = null;
+  document.addEventListener("touchstart", function(e) { tsX = e.touches[0].clientX; });
+  document.addEventListener("touchend", function(e) {
+    if (tsX === null) return;
+    var diff = e.changedTouches[0].clientX - tsX;
+    if (Math.abs(diff) > 50) {
+      {% if prev_id is not none %}
+      if (diff > 0) window.location.href = "{{ prev_id }}.html";
+      {% endif %}
+      {% if next_id is not none %}
+      if (diff < 0) window.location.href = "{{ next_id }}.html";
+      {% endif %}
+    }
+    tsX = null;
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="{{ lang | default('en') }}">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta property="og:type" content="website" />
+  {% if meta.get('og-description') %}
+  <meta property="og:description" content="{{ meta['og-description'] }}" />
+  {% endif %}
+  {% if meta.get('thumbnail') %}
+  <meta property="og:image" content="{{ meta.thumbnail.album }}/thumbnail/{{ meta.thumbnail.photo }}" />
+  <meta property="og:image:alt" content="{{ meta.thumbnail.get('alt', '') }}" />
+  {% endif %}
+  <title>{{ meta.title }}</title>
+  <link rel="stylesheet" href="bootstrap.min.css" />
+  <style>
+    body { font-family: Garamond, 'EB Garamond', serif; }
+    .album-thumb { width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+    .album-card { transition: transform 0.15s; }
+    .album-card:hover { transform: translateY(-2px); }
+    .album-desc { font-size: 0.9rem; color: #555; }
+    footer { border-top: 1px solid #ccc; margin-top: 3rem; padding-top: 1rem; font-size: 0.85rem; color: #888; }
+  </style>
+</head>
+<body>
+<div class="container py-4">
+  <header class="mb-4">
+    <h1>{{ meta.title }}</h1>
+    {% if meta.get('og-description') %}
+    <p class="lead">{{ meta['og-description'] }}</p>
+    {% endif %}
+  </header>
+
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+    {% for album in albums %}
+    {% set album_title = album.get(lang, {}).get('title') or album.get('en', {}).get('title', album.url) %}
+    {% set album_desc = album.get(lang, {}).get('desc') or album.get('en', {}).get('desc', '') %}
+    <div class="col">
+      <div class="card album-card h-100 border-0 shadow-sm">
+        <a href="{{ album.url }}/index.html">
+          <img
+            src="{{ album.url }}/thumbnail/{{ album.thumbnail }}"
+            alt="{{ album_title }}"
+            class="card-img-top album-thumb"
+            loading="lazy"
+          />
+        </a>
+        <div class="card-body">
+          <h5 class="card-title"><a href="{{ album.url }}/index.html" class="text-decoration-none text-dark">{{ album_title }}</a></h5>
+          {% if album_desc %}
+          <p class="album-desc">{{ album_desc }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <footer class="text-center">
+    <p>{{ meta.author }}</p>
+  </footer>
+</div>
+<script src="bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -28,7 +28,9 @@ class Resizer:
         self.quality = float(quality)
 
     async def process(self, source, destination):
-        p = await asyncio.create_subprocess_exec("convert", "-scale", self.scale, "-quality", str(self.quality), source, destination)
+        # ImageMagick -quality takes 0-100; self.quality is stored as 0.0-1.0
+        quality_pct = str(int(self.quality * 100))
+        p = await asyncio.create_subprocess_exec("convert", "-scale", self.scale, "-quality", quality_pct, source, destination)
         await p.wait()
 
 #  convert -scale 1024x1024 -quality 70% \$< \$@

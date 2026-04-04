@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="{{ lang | default('en') }}">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta property="og:type" content="website" />
+  <meta property="og:description" content="{{ meta['og-description'] }}" />
+  <meta property="og:image" content="{{ meta['og-image'] }}" />
+  <meta property="og:image:alt" content="{{ meta['og-image-alt'] }}" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:description" content="{{ meta['og-description'] }}" />
+  <meta name="twitter:image" content="{{ meta['og-image'] }}" />
+  <title>{{ meta.title }}</title>
+  <link rel="stylesheet" href="bootstrap.min.css" />
+  <style>
+    body { font-family: Garamond, 'EB Garamond', serif; }
+    .photo-thumb { cursor: pointer; width: 100%; aspect-ratio: 1; object-fit: cover; }
+    .photo-thumb:hover { opacity: 0.85; }
+    .photo-caption { font-size: 0.85rem; color: #555; min-height: 2.5em; }
+    footer { border-top: 1px solid #ccc; margin-top: 2rem; padding-top: 1rem; font-size: 0.85rem; color: #888; }
+  </style>
+</head>
+<body>
+<div class="container py-4">
+  <header class="mb-4">
+    <h1>{{ meta.title }}</h1>
+    {% if meta['og-description'] %}
+    <p class="lead">{{ meta['og-description'] }}</p>
+    {% endif %}
+    <p class="text-muted">{{ meta.author }}</p>
+  </header>
+
+  <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-2">
+    {% for img in images %}
+    <div class="col">
+      <a href="photos/{{ img.img_id }}.html">
+        <img
+          src="thumbnail/{{ img.orig }}"
+          alt="{{ img.get(lang, img.get('en', '')) }}"
+          class="photo-thumb rounded"
+          loading="lazy"
+        />
+      </a>
+      {% set caption = img.get(lang, img.get('en', '')) %}
+      {% if caption and caption != 'TODO' %}
+      <div class="photo-caption mt-1">{{ caption | truncate(80) }}</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  <footer class="text-center">
+    <p>{{ meta.author }} &mdash; <a href="mailto:photos@jmq.cz">Contact</a></p>
+  </footer>
+</div>
+<script src="bootstrap.bundle.min.js"></script>
+</body>
+</html>

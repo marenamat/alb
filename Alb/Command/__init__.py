@@ -62,3 +62,5 @@ from .Help import Help
 from .Scan import Scan
 from .Init import Init
 from .GUI import GUI
+from .Generate import Generate
+from .Landing import Landing

@@ -94,7 +94,9 @@ a:visited {
 <header id="title-block-header">
   <h1 class="title editable-text" data-source="meta.title"></h1>
 </header>
-<div id="log"></div>
+<div id="log">
+  <button id="btn-generate">Generate website</button>
+</div>
 <table id="metadata">
   <tbody>
     <tr><th>Author: <td class="editable-text" data-source="meta.author">
@@ -236,6 +238,16 @@ a:visited {
   function toggleDelete(id) {
     sSend({ "_": "toggle_delete", "id": id }, receiveIndex)
   }
+
+  function generateWebsite() {
+    logMsg("Generating website...")
+    sSend({ "_": "generate" }, function(data) {
+      var r = JSON.parse(data)
+      logMsg("Generated " + r.visible + " photos -> " + r.views_dir)
+    })
+  }
+
+  document.getElementById("btn-generate").addEventListener("click", generateWebsite)
 
   document.addEventListener("keydown", function(ev) {
     if (ev.key === "Delete" && selected_id !== null) {

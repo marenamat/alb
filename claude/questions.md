@@ -62,3 +62,16 @@ there will be `albums.yaml` which should be aggregated by Alb from
 subdirectories. The generated landing page should be generated in the same
 directory. Add `Makefile` so that `make install` installs everything
 recursively.
+
+## Packages needed (please install)
+
+The following Alpine packages are required to run `alb`:
+
+```
+apk add py3-yaml py3-jinja2 py3-aiohttp
+```
+
+These provide:
+- `py3-yaml` — YAML loading/saving (`import yaml`)
+- `py3-jinja2` — HTML template rendering (`import jinja2`)
+- `py3-aiohttp` — async HTTP server + WebSocket (`import aiohttp`)
