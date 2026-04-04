@@ -2,6 +2,8 @@
 
 This should generate websites showing basic photo albums.
 
+There are definitely some questions to be clarified. Ask.
+
 ## Landing page
 
 Index of albums, ordered by time, with thumbnails and descriptions.
@@ -84,8 +86,51 @@ capability list, user has access to that resources.
 
 If no access is specified, nobody is allowed to access.
 
+All the website is served by NGINX, design a minimalist cookie-based
+and link-based authentication and generate appropriate config files.
+
+This section needs further refinements.
+
+# Owner workflow
+
+## Input
+
+Photo dump from a camera. Run a CLI command pointing to a camera dump folder and open a
+preliminary website locally (run HTTP server, `xdg-open URL`) displaying all photos
+as if published. That folder is one future album.
+
+By pressing DELETE key, mark the photo for omission but do not delete it. Allow
+displaying all photos including deleted ones, and undeleting.
+
+By pressing ENTER, open photo description editor allowing to enter localized descriptions.
+By default, open CS and EN descriptions; commit the description by ENTER, 
+allow adding explicit newline by shift+ENTER and ctrl+enter. The description
+should be interpreted as markdown.
+
+By pressing shift+G, open `gimp` with that photo. Supersede every photo named
+`<something>.jpg` by `<something>-<mod>.jpg`. Allow displaying photos before
+modification.
+
+Save all data to `index.yaml` into the camera dump folder. Every five minutes,
+copy `index.yaml` to `backup-yyyy-mm-dd--hh-mm.yaml` if something goes wrong.
+
+Allow editing the album's url, title and description, and selecting its thumbnail.
+Allow choosing the album's required access capabilities.
+
+When tools starts again, re-load `index.yaml`.
+
+## Generate the website
+
+On clicking a button, the tool should generate a subdirectory `views` with `index.html`.
+Use common CSS and JS for all albums.
+
+There should be also a `Makefile` allowing for `make install` to `rsync` the directory
+to a configured server by `make install`, and `make edit` to re-run the editor.
+
 # Details
 
 - Use Bootstrap to create the layouts
 - Use Garamond serif fonts
 - No other external JS/CSS dependency
+- The website should basically work 
+- Expect future localization of the app to different languages
