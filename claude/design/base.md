@@ -132,9 +132,10 @@ to a configured server by `make install`, and `make edit` to re-run the editor.
 - Use Bootstrap to create the layouts
 - Use Garamond serif fonts
 - No other external JS/CSS dependency
-- The website should basically work 
+- The website should work in basic mode even without JS
+- Upgrade to newer Bootstrap when a new version is released
 - Expect future localization of the app to different languages
 
 # Miscellaneous
 
-This project has no Github actions. No need to check them.
+- This project has no Github actions. No need to check them.
