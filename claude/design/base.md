@@ -134,3 +134,7 @@ to a configured server by `make install`, and `make edit` to re-run the editor.
 - No other external JS/CSS dependency
 - The website should basically work 
 - Expect future localization of the app to different languages
+
+# Miscellaneous
+
+This project has no Github actions. No need to check them.
