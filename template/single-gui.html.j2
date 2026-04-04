@@ -262,24 +262,34 @@ a:visited {
     sendIndexUpdate(e.dataset.source, e.dataset.text)
   }
 
-  function editableKey(ev) { 
-//    logMsg("editable!" + ev.key)
-    if (ev.key == "Enter" && !ev.ctrlKey && !ev.shiftKey && !ev.altKey)
-      return editableSave(ev)
+  function editableKey(ev) {
+    ev.stopPropagation()  // never let key events escape the editor
+
+    if (ev.key == "Enter" && !ev.ctrlKey && !ev.shiftKey && !ev.altKey) {
+      editableSave(ev)
+      // Cycle to the next language variant; stop after the last one
+      let all = Array.from(editables)
+      let idx = all.indexOf(ev.target.parentNode)
+      if (idx >= 0 && idx + 1 < all.length)
+        editableEdit({ target: all[idx + 1] })
+      return
+    }
 
     if (ev.key == "Escape")
       return editableUpdate(ev.target.parentNode)
-
-    ev.stopPropagation()
   }
 
   function editableEdit(ev) {
     let e = ev.target
+    // If already in edit mode, do nothing (prevents click-inside-textarea re-init)
+    if (e.querySelector("textarea"))
+      return
     CL(e)
-    inp = EL("textarea")
-    inp.type = "text"
+    let inp = EL("textarea")
     inp.value = e.dataset.text
     inp.addEventListener("keydown", editableKey)
+    // Clicks inside the textarea must not bubble up and re-trigger editableEdit
+    inp.addEventListener("click", function(ev) { ev.stopPropagation() })
     e.appendChild(inp)
     inp.focus()
   }
