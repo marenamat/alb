@@ -64,3 +64,4 @@ from .Init import Init
 from .GUI import GUI
 from .Generate import Generate
 from .Landing import Landing
+from .Migrate import Migrate
