@@ -5,7 +5,9 @@
       "Bash(curl *)",
       "Bash(git *)",
       "Bash(gh *)",
-      "Update(Alb/*)"
+      "Update(Alb/*)",
+      "Update(Alb/**)",
+      "Update(Alb/**/*)"
     ],
     "deny": [
       "Bash(npm *)"

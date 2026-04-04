@@ -80,6 +80,7 @@ That is where the overall project goal is stored.
 
 - Never touch `hacks/` but you may read it.
 - Whenever you need a package installed, ask for it through `claude/questions.md`.
+- Do not use `gh` tool, run `curl` to public github API instead.
 
 # Deployment
 
