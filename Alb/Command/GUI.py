@@ -17,7 +17,7 @@ class GUI(Command):
         if len(args) == 0:
             self.dirs = [ pathlib.Path(".") ]
         else:
-            self.dirs = [ Pathlib.Path(p) for p in args ]
+            self.dirs = [ pathlib.Path(p) for p in args ]
 
     async def run(self):
         try:

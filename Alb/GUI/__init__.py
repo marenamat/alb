@@ -22,6 +22,8 @@ class WebApp:
 
     async def open_browser(self, app):
         await asyncio.create_subprocess_exec("xdg-open", self.url)
+        # Start 5-minute auto-backup loop
+        asyncio.create_task(self.index.auto_backup_loop())
 
     async def run(self):
         self.port = random.randrange(1025, 32768)

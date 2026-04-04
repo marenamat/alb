@@ -80,4 +80,15 @@ class Gimp(CC):
 
 Controller.register(Gimp)
 
+class ToggleDelete(CC):
+    # Mark or unmark a photo for omission (does not delete the file)
+    name = "toggle_delete"
+    async def run(self, id):
+        img = self.app.index.data["images"][id]
+        img["deleted"] = not img.get("deleted", False)
+        await self.app.index.store()
+        return self.app.index.data
+
+Controller.register(ToggleDelete)
+
 WebApp.register(Controller)

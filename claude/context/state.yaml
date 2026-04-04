@@ -1,23 +1,61 @@
 date: 2026-04-04
-workflow_step: blocked
+workflow_step: questions_pending
 
 maintenance:
   status: done
   notes:
+    - Pulled from github/main (fast-forward, 2 new commits)
+    - Received: .claude/settings.json update + claude/design/base.md (design requirements)
     - Only one branch (main) exists, no rebase/prune needed
-    - Local main is 2 commits ahead of github/main (8ea472d, 2621f6a "Fix clanker setup")
-    - Untracked: clank directory
 
 github_pipelines:
   status: blocked
-  reason: gh CLI not installed
+  reason: gh CLI not authenticated (installed, needs gh auth login)
+  notes:
+    - No GitHub Actions workflows exist yet in .github/
 
 github_issues:
   status: blocked
-  reason: gh CLI not installed
+  reason: gh CLI not authenticated
 
 design_check:
-  status: blocked
-  reason: claude/design/ directory does not exist
+  status: done
+  design_file: claude/design/base.md
+  summary: >
+    Photo album generator. Owner CLI tool to process camera dumps (GUI editor),
+    static site generator, landing page with access control (capabilities),
+    NGINX config. Bootstrap + Garamond fonts. Localization (CS, EN).
+
+bugs_fixed:
+  - file: Alb/Resizer.py:11
+    issue: invalid Python syntax for typed default args (x=None:int)
+    fix: changed to x:int=None style
+  - file: Alb/Command/GUI.py:20
+    issue: Pathlib.Path (wrong capitalization)
+    fix: pathlib.Path
+
+features_implemented:
+  - DELETE key to mark/unmark photos for omission (toggle_delete WebSocket command)
+    files: [Alb/GUI/Controller.py, template/main-gui.html.j2, template/single-gui.html.j2]
+  - 5-minute auto-backup of index.yaml (Index.auto_backup_loop)
+    files: [Alb/Index.py, Alb/GUI/__init__.py]
+  - img click selects (highlights blue), dblclick navigates
+  - Deleted photos shown with red outline + low opacity
+  - Escape on single view returns to main view
+
+features_missing:
+  - Static site generation (views/ directory + index.html)
+  - Makefile (make install, make edit)
+  - Bootstrap + Garamond fonts in templates
+  - Landing page generator (albums.yaml → index.html per capability)
+  - Access control + NGINX config generation
+  - Album metadata editing (URL, title, thumbnail, access capabilities) in GUI
+  - GIMP modified file detection/renaming
 
 questions_file: claude/questions.md
+questions_pending:
+  - gh auth login needed
+  - Access control design (link-based auth, token issuance, NGINX strategy)
+  - Bootstrap sourcing (CDN vs bundled)
+  - GIMP modified file naming (auto-detect or manual)
+  - Landing page YAML location

@@ -8,7 +8,7 @@ class ResizerConfigError(AlbException):
     pass
 
 class Resizer:
-    def __init__(self, x=None: int, y=None: int, quality=0.7: float):
+    def __init__(self, x: int = None, y: int = None, quality: float = 0.7):
         if x is None:
             x = 1024
 

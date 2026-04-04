@@ -1,7 +1,10 @@
 from . import AlbException
 
+import asyncio
+import datetime
 import logging
 import mimetypes
+import shutil
 import yaml
 
 logger = logging.getLogger(__name__)
@@ -48,13 +51,26 @@ class Index:
         return self.data
 
     async def store(self):
-        try:
-            fp = self.path / 'index.yaml'
-            logger.debug(f"Storing index to {fp}")
-            with open(fp, "w") as f:
-                yaml.safe_dump(self.data, f, allow_unicode=True)
-        finally:
-            pass
+        fp = self.path / 'index.yaml'
+        logger.debug(f"Storing index to {fp}")
+        with open(fp, "w") as f:
+            yaml.safe_dump(self.data, f, allow_unicode=True)
+
+    async def backup(self):
+        # Copy index.yaml to backup-yyyy-mm-dd--hh-mm.yaml
+        src = self.path / 'index.yaml'
+        if not src.exists():
+            return
+        ts = datetime.datetime.now().strftime("%Y-%m-%d--%H-%M")
+        dst = self.path / f"backup-{ts}.yaml"
+        shutil.copy2(src, dst)
+        logger.info(f"Backed up index to {dst}")
+
+    async def auto_backup_loop(self, interval: int = 300):
+        # Run backup every `interval` seconds (default 5 minutes)
+        while True:
+            await asyncio.sleep(interval)
+            await self.backup()
 
     async def new(self):
         # Check existing index

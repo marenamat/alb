@@ -57,6 +57,8 @@ a:visited {
 /*  cursor: pointer; */
 }
 .display-none { display: none!important; }
+.img-deleted { opacity: 0.3; outline: 3px solid red; }
+.img-selected { outline: 3px solid blue; }
 
 #log {
   font-family: monospace;
@@ -172,6 +174,8 @@ a:visited {
     response_handler = rhandler
   }
 
+  var selected_id = null  // currently focused image index
+
   function receiveIndex(data) {
     index = JSON.parse(data)
 
@@ -184,13 +188,24 @@ a:visited {
       it.id = "img-" + i
       it.src = "img/thumbnail-" + i
       it.className = "img-tiles"
+      if (index.images[i].deleted)
+        it.classList.add("img-deleted")
       for (item in index.images[i])
 	it.dataset[item] = index.images[i][item]
 
+      // Click selects without navigating; double-click opens single view
+      it.addEventListener("click", function(ev) {
+        selected_id = Number(this.id.replace("img-", ""))
+        for (let el of document.getElementsByClassName("img-selected"))
+          el.classList.remove("img-selected")
+        this.classList.add("img-selected")
+      })
+      it.addEventListener("dblclick", function(ev) {
+        window.location.href = "single-" + this.id.replace("img-", "")
+      })
+
       var a = EL("a")
       a.appendChild(it)
-      a.href = "single-" + i
-
       img_container.appendChild(a)
     }
 
@@ -217,6 +232,16 @@ a:visited {
       "value": value,
     }, receiveIndex)
   }
+
+  function toggleDelete(id) {
+    sSend({ "_": "toggle_delete", "id": id }, receiveIndex)
+  }
+
+  document.addEventListener("keydown", function(ev) {
+    if (ev.key === "Delete" && selected_id !== null) {
+      toggleDelete(selected_id)
+    }
+  })
 
   try {
     socket = new WebSocket("ws://{{ app.host }}/controller/")

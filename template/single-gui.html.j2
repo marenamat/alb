@@ -354,6 +354,10 @@ a:visited {
 
   document.getElementById("open-gimp").addEventListener("click", open_gimp)
 
+  function toggleDelete() {
+    sSend({ "_": "toggle_delete", "id": img_id }, receiveIndex)
+  }
+
   function dispatchKey(e) {
     console.log(e)
 
@@ -363,9 +367,13 @@ a:visited {
 
     if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey)
       return
-    
+
     if (e.key === "Escape") {
-      backlink.activate() // TODO
+      window.location.href = "/"
+    }
+
+    if (e.key === "Delete") {
+      toggleDelete()
     }
 
     if (e.key === "+") {

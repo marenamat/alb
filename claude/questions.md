@@ -1,20 +1,46 @@
 # Questions
 
-## Blocking: `gh` CLI not installed
+## Blocking: `gh` CLI not authenticated
 
-The workflow requires checking GitHub pipeline results and issues, but `gh` (GitHub CLI) is not available in the environment.
-
-Please install `gh` so I can:
+`gh` is installed but not logged in. Please run `gh auth login` so I can:
 - Check CI/CD pipeline results
 - List and work on GitHub issues
 
-Install command (Arch/Manjaro): `sudo pacman -S github-cli`
-Or: `sudo apt install gh` / `sudo dnf install gh`
+## Design: Access control — needs further refinement
 
-## Missing: `claude/design/` directory
+`claude/design/base.md` says "This section needs further refinements" for access control.
 
-There is no `claude/design/` directory in the repo. The workflow says to check it for overall project goals/design files.
+Specific questions:
+1. **Link-based authentication** — what does this mean? A secret token in the URL
+   (e.g. `https://alb.example.com/family/?token=xyz`) that sets a cookie?
+2. **Cookie lifetime** — how long should the session cookie last?
+3. **NGINX config** — should the NGINX config use `auth_request` to a helper,
+   or is it purely static (sub_filter / map directives)?
+4. **How are tokens issued?** Via a separate admin page, or pre-generated
+   in the YAML and embedded in invite links?
 
-Please either:
-- Create `claude/design/` with any design documents you have, or
-- Confirm there are no design files yet
+## Design: Bootstrap sourcing
+
+`claude/design/base.md` says "Use Bootstrap" and "No other external JS/CSS dependency".
+
+- Should Bootstrap be self-hosted (bundled into the repo / served from the album)?
+- Or is loading from a CDN acceptable as a single exception?
+- Which Bootstrap version? (5.x is current)
+
+## Design: GIMP integration — modified file naming
+
+The design says: "Supersede every photo named `<something>.jpg` by `<something>-<mod>.jpg`".
+
+- Does `alb` need to watch for file changes after GIMP exits and auto-rename
+  the modified file, or is the `-<mod>` suffix a convention the user applies
+  manually in GIMP before saving?
+- Should the original file be kept alongside the modified version, or hidden?
+
+## Design: Landing page — where does the YAML live?
+
+The design shows a `albums:` YAML structure for the landing page,
+but doesn't specify where this file should be stored.
+
+- Is it a separate `albums.yaml` at the server root?
+- Or does `alb` aggregate `index.yaml` files from subdirectories?
+- Where should the generated landing page HTML go?
