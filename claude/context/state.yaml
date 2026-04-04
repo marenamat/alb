@@ -4,9 +4,9 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - github/main: fix/issue-1-gimp-button merged
-    - Deleted merged fix/issue-1-gimp-button
-    - Rebased fix/issue-2-enter-edit and fix/issue-3-single-delete onto main cleanly
+    - github/main: fix/issue-3-single-delete merged
+    - Deleted merged fix/issue-3-single-delete
+    - Rebased fix/issue-2-enter-edit onto main
 
 github_pipelines:
   status: done
@@ -16,9 +16,8 @@ github_pipelines:
 github_issues:
   status: done
   notes:
-    - "#1: closed (merged)"
     - "#2: fix ready in fix/issue-2-enter-edit (awaiting merge)"
-    - "#3: fix ready in fix/issue-3-single-delete (awaiting merge)"
+    - "#3: closed (merged)"
 
 design_check:
   status: done
@@ -26,6 +25,5 @@ design_check:
     - No changes
 
 branches:
-  - main: c91429f (GIMP button fix merged)
+  - main: b7a4207
   - fix/issue-2-enter-edit: Enter cycles CS->EN, click re-init fixed
-  - fix/issue-3-single-delete: deleted banner + undelete button in single view
