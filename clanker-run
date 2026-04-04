@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+
+self=$(readlink -f "$0")
+selfdir=$(dirname "$self")
+
+cd "$selfdir"
+claude \
+  --allowed-tools "Bash(git:*), Edit" \
+  "proceed as the workflow specifies in CLAUDE.md"
