@@ -4,9 +4,8 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - github/main: fix/issue-2-enter-edit merged
-    - Deleted merged fix/issue-2-enter-edit
-    - All local branches clean; only main remains
+    - No new commits on github/main
+    - Issues #2 and #4 found open
 
 github_pipelines:
   status: done
@@ -16,7 +15,9 @@ github_pipelines:
 github_issues:
   status: done
   notes:
-    - All issues closed (1, 2, 3)
+    - "#2 re-opened: cycling broken (parentNode null bug) + blur-to-save missing"
+    - "#4: ESC in editor should navigate away - fixed in same branch"
+    - Both fixed in fix/issues-2-4-editor
 
 design_check:
   status: done
@@ -24,11 +25,5 @@ design_check:
     - No changes
 
 branches:
-  - main: 33e8e2f (all fixes merged)
-
-all_merged:
-  - Bootstrap 5.3.8 upgrade
-  - Shift+G GIMP, ENTER description editor, show-originals, album metadata
-  - GIMP button to #controls toolbar
-  - Enter-to-edit cycles CS->EN, click re-init fixed
-  - Single view deleted state + Undelete button
+  - main: cb37676 (context update, ahead of github/main by 1)
+  - fix/issues-2-4-editor: cycling fix, blur-to-save, ESC navigates away
