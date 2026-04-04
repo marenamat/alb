@@ -1,18 +1,17 @@
 date: 2026-04-04
-workflow_step: feature_branch_in_progress
+workflow_step: maintenance_complete
 
 maintenance:
   status: done
   notes:
-    - Fetched github/main; 2 new commits (9b585a5 fix workflow, 9cd8dfb answers)
-    - Rebased local main onto github/main (fast-forward)
-    - Only one branch (main) exists + new feature branch feature/static-site-gen
+    - Fetched github/main; 4 new commits (ad14262..b73fc41) - all settings.json updates
+    - Rebased local main and feature/static-site-gen onto github/main
+    - No merged branches to prune
 
 github_pipelines:
   status: done
   notes:
-    - No GitHub Actions workflows exist (total_count = 0)
-    - Nothing to check
+    - No GitHub Actions workflows exist (design file confirms: no actions needed)
 
 github_issues:
   status: done
@@ -22,16 +21,16 @@ github_issues:
 design_check:
   status: done
   design_file: claude/design/base.md
-  answers_applied:
-    - access_control: ignore for v1; unlist albums without 'public' in access list
-    - bootstrap: selfhosted v5.x, downloaded to static/vendor/
-    - gimp: watch for new files with suffixes, auto-mark original hidden
-    - landing_page: ~/foto dir, albums.yaml aggregated from subdirs, make install recursive
-  new_rules:
-    - All updates go to work branches (never touch main)
-    - Use curl instead of gh
+  notes:
+    - Design unchanged from last session
+    - Bootstrap 5.3.3 upgraded to 5.3.8 (latest release 2025-08-26)
+    - All outstanding GUI features from features_missing are now implemented
 
-current_branch: feature/static-site-gen
+branches:
+  - main: up to date with github/main (b73fc41)
+  - feature/static-site-gen: rebased onto main
+  - feature/bootstrap-upgrade: branched from feature/static-site-gen; Bootstrap 5.3.8
+  - feature/gui-improvements: branched from feature/static-site-gen; GUI features
 
 features_implemented:
   - DELETE key to mark/unmark photos for omission (toggle_delete WebSocket command)
@@ -39,7 +38,7 @@ features_implemented:
   - img click selects, dblclick navigates
   - Deleted photos shown with red outline + low opacity
   - Escape on single view returns to main view
-  - Bootstrap 5.3.3 vendored to static/vendor/
+  - Bootstrap 5.3.8 vendored to static/vendor/ (upgraded from 5.3.3)
   - Static site generator (Alb/Generator.py)
   - generate CLI command (Alb/Command/Generate.py)
   - Generate button + WebSocket command in GUI
@@ -49,12 +48,15 @@ features_implemented:
   - landing.html.j2 template
   - GIMP file watcher (watches for <basename>-*.ext, marks original hidden)
   - Fixed Resizer quality bug (0-1 float -> 0-100 int for ImageMagick)
+  - Shift+G to open GIMP in single view (was Ctrl+G) [feature/gui-improvements]
+  - ENTER key to open description editor in single view [feature/gui-improvements]
+  - Show originals toggle (show/hide hidden photos) in main view [feature/gui-improvements]
+  - Album metadata fields in main GUI: URL, thumbnail, access capabilities [feature/gui-improvements]
+  - T key sets selected photo as album thumbnail [feature/gui-improvements]
+  - Index.py: default url/thumbnail/access in new index metadata [feature/gui-improvements]
 
 features_missing:
-  - Album metadata editing in GUI: URL, thumbnail, access capabilities
-  - ENTER key to open photo description editor
-  - Shift+G to open GIMP (currently Ctrl+G in single view)
-  - Browse-before-modification view in GUI
+  - No CI/CD deployment workflow (design explicitly says no Github actions needed)
 
 packages_needed:
   - py3-yaml
@@ -62,6 +64,5 @@ packages_needed:
   - py3-aiohttp
   - Asked in claude/questions.md
 
-questions_file: claude/questions.md
 questions_pending:
   - Packages: py3-yaml, py3-jinja2, py3-aiohttp need to be installed (apk add)
