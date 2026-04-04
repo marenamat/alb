@@ -5,22 +5,24 @@ set -e
 self=$(readlink -f "$0")
 selfdir=$(dirname "$self")
 
+claude=$(which claude)
+
 dirxx=${selfdir/#$HOME/}
 dirdd=${dirxx//\//__}
 
-systemd=$HOME/.config/systemd/user/
-claude=$(which claude)
+git config --local user.name "Claude Worker by Maria"
+git config --local user.email "vibecoding@jmq.cz"
 
-tf=$systemd/$dirdd.timer
-sf=$systemd/$dirdd.service
+if which systemctl >/dev/null; then
 
-if [ -f "$tf" ] || [ -f "$sf" ]; then
-  echo "Error: Already set up. Remove files to unsetup:"
-  echo "rm -f \"$tf\" \"$sf\""
-  exit 1
-fi
+  systemd=$HOME/.config/systemd/user/
 
-cat >$tf <<EOT
+  tf=$systemd/$dirdd.timer
+  sf=$systemd/$dirdd.service
+
+  mkdir -p $systemd
+
+  cat >$tf <<EOT
 [Unit]
 Description=Claude Worker Timer for $selfdir
 
@@ -31,7 +33,7 @@ OnUnitInactiveSec=240
 WantedBy=timers.target
 EOT
 
-cat >$sf <<EOF
+  cat >$sf <<EOF
 [Unit]
 Description=Claude Worker Service for $selfdir
 
@@ -42,5 +44,14 @@ ExecStart=$selfdir/clanker-run
 WantedBy=default.target
 EOF
 
-git --config --local user.name="Claude Worker by Maria"
-git --config --local user.email="vibecoding@jmq.cz"
+  systemctl --user daemon-reload
+
+else
+
+  CF=$(mktemp)
+  crontab -l | grep -v "$selfdir" > $CF
+  echo "*/10 * * * * $selfdir/clanker-run" >>$CF
+  crontab $CF
+  rm $CF
+
+fi
