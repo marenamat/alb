@@ -479,7 +479,14 @@ a:visited {
     }
 
     if (e.key === "Escape") {
-      window.location.href = "/"
+      // Close any open description editor first; navigate only if none is open.
+      // This also handles the case where the textarea exists but is not focused
+      // (so editableKey never fires for it).
+      let openEditor = document.querySelector(".editable-text textarea")
+      if (openEditor)
+        editableUpdate(openEditor.parentNode)
+      else
+        window.location.href = "/"
     }
 
     if (e.key === "Delete") {
