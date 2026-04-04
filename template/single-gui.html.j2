@@ -254,11 +254,12 @@ a:visited {
     e.appendChild(TN(e.dataset.text))
   }
 
-  function editableSave(ev) {
-    let inp = ev.target
+  // Save inp's current value; safe to call even after inp was removed from DOM.
+  function editableSave(inp) {
     let e = inp.parentNode
+    if (!e) return  // already detached (e.g. called from blur after cycling)
     e.dataset.text = inp.value
-    editableUpdate(e)
+    editableUpdate(e)  // removes inp from DOM (inp.parentNode becomes null after this)
     sendIndexUpdate(e.dataset.source, e.dataset.text)
   }
 
@@ -266,17 +267,22 @@ a:visited {
     ev.stopPropagation()  // never let key events escape the editor
 
     if (ev.key == "Enter" && !ev.ctrlKey && !ev.shiftKey && !ev.altKey) {
-      editableSave(ev)
+      let parent = ev.target.parentNode  // capture before editableSave detaches textarea
+      editableSave(ev.target)
       // Cycle to the next language variant; stop after the last one
       let all = Array.from(editables)
-      let idx = all.indexOf(ev.target.parentNode)
+      let idx = all.indexOf(parent)
       if (idx >= 0 && idx + 1 < all.length)
         editableEdit({ target: all[idx + 1] })
       return
     }
 
-    if (ev.key == "Escape")
-      return editableUpdate(ev.target.parentNode)
+    if (ev.key == "Escape") {
+      // Discard edit and go back to the album index (issue #4)
+      editableUpdate(ev.target.parentNode)
+      window.location.href = "/"
+      return
+    }
   }
 
   function editableEdit(ev) {
@@ -290,6 +296,8 @@ a:visited {
     inp.addEventListener("keydown", editableKey)
     // Clicks inside the textarea must not bubble up and re-trigger editableEdit
     inp.addEventListener("click", function(ev) { ev.stopPropagation() })
+    // Save when focus leaves the textarea (clicking elsewhere)
+    inp.addEventListener("blur", function() { editableSave(inp) })
     e.appendChild(inp)
     inp.focus()
   }
