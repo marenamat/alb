@@ -1,0 +1,23 @@
+date: 2026-04-04
+workflow_step: blocked
+
+maintenance:
+  status: done
+  notes:
+    - Only one branch (main) exists, no rebase/prune needed
+    - Local main is 2 commits ahead of github/main (8ea472d, 2621f6a "Fix clanker setup")
+    - Untracked: clank directory
+
+github_pipelines:
+  status: blocked
+  reason: gh CLI not installed
+
+github_issues:
+  status: blocked
+  reason: gh CLI not installed
+
+design_check:
+  status: blocked
+  reason: claude/design/ directory does not exist
+
+questions_file: claude/questions.md
