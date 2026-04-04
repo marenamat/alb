@@ -59,6 +59,8 @@ a:visited {
 .display-none { display: none!important; }
 .img-deleted { opacity: 0.3; outline: 3px solid red; }
 .img-selected { outline: 3px solid blue; }
+/* Original photos superseded by GIMP edits (hidden=true) */
+.img-hidden { opacity: 0.5; outline: 3px solid orange; }
 
 #log {
   font-family: monospace;
@@ -96,11 +98,15 @@ a:visited {
 </header>
 <div id="log">
   <button id="btn-generate">Generate website</button>
+  <button id="btn-show-originals">Show originals</button>
 </div>
 <table id="metadata">
   <tbody>
     <tr><th>Author: <td class="editable-text" data-source="meta.author">
     <tr><th>Description: <td class="editable-text" data-source="meta.og-description">
+    <tr><th>Album URL: <td class="editable-text" data-source="meta.url">
+    <tr><th>Thumbnail: <td id="meta-thumbnail-cell" class="editable-text" data-source="meta.thumbnail">
+    <tr><th>Access: <td id="meta-access-cell" class="editable-text" data-source="meta.access" data-type="array">
   </tbody>
 </table>
 <div id="img-container"></div>
@@ -109,11 +115,13 @@ a:visited {
   var log_div = document.getElementById("log")
   var img_container = document.getElementById("img-container")
 
+  // All editable-text elements (including dynamically added ones from HTML)
   var editables = document.getElementsByClassName("editable-text")
 
   var index = {}
   var response_handler = null
   var socket = null
+  var show_originals = false  // toggle: show photos marked hidden (GIMP originals)
 
   function TN(m) {
     return document.createTextNode(m)
@@ -145,7 +153,13 @@ a:visited {
     let e = inp.parentNode
     e.dataset.text = inp.value
     editableUpdate(e)
-    sendIndexUpdate(e.dataset.source.split("."), e.dataset.text)
+    var path = e.dataset.source.split(".")
+    var value = e.dataset.text
+    // Array fields: split comma-separated string into a list
+    if (e.dataset.type === "array") {
+      value = value.split(",").map(s => s.trim()).filter(s => s.length > 0)
+    }
+    sendIndexUpdate(path, value)
   }
 
   function editableKey(ev) {
@@ -165,6 +179,7 @@ a:visited {
     inp.value = e.dataset.text
     inp.addEventListener("keydown", editableKey)
     e.appendChild(inp)
+    inp.focus()
   }
 
   for (let e of editables) {
@@ -186,14 +201,22 @@ a:visited {
     }
 
     for (let i = 0; i < index.images.length; i++) {
+      var img = index.images[i]
+
+      // Skip hidden (GIMP originals) unless show_originals is on
+      if (img.hidden && !show_originals)
+        continue
+
       var it = EL("img")
       it.id = "img-" + i
       it.src = "img/thumbnail-" + i
       it.className = "img-tiles"
-      if (index.images[i].deleted)
+      if (img.deleted)
         it.classList.add("img-deleted")
-      for (item in index.images[i])
-	it.dataset[item] = index.images[i][item]
+      if (img.hidden)
+        it.classList.add("img-hidden")
+      for (item in img)
+	it.dataset[item] = img[item]
 
       // Click selects without navigating; double-click opens single view
       it.addEventListener("click", function(ev) {
@@ -211,12 +234,18 @@ a:visited {
       img_container.appendChild(a)
     }
 
-    for (elem of editables) {
+    for (let elem of editables) {
       var loc = index
-      for (spart of elem.dataset.source.split("."))
+      var parts = elem.dataset.source.split(".")
+      for (let spart of parts)
 	loc = loc[spart]
 
-      elem.dataset.text = loc
+      // Array fields: display as comma-separated
+      if (elem.dataset.type === "array") {
+        elem.dataset.text = Array.isArray(loc) ? loc.join(", ") : (loc || "")
+      } else {
+        elem.dataset.text = (loc !== undefined && loc !== null) ? loc : ""
+      }
       editableUpdate(elem)
     }
   }
@@ -239,6 +268,12 @@ a:visited {
     sSend({ "_": "toggle_delete", "id": id }, receiveIndex)
   }
 
+  function setThumbnail(id) {
+    var orig = index.images[id].orig
+    logMsg("Setting thumbnail: " + orig)
+    sendIndexUpdate(["meta", "thumbnail"], orig)
+  }
+
   function generateWebsite() {
     logMsg("Generating website...")
     sSend({ "_": "generate" }, function(data) {
@@ -249,9 +284,21 @@ a:visited {
 
   document.getElementById("btn-generate").addEventListener("click", generateWebsite)
 
+  // Toggle showing hidden (GIMP original) photos
+  document.getElementById("btn-show-originals").addEventListener("click", function() {
+    show_originals = !show_originals
+    this.textContent = show_originals ? "Hide originals" : "Show originals"
+    receiveIndex(JSON.stringify(index))  // re-render with current index data
+  })
+
   document.addEventListener("keydown", function(ev) {
+    // Delete: toggle deleted flag on selected photo
     if (ev.key === "Delete" && selected_id !== null) {
       toggleDelete(selected_id)
+    }
+    // T: set selected photo as album thumbnail
+    if (ev.key === "t" && selected_id !== null && !ev.ctrlKey && !ev.altKey && !ev.metaKey) {
+      setThumbnail(selected_id)
     }
   })
 

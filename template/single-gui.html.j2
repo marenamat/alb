@@ -361,12 +361,21 @@ a:visited {
   function dispatchKey(e) {
     console.log(e)
 
-    if (e.ctrlKey && e.key == "g") {
+    // Shift+G: open GIMP (before the modifier guard below)
+    if (e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey && e.key == "G") {
       open_gimp()
+      return
     }
 
     if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey)
       return
+
+    if (e.key === "Enter") {
+      // Open description editor on first editable (CS description)
+      if (editables.length > 0)
+        editableEdit({ target: editables[0] })
+      return
+    }
 
     if (e.key === "Escape") {
       window.location.href = "/"

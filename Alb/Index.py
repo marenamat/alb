@@ -86,6 +86,9 @@ class Index:
                         "og-description": "TODO",
                         "og-image": "TODO",
                         "og-image-alt": "TODO",
+                        "url": "",
+                        "thumbnail": "",
+                        "access": ["public"],
                         },
                     "sizes": {
                         "thumbnail": "public",
