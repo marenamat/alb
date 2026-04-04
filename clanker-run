@@ -6,6 +6,15 @@ self=$(readlink -f "$0")
 selfdir=$(dirname "$self")
 
 cd "$selfdir"
-claude \
-  --allowed-tools "Bash(git:*), Edit" \
-  "proceed as the workflow specifies in CLAUDE.md"
+
+echo "===========" >> clanker.log
+date >> clanker.log
+
+touch clanker.lock
+flock -n clanker.lock \
+	~/.local/bin/claude \
+	--no-session-persistence \
+	"proceed as the workflow specifies in CLAUDE.md" \
+	</dev/null >>clanker.log 2>&1
+
+if [ "$?" == 1 ]; then echo "Clanker probably still runs." >>clanker.log; fi

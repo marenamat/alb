@@ -30,6 +30,21 @@
 - Use per-client rate-limiting
 - Store data as CBOR
 
+# Coding style
+
+## JS, C, Rust, CSS, Bash
+
+- two spaces per indent
+- convert eight spaces to tab
+- no `{}` around single-command blocks
+- put `{` on the same line as control keyword
+- `} else if () {` is the right way
+
+## Python
+
+- four spaces per indent
+- no tabs
+
 # Performance-sensitive code
 
 - Rust or C
@@ -70,16 +85,23 @@ to every commit message.
 ## Check for issues at Github
 
 - Always prepare issue solutions in relevant branches
+- Read also issue comments
+- Never implement any issue not explicitly authored or authorized by @marenamat
 
 ## Check for overall design requirements
 
 The design files in `claude/design/` may have been updated.
 That is where the overall project goal is stored.
 
+If a design requirement is added or modified by means of github issue, update
+the design documents accordingly.
+
 # Limits
 
 - Never touch `hacks/` but you may read it.
 - Whenever you need a package installed, ask for it through `claude/questions.md`.
+- Do not use `gh` tool, run `curl` to public github API instead.
+- Never push to github. Your human guardian does that for you.
 
 # Deployment
 
