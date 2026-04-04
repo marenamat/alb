@@ -140,6 +140,25 @@ a:visited {
   border: 2px solid black;
 }
 
+/* Deleted state: dim photo and show red border */
+#showfoto-img.img-deleted {
+  opacity: 0.3;
+  border: 3px solid red;
+}
+
+#deleted-banner {
+  display: none;
+  background: #f88;
+  color: #800;
+  font-weight: bold;
+  text-align: center;
+  padding: 0.3em;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
 #showfoto-title {
   display: block;
   position: absolute;
@@ -173,9 +192,11 @@ a:visited {
   </style>
 </head>
 <body>
+<div id="deleted-banner">MARKED FOR DELETION</div>
 <div id="log"></div>
 <div id="controls">
   <button id="open-gimp">GIMP</button>
+  <button id="btn-undelete" style="display:none">Undelete</button>
 </div>
 <div id="showfoto-block">
   <div id="showfoto-block-img">
@@ -272,6 +293,22 @@ a:visited {
     response_handler = rhandler
   }
 
+  var deleted_banner = document.getElementById("deleted-banner")
+  var btn_undelete = document.getElementById("btn-undelete")
+
+  function updateDeletedState() {
+    let deleted = !!(index.images[img_id] && index.images[img_id].deleted)
+    if (deleted) {
+      img_element.classList.add("img-deleted")
+      deleted_banner.style.display = "block"
+      btn_undelete.style.display = ""
+    } else {
+      img_element.classList.remove("img-deleted")
+      deleted_banner.style.display = "none"
+      btn_undelete.style.display = "none"
+    }
+  }
+
   function receiveIndex(data) {
     index = JSON.parse(data)
 
@@ -283,6 +320,8 @@ a:visited {
 
     index.this_image = index.images[img_id]
     img_element.src = "/img/orig-" + img_id
+
+    updateDeletedState()
 
     for (elem of editables) {
       var loc = index
@@ -361,6 +400,7 @@ a:visited {
   }
 
   document.getElementById("open-gimp").addEventListener("click", open_gimp)
+  document.getElementById("btn-undelete").addEventListener("click", toggleDelete)
 
   function toggleDelete() {
     sSend({ "_": "toggle_delete", "id": img_id }, receiveIndex)
