@@ -5,6 +5,7 @@
       "Bash(curl *)",
       "Bash(git *)",
       "Bash(gh *)",
+      "Bash(python *)",
       "Update(Alb/*)",
       "Update(Alb/**)",
       "Update(Alb/**/*)"
