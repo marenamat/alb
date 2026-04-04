@@ -278,9 +278,8 @@ a:visited {
     }
 
     if (ev.key == "Escape") {
-      // Discard edit and go back to the album index (issue #4)
+      // Discard edit
       editableUpdate(ev.target.parentNode)
-      window.location.href = "/"
       return
     }
   }
