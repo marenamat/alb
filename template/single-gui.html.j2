@@ -227,6 +227,8 @@ a:visited {
   var index = {}
   var this_image = null
   var response_handler = null
+  var after_update_queue = []
+  var queue = []
   var socket = null
 
   function TN(m) {
@@ -256,6 +258,7 @@ a:visited {
 
   // Save inp's current value; safe to call even after inp was removed from DOM.
   function editableSave(inp) {
+    logMsg("Saved")
     let e = inp.parentNode
     if (!e) return  // already detached (e.g. called from blur after cycling)
     e.dataset.text = inp.value
@@ -265,15 +268,27 @@ a:visited {
 
   function editableKey(ev) {
     ev.stopPropagation()  // never let key events escape the editor
+    let prnt = ev.target.parentNode  // capture before editableSave detaches textarea
 
-    if (ev.key == "Enter" && !ev.ctrlKey && !ev.shiftKey && !ev.altKey) {
-      let parent = ev.target.parentNode  // capture before editableSave detaches textarea
-      editableSave(ev.target)
-      // Cycle to the next language variant; stop after the last one
+//    logMsg("Pressed " + ev.key)
+
+    if (ev.key == "Tab" && !ev.ctrlKey && !ev.shiftKey && !ev.altKey) {
+      // Find the next lang variant
       let all = Array.from(editables)
-      let idx = all.indexOf(parent)
+      let idx = all.indexOf(prnt)
       if (idx >= 0 && idx + 1 < all.length)
-        editableEdit({ target: all[idx + 1] })
+      {
+	let next = all[idx+1]
+	after_update_queue.push(() => { editableEdit({ target: next })})
+      }
+
+      ev.preventDefault()
+      editableSave(ev.target)
+      return
+    }
+
+    if (ev.key == "Enter" && ev.ctrlKey) {
+      editableSave(ev.target)
       return
     }
 
@@ -295,10 +310,11 @@ a:visited {
     inp.addEventListener("keydown", editableKey)
     // Clicks inside the textarea must not bubble up and re-trigger editableEdit
     inp.addEventListener("click", function(ev) { ev.stopPropagation() })
-    // Save when focus leaves the textarea (clicking elsewhere)
-    inp.addEventListener("blur", function() { editableSave(inp) })
     e.appendChild(inp)
     inp.focus()
+
+    // Save when focus leaves the textarea (clicking elsewhere)
+    inp.addEventListener("blur", function() { editableSave(inp) })
   }
 
   for (let e of editables) {
@@ -306,8 +322,14 @@ a:visited {
   }
 
   function sSend(data, rhandler) {
-    socket.send(JSON.stringify(data))
-    response_handler = rhandler
+    if (response_handler !== null) {
+      queue.push({ "data": data, "handler": rhandler})
+    }
+    else
+    {
+      socket.send(JSON.stringify(data))
+      response_handler = rhandler
+    }
   }
 
   var deleted_banner = document.getElementById("deleted-banner")
@@ -348,6 +370,11 @@ a:visited {
       elem.dataset.text = loc
       editableUpdate(elem)
     }
+
+    let q = after_update_queue
+    after_update_queue = []
+    for (cb of q)
+      cb()
   }
 
   function loadIndex() {
@@ -384,6 +411,11 @@ a:visited {
       {
 	response_handler(m.data)
 	response_handler = null
+
+	if (queue.length > 0) {
+	  next = queue.shift()
+	  sSend(next.data, next.handler)
+	}
       }
     }
   } catch (err) {
@@ -435,10 +467,14 @@ a:visited {
     if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey)
       return
 
-    if (e.key === "Enter") {
+    if ((e.key === "Enter") || (e.key === "Tab")) {
+      e.stopPropagation()
+      e.preventDefault()
       // Open description editor on first editable (CS description)
       if (editables.length > 0)
+      {
         editableEdit({ target: editables[0] })
+      }
       return
     }
 
