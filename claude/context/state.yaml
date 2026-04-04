@@ -1,12 +1,12 @@
 date: 2026-04-05
-workflow_step: in_progress
+workflow_step: complete
 
 maintenance:
   status: done
   notes:
-    - github/main had feature/gui-improvements merged (Shift+G, ENTER editor, show-originals, album metadata)
-    - Deleted merged feature/gui-improvements branch
-    - Rebased fix/issue-1-gimp-button onto new main
+    - github/main: feature/gui-improvements merged
+    - Deleted merged feature/gui-improvements
+    - Rebased fix/issue-1-gimp-button; resolved context conflict
 
 github_pipelines:
   status: done
@@ -14,11 +14,11 @@ github_pipelines:
     - No workflows configured
 
 github_issues:
-  status: in_progress
+  status: done
   notes:
-    - "#1: move GIMP button elsewhere - fix ready in fix/issue-1-gimp-button"
-    - "#2: Enter-to-edit weird behavior - cycling through CS/EN; click-to-edit never saves"
-    - "#3: Deletion in single view - show deleted state, add undelete button"
+    - "#1: GIMP button → fix ready in fix/issue-1-gimp-button"
+    - "#2: Enter-to-edit cycling + click bug → fixed in fix/issue-2-enter-edit"
+    - "#3: Deleted state in single view → fixed in fix/issue-3-single-delete"
 
 design_check:
   status: done
@@ -26,7 +26,11 @@ design_check:
     - No changes
 
 branches:
-  - main: 4578c76 (all GUI features merged)
+  - main: 4578c76
   - fix/issue-1-gimp-button: GIMP button to #controls (issue #1)
-  - fix/issue-2-enter-edit: TBD
-  - fix/issue-3-single-delete: TBD
+  - fix/issue-2-enter-edit: cycles CS->EN on Enter, stops click re-init (issue #2)
+  - fix/issue-3-single-delete: deleted banner + undelete button (issue #3, needs #1 merged first)
+
+merge_order_note: |
+  fix/issue-3-single-delete is based on fix/issue-1-gimp-button.
+  Merge #1 first, then rebase #3 onto main before merging.
