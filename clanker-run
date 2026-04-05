@@ -7,6 +7,9 @@ selfdir=$(dirname "$self")
 
 cd "$selfdir"
 
+echo "===========" >> clanker.log
+date >> clanker.log
+
 touch clanker.lock
 flock -n clanker.lock \
 	~/.local/bin/claude \
@@ -14,4 +17,4 @@ flock -n clanker.lock \
 	"proceed as the workflow specifies in CLAUDE.md" \
 	</dev/null >>clanker.log 2>&1
 
-if [ "$?" == 1 ]; then echo "Clanker probably still runs."; fi
+if [ "$?" == 1 ]; then echo "Clanker probably still runs." >>clanker.log; fi
