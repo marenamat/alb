@@ -92,8 +92,9 @@ def do_git_maintenance():
             run(f"git checkout {current}")
 
     # Rebase all local branches (except main) onto origin/main
-    branches_out, _, _ = run("git branch --format=%(refname:short)")
-    branches = [b for b in branches_out.splitlines() if b and b != "main"]
+    branches_out, _, _ = run("git branch")
+    branches = [line.strip().lstrip("*").strip() for line in branches_out.splitlines()
+                if line.strip() and line.strip().lstrip("*").strip() not in ("", "main")]
     if branches:
         current, _, _ = run("git branch --show-current")
         for branch in branches:
@@ -110,9 +111,9 @@ def do_git_maintenance():
         run(f"git checkout {restore}")
 
     # Prune local branches fully merged into origin/main
-    merged_out, _, _ = run("git branch --merged origin/main --format=%(refname:short)")
+    merged_out, _, _ = run("git branch --merged origin/main")
     for branch in merged_out.splitlines():
-        branch = branch.strip()
+        branch = branch.strip().lstrip("*").strip()
         if branch and branch != "main":
             run(f"git branch -d {branch}")
             actions.append(f"pruned: {branch}")
@@ -186,8 +187,9 @@ def main():
     git_actions = do_git_maintenance()
     print(f"Git actions: {git_actions}", file=sys.stderr)
 
-    branches_out, _, _ = run("git branch --format=%(refname:short)")
-    existing_branches = set(branches_out.splitlines())
+    # Use 'git branch' and strip the '* ' marker from the current branch
+    branches_out, _, _ = run("git branch")
+    existing_branches = {line.strip().lstrip("*").strip() for line in branches_out.splitlines() if line.strip()}
 
     git_ctx = {
         "recorded_at": now,
