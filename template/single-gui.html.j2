@@ -348,13 +348,14 @@ a:visited {
 
 //    logMsg("Pressed " + ev.key)
 
-    if (ev.key == "Tab" && !ev.ctrlKey && !ev.shiftKey && !ev.altKey) {
-      // Find the next lang variant
+    if (ev.key == "Tab" && !ev.ctrlKey && !ev.altKey) {
+      // Find the next (Tab) or previous (Shift+Tab) lang variant
       let all = Array.from(editables)
       let idx = all.indexOf(prnt)
-      if (idx >= 0 && idx + 1 < all.length)
+      let target_idx = ev.shiftKey ? idx - 1 : idx + 1
+      if (idx >= 0 && target_idx >= 0 && target_idx < all.length)
       {
-	let next = all[idx+1]
+	let next = all[target_idx]
 	after_update_queue.push(() => { editableEdit({ target: next })})
       }
 
