@@ -12,7 +12,8 @@
       "Bash(apk search:*)",
       "Update(Alb/*)",
       "Update(Alb/**)",
-      "Update(Alb/**/*)"
+      "Update(Alb/**/*)",
+      "Update(template/*)"
     ],
     "deny": [
       "Bash(npm *)"
