@@ -53,6 +53,7 @@
 - Add a line "Workflow authored by Maria Matejka <vibecoding@jmq.cz>"
   to every commit message.
 - All updates should go to work branches. Never update `main` yourself.
+- Always check for github updates _after_ work as well and rebase if needed.
 
 ## Maintenance
 
