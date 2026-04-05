@@ -4,10 +4,9 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - github/main had 2 new commits (Fix #5 merged - our fix/issue-5-view-caching work)
-    - Rebased local main onto github/main (now at 6cd2ac9)
-    - Deleted fix/issue-5-view-caching (was merged into github/main)
-    - Rebased feature/migrate-tool onto updated main
+    - local main is 2 context-update commits ahead of github/main (awaiting push by guardian)
+    - feature/migrate-tool rebased onto main (adds 'alb migrate' command)
+    - No merged branches to prune (feature/migrate-tool not yet merged)
 
 github_pipelines:
   status: skipped
@@ -17,8 +16,8 @@ github_pipelines:
 github_issues:
   status: done
   notes:
-    - All 7 issues are now closed (#1-#7)
-    - No new open issues
+    - All 7 issues closed (#1-#7), no open issues
+    - issues_closed.json updated with all closed issues
 
 design_check:
   status: done
@@ -27,5 +26,5 @@ design_check:
     - No new design changes
 
 branches:
-  - main: up to date with github/main (6cd2ac9)
+  - main: 2 context commits ahead of github/main (f4c7795)
   - feature/migrate-tool: 'alb migrate' command parses old index.md -> index.yaml

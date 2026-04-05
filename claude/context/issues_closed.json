@@ -1,0 +1,58 @@
+[
+  {
+    "number": 7,
+    "title": "Title page menu visibility",
+    "state": "closed",
+    "author": "marenamat",
+    "closed_at": "2026-04-05T11:55:55Z",
+    "body": "Now when the thumbnail page scrolls down, the controls and metadata disappear. I want them fixed."
+  },
+  {
+    "number": 6,
+    "title": "Display descriptions on the thumbnail page",
+    "state": "closed",
+    "author": "marenamat",
+    "closed_at": "2026-04-05T10:39:22Z",
+    "body": "Display truncated descriptions below the images on the thumbnail page. Display full descriptions on hover."
+  },
+  {
+    "number": 5,
+    "title": "Image view recalculation",
+    "state": "closed",
+    "author": "marenamat",
+    "closed_at": "2026-04-05T12:12:10Z",
+    "body": "The views should be generated only once and aggressively cached, e.g. by keeping a SHA hash of the original file and checking against that. After editing by GIMP, regenerating the views is needed."
+  },
+  {
+    "number": 4,
+    "title": "ESC should return to the main album page",
+    "state": "closed",
+    "author": "marenamat",
+    "closed_at": "2026-04-05T10:24:23Z",
+    "body": "in the editor, ESC does not work for whatever reason"
+  },
+  {
+    "number": 3,
+    "title": "Deletion: show in the single view, allow undelete",
+    "state": "closed",
+    "author": "marenamat",
+    "closed_at": "2026-04-04T22:24:55Z",
+    "body": "Show that the photo is deleted in the single-* view. Add undelete button there."
+  },
+  {
+    "number": 2,
+    "title": "Enter-to-edit weird behavior",
+    "state": "closed",
+    "author": "marenamat",
+    "closed_at": "2026-04-04T22:47:51Z",
+    "body": "The enter-to-edit-description should cycle through the language variants (cs and en). Also when manually clicking the description, it never saves."
+  },
+  {
+    "number": 1,
+    "title": "move the GIMP button elsewhere",
+    "state": "closed",
+    "author": "marenamat",
+    "closed_at": "2026-04-04T22:22:06Z",
+    "body": "it looks weird in the log window"
+  }
+]
