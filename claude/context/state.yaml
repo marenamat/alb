@@ -4,8 +4,10 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - local main was 1 commit ahead of github/main (context update commit, normal)
-    - no extra branches to rebase or prune
+    - fetched github/main (432d6e7 was new: fix/13)
+    - rebased local main onto github/main, resolved context conflict
+    - fix/13-cover-photo-button was merged (already in github/main), branch pruned
+    - no other branches to rebase or prune
 
 github_pipelines:
   status: skipped
@@ -13,20 +15,17 @@ github_pipelines:
     - no Github actions configured for this project (stated in design/base.md)
 
 github_issues:
-  status: done
+  status: partial
   notes:
-    - issue #13: "Select the album cover photo by clicking" - authored by @marenamat
-    - fixed in branch fix/13-cover-photo-button (commit 432d6e7)
-    - changes: added "Set as cover" button (disabled until photo selected),
-      green outline on current cover photo (img-cover CSS class),
-      re-apply selection highlight after index re-renders,
-      T keyboard shortcut still works
-    - fix calls existing setThumbnail() function (line 288 of main-gui.html.j2)
-    - branch pushed to github
+    - GitHub API rate-limited (unauthenticated, 60 req/hour exhausted)
+    - cached issues.json shows empty (no open issues) from previous run
+    - issue #13 "Select the album cover photo by clicking" was fixed and merged
+    - added question to questions.md about providing a GitHub token for auth
+    - could not verify if new issues were filed since last run
 
 design_check:
   status: done
   notes:
     - design files unchanged since last run
     - no new design changes
-    - questions.md has all answers filled in, no new blocking questions
+    - questions.md has all previous questions answered; added new rate-limit question
