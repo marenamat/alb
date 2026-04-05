@@ -1,9 +1,13 @@
 branches:
 - issue-1-claude-run-script
+- issue-2-restart-if-updated
+- issue-3-github-pages-website
 - main
 maintenance_actions:
 - fetched
-- main fast-forwarded
-- 'rebased: issue-1-claude-run-script'
+- 'rebase_failed: issue-1-claude-run-script'
+- 'rebase_failed: issue-2-restart-if-updated'
+- 'rebase_failed: issue-3-github-pages-website'
 - 'pruned: issue-1-claude-run-script'
-recorded_at: '2026-04-05T16:40:00.336238+00:00'
+- 'pruned: issue-2-restart-if-updated'
+recorded_at: '2026-04-05T17:00:00.364166+00:00'
