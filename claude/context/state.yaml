@@ -4,34 +4,35 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - github/main had 3 new commits (27635c0, bb4feb4, 3557ec7)
-    - New commits updated CLAUDE.md (design-from-issues rule, post-work rebase rule)
-    - New file claude/design/optimizations.md (captures issue #5 caching requirement)
-    - Local main fast-forwarded to 3557ec7
-    - All branches rebased onto new main
-    - No branches merged into main yet
+    - github/main advanced to 1ab1e21 (Fix #4: ESC closes open editor or navigates to album index)
+    - fix/issue-4-esc was merged into main and pruned locally
+    - All remaining branches rebased onto new main (fix/issue-5-view-caching, fix/issue-6-thumbnail-descriptions, feature/migrate-tool)
+    - clanker-run has uncommitted local modifications (--no-session-persistence, removed --allowed-tools)
+    - clank file present (patch for clanker-run and clanker-setup improvements)
 
 github_pipelines:
   status: done
   notes:
-    - No workflows configured (confirmed in base.md)
+    - No workflows configured (0 workflow runs)
 
 github_issues:
   status: done
   notes:
-    - "#4 ESC should return to album: fix ready in fix/issue-4-esc"
-    - "#5 Image view recalculation: fixed in fix/issue-5-view-caching; design captured in optimizations.md"
-    - "#6 Display descriptions on thumbnail page: fixed in fix/issue-6-thumbnail-descriptions; design updated in base.md"
+    - "#4 ESC: merged into main"
+    - "#5 Image view recalculation: fix ready in fix/issue-5-view-caching (SHA256 caching)"
+    - "#6 Display descriptions on thumbnail page: fix ready in fix/issue-6-thumbnail-descriptions (CSS line-clamp + hover)"
 
 design_check:
   status: done
   notes:
-    - optimizations.md added on main (covers issue #5 caching)
-    - base.md updated in fix/issue-6 to capture thumbnail description requirement (issue #6)
+    - Design files match github/main (no divergence)
+    - No new design changes since last run
+
+open_prs:
+  status: none
 
 branches:
-  - main: 3557ec7
-  - fix/issue-4-esc: ESC in dispatchKey closes open editor, else navigates (rebased)
-  - feature/migrate-tool: alb migrate command parses old index.md -> index.yaml (rebased)
-  - fix/issue-5-view-caching: SHA256 hash caching in Generator.py (views/.hashes.yaml) (rebased)
-  - fix/issue-6-thumbnail-descriptions: CSS line-clamp + title attr for hover descriptions; design updated (rebased)
+  - main: 1ab1e21
+  - feature/migrate-tool: alb migrate command parses old index.md -> index.yaml
+  - fix/issue-5-view-caching: SHA256 hash caching in Generator.py (views/.hashes.yaml)
+  - fix/issue-6-thumbnail-descriptions: CSS line-clamp + title attr for hover descriptions
