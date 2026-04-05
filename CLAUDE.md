@@ -75,6 +75,9 @@
 The design files in `claude/design/` may have been updated.
 That is where the overall project goal is stored.
 
+If a design requirement is added or modified by means of github issue, update
+the design documents accordingly.
+
 # Limits
 
 - Never touch `hacks/` but you may read it.
