@@ -5,32 +5,33 @@ maintenance:
   status: done
   notes:
     - github/main still at aec7c34 (no new upstream commits)
-    - Rebased feature/migrate-tool, fix/issue-5-view-caching, fix/issue-7-fixed-controls onto main (7562895)
+    - Rebased feature/migrate-tool, fix/issue-5-view-caching onto main
+    - Recreated fix/issue-7-fixed-controls as clean branch (only fix commit, removed migrate tool commit which leaked from previous branching)
     - No merged branches to prune
 
 github_pipelines:
-  status: done
+  status: skipped
   notes:
-    - No workflows configured (0 workflow runs)
     - design/base.md confirms: "This project has no Github actions. No need to check them."
 
 github_issues:
   status: done
   notes:
-    - "#5 Image view recalculation: fix ready in fix/issue-5-view-caching; comment addressed (SHA256 hashes stored in index.yaml per image entry)"
-    - "#7 Title page menu visibility: fix ready in fix/issue-7-fixed-controls (position:fixed for #log and #metadata)"
+    - "#5 Image view recalculation: fix ready in fix/issue-5-view-caching (2 commits: SHA256 hash caching + move hashes into index.yaml per image)"
+    - "#7 Title page menu visibility: fix ready in fix/issue-7-fixed-controls (1 clean commit: position:fixed for #log and #metadata)"
+    - "No new issues or comments since last run"
 
 design_check:
   status: done
   notes:
-    - Design files unchanged since last run (346996f)
+    - Design files unchanged since 346996f
     - No new design changes
 
 open_prs:
   status: none
 
 branches:
-  - main: 7562895
+  - main: c4a148f (4 commits ahead of github/main)
   - feature/migrate-tool: alb migrate command parses old index.md -> index.yaml
-  - fix/issue-5-view-caching: SHA256 hashes stored per-image in index.yaml
-  - fix/issue-7-fixed-controls: position:fixed for #log and #metadata in main-gui.html.j2
+  - fix/issue-5-view-caching: SHA256 hashes stored per-image in index.yaml, cached view generation
+  - fix/issue-7-fixed-controls: position:fixed for #log and #metadata (clean, single commit)
