@@ -4,25 +4,23 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - github/main updated to a9245df (human pushed fix/10-shift-tab and feature/migrate-tool)
-    - local main rebased onto github/main (ecba3fb)
-    - fix/10-shift-tab and feature/migrate-tool deleted (both merged into github/main)
-    - no branches remain besides main
+    - local main was already at github/main (f9d1ac6)
+    - no extra branches to rebase or prune
 
 github_pipelines:
   status: skipped
   notes:
-    - no Github actions configured for this project (0 workflows)
+    - no Github actions configured for this project (stated in design/base.md)
 
 github_issues:
-  status: done
+  status: partial
   notes:
-    - no open issues
+    - GitHub API rate limited (unauthenticated), could not refresh
+    - last known state (from issues.json): no open issues
+    - last known closed issues up to #10 (shift-tab fix), all resolved
 
 design_check:
   status: done
   notes:
-    - no design file changes from human since last run
-
-branches:
-  - main: 2 context commits ahead of github/main (ecba3fb, 0ea36b7)
+    - last design change was 346996f on 2026-04-05 (thumbnail descriptions)
+    - no new design changes since last workflow run
