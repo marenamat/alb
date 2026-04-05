@@ -287,6 +287,34 @@ pre code {
   background: var(--accent);
 }
 
+/* Remotes table */
+
+.remotes-table {
+  border-collapse: collapse;
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.remotes-table th,
+.remotes-table td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.8rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.remotes-table th {
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.remotes-table td {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
 /* Footer */
 
 footer {

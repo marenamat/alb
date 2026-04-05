@@ -23,6 +23,7 @@
   <a href="#what">What</a>
   <a href="#how">How it works</a>
   <a href="#setup">Setup</a>
+  <a href="#remotes">Remotes</a>
   <a href="#design">Design</a>
   <a href="https://github.com/marenamat/claude-base">GitHub</a>
 </nav>
@@ -40,7 +41,7 @@
     <p>
       It is also a <strong style="color: var(--text)">template repository</strong>.
       Fork it, drop in your project code, and you get the autonomous loop for free.
-      Claude reads the design documents in <code>claude/design/</code> to stay
+      Claude reads the design goals in <code>CLAUDE.md</code> to stay
       aligned with your goals, and stores working context in <code>claude/context/</code>
       so nothing is forgotten between runs.
     </p>
@@ -146,6 +147,11 @@
         document.
       </li>
       <li>
+        <strong>Configure git remotes</strong>
+        Run <code>setup-remotes</code> to wire up the three remotes used by
+        the workflow. See <a href="#remotes">Remote setup</a> below.
+      </li>
+      <li>
         <strong>Add a cron job</strong>
         <pre><code># runs every 15 minutes
 */15 * * * * /path/to/repo/clanker-run</code></pre>
@@ -158,6 +164,61 @@
         diff before merging.
       </li>
     </ol>
+  </section>
+
+  <section id="remotes">
+    <h2>Remote setup</h2>
+    <p>
+      A project using claude-base has three git remotes. Run
+      <code>./setup-remotes --user &lt;github-user&gt;</code> to configure them:
+    </p>
+
+    <table class="remotes-table">
+      <thead>
+        <tr><th>Remote</th><th>URL pattern</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>github</code></td>
+          <td><code>github.com/&lt;user&gt;/&lt;project&gt;</code></td>
+          <td>Public GitHub repo — where you push finished branches</td>
+        </tr>
+        <tr>
+          <td><code>clanker</code></td>
+          <td><code>&lt;clanker-host&gt;:claude/&lt;project&gt;</code></td>
+          <td>Server running clanker — Claude pushes branches here</td>
+        </tr>
+        <tr>
+          <td><code>claude-base</code></td>
+          <td><code>github.com/marenamat/claude-base</code></td>
+          <td>Upstream template — clanker-prep merges improvements automatically</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Workflow</h3>
+    <p>
+      <code>clanker-prep</code> fetches <code>claude-base/main</code> on every
+      run and merges any new commits into your local <code>main</code> if they
+      apply cleanly. If the merge fails (conflict with your changes), it is
+      reported in context so Claude can resolve it.
+    </p>
+    <p>
+      You stay in sync with upstream improvements without manual intervention.
+      If you customised something that conflicts with a template update, you
+      will see a <code>template_merge_failed</code> entry in
+      <code>claude/context/git_status.yaml</code>.
+    </p>
+
+    <h3>setup-remotes script</h3>
+    <pre><code># basic usage — project name defaults to current directory
+./setup-remotes --user myusername
+
+# override project name or clanker host
+./setup-remotes --user myusername --project myproject --clanker-host myserver
+
+# preview without changing anything
+./setup-remotes --user myusername --dry-run</code></pre>
   </section>
 
   <section id="design">
@@ -174,7 +235,7 @@
     <p>
       All context is in <code>claude/context/</code> and committed to git.
       The loop logs everything to <code>clanker.log</code>.
-      Design goals are versioned in <code>claude/design/</code>.
+      Design goals are versioned in <code>CLAUDE.md</code>.
     </p>
 
     <h3>Self-improving</h3>

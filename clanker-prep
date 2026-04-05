@@ -121,6 +121,54 @@ def do_git_maintenance():
     return actions
 
 
+def do_template_merge():
+    """
+    If a 'claude-base' remote is configured, fetch it and merge new commits
+    from the upstream template into main. Returns list of action strings.
+    """
+    actions = []
+
+    # Check if the remote exists
+    _, _, rc = run("git remote get-url claude-base 2>/dev/null")
+    if rc != 0:
+        return actions  # No template remote configured
+
+    # Fetch from template
+    out, err, rc = run("git fetch claude-base 2>&1")
+    if rc != 0:
+        print(f"claude-base fetch failed: {err}", file=sys.stderr)
+        actions.append(f"template_fetch_failed: {err}")
+        return actions
+    actions.append("template_fetched")
+
+    # Resolve template's main branch
+    template_head, _, rc = run("git rev-parse claude-base/main")
+    if rc != 0:
+        actions.append("template_no_main_branch")
+        return actions
+
+    # Skip if template is already an ancestor of local main
+    _, _, rc = run(f"git merge-base --is-ancestor claude-base/main main")
+    if rc == 0:
+        actions.append("template_up_to_date")
+        return actions
+
+    # New template commits — try to merge into main
+    current, _, _ = run("git branch --show-current")
+    run("git checkout main")
+    _, err, rc = run("git merge --no-edit claude-base/main 2>&1")
+    if rc == 0:
+        actions.append("template_merged")
+    else:
+        run("git merge --abort 2>/dev/null || true")
+        actions.append(f"template_merge_failed: {err}")
+        print(f"Template merge failed: {err}", file=sys.stderr)
+    if current and current != "main":
+        run(f"git checkout {current}")
+
+    return actions
+
+
 def fetch_issues(repo):
     """Fetch open issues + comments from GitHub. Returns list of issue dicts."""
     issues, err = github_api(f"repos/{repo}/issues?state=open&per_page=50")
@@ -187,6 +235,12 @@ def main():
     git_actions = do_git_maintenance()
     print(f"Git actions: {git_actions}", file=sys.stderr)
 
+    # --- Template merge ---
+    print("Checking upstream template (claude-base)...", file=sys.stderr)
+    template_actions = do_template_merge()
+    print(f"Template actions: {template_actions}", file=sys.stderr)
+    git_actions.extend(template_actions)
+
     # Use 'git branch' and strip the '* ' marker from the current branch
     branches_out, _, _ = run("git branch")
     existing_branches = {line.strip().lstrip("*").strip() for line in branches_out.splitlines() if line.strip()}
@@ -201,7 +255,7 @@ def main():
 
     # Rebase failures need Claude to resolve conflicts
     for action in git_actions:
-        if action.startswith("rebase_failed:"):
+        if action.startswith("rebase_failed:") or action.startswith("template_merge_failed:"):
             reasons.append(action)
 
     # --- Detect repo ---
