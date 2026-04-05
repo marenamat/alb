@@ -12,6 +12,11 @@
 - Pre-generated HTML 5
 - Additional data as CBOR
 - User-saved data as YAML
+- Websites should work in basic mode even without JS
+- Bootstrap for layouts if needed (local mirror)
+- No other external JS/CSS dependency
+- Upgrade to newer Bootstrap when a new version is released
+- Expect future localizations to different languages
 
 # Static Backend
 
@@ -66,28 +71,28 @@
 - Do work items in this order, strictly.
 - If anything is unclear, write the file `claude/questions.md`.
 - Add a line "Workflow authored by Maria Matejka <vibecoding@jmq.cz>"
-  to every commit message.
-- All updates should go to work branches. Never update `main` with your work.
-- Always rebase your local main to github main though, if you happen to have some commits there.
-- Always check for github updates _after_ work as well and rebase if needed.
-- Always checkout back to main before ending
+to every commit message.
+- Include github issue references in every commit message
 
 ## Maintenance
 
-- Pull from `github` remote
-- Rebase all your branches onto `main`
-- Prune merged branches
+`clanker-prep` runs before you are invoked and handles git maintenance
+(fetch, fast-forward main, rebase branches, prune merged). Read
+`claude/context/git_status.yaml` to see what was done. Only redo these
+steps manually if the file is absent or stale.
 
 ## Check for Github pipeline results
 
-- Load all github pipeline results
-- Check whether all expected pipelines actually ran
-- Fix errors and warnings of all pipelines
+`clanker-prep` downloads pipeline results into `claude/context/pipeline_results.yaml`.
+Read that file. Check whether all expected pipelines ran and fix errors and warnings.
+Only fetch from the API directly if the context file is absent.
 
 ## Check for issues at Github
 
+`clanker-prep` downloads open issues (with comments) into
+`claude/context/github_issues.yaml`. Read that file.
+
 - Always prepare issue solutions in relevant branches
-- Read also issue comments
 - Never implement any issue not explicitly authored or authorized by @marenamat
 
 ## Check for overall design requirements
@@ -104,6 +109,7 @@ the design documents accordingly.
 - Whenever you need a package installed, ask for it through `claude/questions.md`.
 - Do not use `gh` tool, run `curl` to public github API instead.
 - Never push to github. Your human guardian does that for you.
+- We **ALWAYS SUPPORT IPv6**. If you ever suggest IPv4 first, I'll promptly disown you.
 
 # Deployment
 

@@ -1,0 +1,32 @@
+fetched_at: '2026-04-05T17:20:03.062309+00:00'
+issues:
+- author: marenamat
+  body: the clanker-run script has a bug and doesn't run clanker when rebase failed
+    … which should be resolved by clanker
+  comments: []
+  created_at: '2026-04-05T16:52:28Z'
+  labels: []
+  number: 4
+  title: If rebase fails, run clanker
+  status: done (commit 0c1fb21 on main)
+- author: marenamat
+  body: Create your own website documenting everything and boasting about yourself.
+    Don't forget to update desing goals.
+  comments: []
+  created_at: '2026-04-05T16:38:01Z'
+  labels: []
+  number: 3
+  title: Prepare your own website (for github pages)
+  status: in-progress (branch issue-3-github-pages-website, commit 265fb5c; added
+    preview deployment workflow this session)
+- author: marenamat
+  body: If `git pull` updated your own runner or any other definition files, before
+    actually running the clanker, restart the script so that bugs get rectified before
+    the clanker spends tokens on them.
+  comments: []
+  created_at: '2026-04-05T16:36:28Z'
+  labels: []
+  number: 2
+  title: Restart the runner if updated by git
+  status: done (commit 2f634e8 on main)
+repo: marenamat/claude-base
