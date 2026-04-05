@@ -4,10 +4,10 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - github/main still at aec7c34 (no new upstream commits)
-    - Rebased feature/migrate-tool, fix/issue-5-view-caching onto main
-    - Recreated fix/issue-7-fixed-controls as clean branch (only fix commit, removed migrate tool commit which leaked from previous branching)
-    - No merged branches to prune
+    - github/main advanced to c9deef0 (Fix #7 was merged)
+    - Rebased local main onto github/main
+    - Deleted merged branch fix/issue-7-fixed-controls
+    - Rebased feature/migrate-tool, fix/issue-5-view-caching onto new main
 
 github_pipelines:
   status: skipped
@@ -17,21 +17,16 @@ github_pipelines:
 github_issues:
   status: done
   notes:
-    - "#5 Image view recalculation: fix ready in fix/issue-5-view-caching (2 commits: SHA256 hash caching + move hashes into index.yaml per image)"
-    - "#7 Title page menu visibility: fix ready in fix/issue-7-fixed-controls (1 clean commit: position:fixed for #log and #metadata)"
-    - "No new issues or comments since last run"
+    - "#5 Image view recalculation: fix complete in fix/issue-5-view-caching (SHA256 hash caching + hashes stored per-image in index.yaml). Awaiting push/merge by marenamat."
+    - "No new issues or comments beyond previous run"
 
 design_check:
   status: done
   notes:
-    - Design files unchanged since 346996f
+    - Design files unchanged
     - No new design changes
 
-open_prs:
-  status: none
-
 branches:
-  - main: c4a148f (4 commits ahead of github/main)
-  - feature/migrate-tool: alb migrate command parses old index.md -> index.yaml
+  - main: cc5ea24 (1 commit ahead of github/main, context update only)
+  - feature/migrate-tool: 'alb migrate' command parses old index.md -> index.yaml
   - fix/issue-5-view-caching: SHA256 hashes stored per-image in index.yaml, cached view generation
-  - fix/issue-7-fixed-controls: position:fixed for #log and #metadata (clean, single commit)
