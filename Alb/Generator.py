@@ -2,9 +2,11 @@ from . import AlbException
 from .Resizer import Resizer
 
 import asyncio
+import hashlib
 import logging
 import pathlib
 import shutil
+import yaml
 
 import jinja2
 
@@ -19,9 +21,31 @@ class GeneratorException(AlbException):
     pass
 
 
+def _sha256(path: pathlib.Path) -> str:
+    """Return hex SHA256 of a file."""
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
 class Generator:
     def __init__(self, index):
         self.index = index
+
+    def _load_hashes(self, views: pathlib.Path) -> dict:
+        """Load stored hashes from views/.hashes.yaml."""
+        p = views / ".hashes.yaml"
+        if p.exists():
+            with open(p) as f:
+                return yaml.safe_load(f) or {}
+        return {}
+
+    def _save_hashes(self, views: pathlib.Path, hashes: dict):
+        """Persist hashes to views/.hashes.yaml."""
+        with open(views / ".hashes.yaml", "w") as f:
+            yaml.safe_dump(hashes, f)
 
     def _jinja_env(self):
         return jinja2.Environment(
@@ -74,6 +98,13 @@ class Generator:
             quality=pub_cfg.get("quality", 0.85),
         )
 
+        # Load stored hashes to skip unchanged images
+        hashes = self._load_hashes(views)
+
+        # Embed resizer config in the cache key so dimension/quality changes force regen
+        thumb_key = f"{thumb_resizer.scale}@{thumb_resizer.quality}"
+        pub_key = f"{pub_resizer.scale}@{pub_resizer.quality}"
+
         visible_images = []
         resize_tasks = []
 
@@ -84,20 +115,35 @@ class Generator:
             visible_images.append(img)
 
             src = self.index.path / img["orig"]
+            orig = img["orig"]
 
-            # Generate thumbnail
-            th_dest = thumb_dir / img["orig"]
-            if not th_dest.exists():
+            # Compute source hash once per image
+            src_hash = _sha256(src)
+            stored = hashes.get(orig, {})
+
+            # Thumbnail: regenerate if missing, hash changed, or resizer config changed
+            th_dest = thumb_dir / orig
+            if (not th_dest.exists()
+                    or stored.get("sha256") != src_hash
+                    or stored.get("thumb_cfg") != thumb_key):
                 resize_tasks.append(thumb_resizer.process(str(src), str(th_dest)))
 
-            # Generate public (full-size) image
-            pub_dest = pub_dir / img["orig"]
-            if not pub_dest.exists():
+            # Public image: same conditions, but track pub_cfg separately
+            pub_dest = pub_dir / orig
+            if (not pub_dest.exists()
+                    or stored.get("sha256") != src_hash
+                    or stored.get("pub_cfg") != pub_key):
                 resize_tasks.append(pub_resizer.process(str(src), str(pub_dest)))
+
+            # Update stored hash entry after scheduling regeneration
+            hashes[orig] = {"sha256": src_hash, "thumb_cfg": thumb_key, "pub_cfg": pub_key}
 
         if resize_tasks:
             logger.info(f"Resizing {len(resize_tasks)} images...")
             await asyncio.gather(*resize_tasks)
+
+        # Persist updated hashes
+        self._save_hashes(views, hashes)
 
         # Render templates
         env = self._jinja_env()
