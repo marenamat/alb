@@ -4,39 +4,31 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - github/main in sync with local main (no new commits)
-    - no merged branches to prune
+    - github/main had 3 new commits (fix/8 and fix/12 merged)
+    - reset local main to github/main (context-only commit dropped, conflict avoided)
+    - deleted merged branches fix/8-gimp-editing and fix/12-viewing-improvements
+    - rebased fix/9-exif-display onto main (clean, 1 commit)
+    - rebased fix/10-shift-tab onto fix/9 (clean, 1 commit)
+    - rebased feature/migrate-tool onto main (clean, 1 commit)
 
 github_pipelines:
   status: skipped
   notes:
-    - no Github actions configured for this project (confirmed in design/base.md)
+    - no Github actions configured for this project (0 workflows)
 
 github_issues:
   status: done
   notes:
-    - issue #12 (new): "Viewing improvements" — fixed in fix/12-viewing-improvements
-      changes:
-        - dark/light mode via data-bs-theme + inline prefers-color-scheme JS (no FOUC)
-        - all three generated templates updated: album-single, album-index, landing
-        - replaced hardcoded #555/#ccc/#888 with Bootstrap CSS vars (--bs-secondary-color, --bs-border-color)
-        - fixed text-dark -> text-body on landing page for dark mode compat
-        - Esc -> thumbnails was already implemented in album-single.html.j2
-    - issue #11 (open): fix/11-memory-oom — OOM fix for large album generation
-    - issue #10 (open): fix/10-shift-tab — shift-tab navigation
-    - issue #9 (open): fix/9-exif-display — EXIF display
-    - issue #8 (open): fix/8-gimp-editing — GIMP mod tracking
+    - issue #9 (open): fix in fix/9-exif-display — squashed coding style commit per @marenamat comment
+    - issue #10 (open): fix in fix/10-shift-tab (stacked on fix/9)
 
 design_check:
   status: done
   notes:
-    - No design file changes
+    - No design file changes since last github sync
 
 branches:
-  - main: in sync with github/main
-  - fix/8-gimp-editing: GIMP mod tracking, originals side panel, WebSocket broadcast
-  - fix/9-exif-display: EXIF display in single-photo GUI (stacked on fix/8)
-  - fix/10-shift-tab: shift-tab navigation (stacked on fix/9)
-  - fix/11-memory-oom: OOM fix for large album generation (standalone on main)
-  - fix/12-viewing-improvements: dark/light mode respecting OS setting (standalone on main)
-  - feature/migrate-tool: adds 'alb migrate' command (standalone on main)
+  - main: in sync with github/main (0380c14)
+  - fix/9-exif-display: EXIF display in single-photo GUI (1 clean commit, stacked on main)
+  - fix/10-shift-tab: shift-tab navigation (1 commit, stacked on fix/9)
+  - feature/migrate-tool: adds 'alb migrate' command (1 commit, standalone on main)
