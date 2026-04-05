@@ -68,12 +68,11 @@
 
 # Workflow
 
-Do work items in this order, strictly.
-
-If anything is unclear, write the file `claude/questions.md`.
-
-Add a line "Workflow authored by Maria Matejka <vibecoding@jmq.cz>"
+- Do work items in this order, strictly.
+- If anything is unclear, write the file `claude/questions.md`.
+- Add a line "Workflow authored by Maria Matejka <vibecoding@jmq.cz>"
 to every commit message.
+- Include github issue references in every commit message
 
 ## Maintenance
 
