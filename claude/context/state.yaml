@@ -4,11 +4,9 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - github/main advanced to aec7c34 (update rebasing requirements); rebased local main onto it
-    - Stale context commits (5e5e282, 7e10887) skipped during rebase (obsolete state)
-    - fix/issue-6-thumbnail-descriptions was merged into main; deleted locally
-    - fix/issue-5-view-caching and feature/migrate-tool rebased onto new main
-    - clanker-run: committed log separator/date improvements (9204f47)
+    - github/main still at aec7c34 (no new upstream commits)
+    - Rebased feature/migrate-tool, fix/issue-5-view-caching, fix/issue-7-fixed-controls onto main (7562895)
+    - No merged branches to prune
 
 github_pipelines:
   status: done
@@ -19,8 +17,8 @@ github_pipelines:
 github_issues:
   status: done
   notes:
-    - "#5 Image view recalculation: fix ready in fix/issue-5-view-caching (SHA256 in index.yaml)"
-    - "#7 Title page menu visibility (NEW): fix ready in fix/issue-7-fixed-controls (position:fixed for #log and #metadata)"
+    - "#5 Image view recalculation: fix ready in fix/issue-5-view-caching; comment addressed (SHA256 hashes stored in index.yaml per image entry)"
+    - "#7 Title page menu visibility: fix ready in fix/issue-7-fixed-controls (position:fixed for #log and #metadata)"
 
 design_check:
   status: done
@@ -32,7 +30,7 @@ open_prs:
   status: none
 
 branches:
-  - main: 9204f47
+  - main: 7562895
   - feature/migrate-tool: alb migrate command parses old index.md -> index.yaml
   - fix/issue-5-view-caching: SHA256 hashes stored per-image in index.yaml
   - fix/issue-7-fixed-controls: position:fixed for #log and #metadata in main-gui.html.j2
