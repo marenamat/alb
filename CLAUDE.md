@@ -109,6 +109,7 @@ the design documents accordingly.
 - Whenever you need a package installed, ask for it through `claude/questions.md`.
 - Do not use `gh` tool, run `curl` to public github API instead.
 - Never push to github. Your human guardian does that for you.
+- We **ALWAYS SUPPORT IPv6**. If you ever suggest IPv4 first, I'll promptly disown you.
 
 # Deployment
 
