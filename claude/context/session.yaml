@@ -1,10 +1,11 @@
 recorded_at: '2026-04-05'
-branch: issue-1-claude-run-script
+branch: issue-2-restart-if-updated
 status: implemented
-issue: 1
+issue: 2
 summary: >
-  Implemented clanker-prep Python script that does git maintenance and GitHub
-  API fetches before invoking Claude. clanker-run updated to use it and
-  incorporates Maria's improved exit-status logging (7b44ebb).
-  CLAUDE.md updated to read from context files instead of re-fetching.
-  Branch rebased onto main (7b44ebb). Awaiting human review and merge.
+  Modified clanker-run to snapshot md5sums of clanker-run, clanker-prep,
+  and CLAUDE.md before git maintenance. After clanker-prep runs (which
+  fast-forwards main), if any of those files changed, a restart flag file
+  is created and the flock subshell exits cleanly. The outer script then
+  re-execs itself with the updated code. This prevents spending Claude
+  tokens with a stale runner after a git update.

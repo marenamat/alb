@@ -1,15 +1,20 @@
-fetched_at: '2026-04-05T16:30:00.327656+00:00'
+fetched_at: '2026-04-05T16:40:00.336238+00:00'
 issues:
 - author: marenamat
-  body: 'Implement most of the repeated workflow as Python or Bash script. Call the
-    clanker only whenever the input is really needed.
-
-
-    That means: That script should do the git fetching, issue downloading, preparing
-    everything for the clanker locally.'
+  body: Create your own website documenting everything and boasting about yourself.
+    Don't forget to update desing goals.
   comments: []
-  created_at: '2026-04-05T16:09:59Z'
+  created_at: '2026-04-05T16:38:01Z'
   labels: []
-  number: 1
-  title: Propose a better claude-run script
+  number: 3
+  title: Prepare your own website (for github pages)
+- author: marenamat
+  body: If `git pull` updated your own runner or any other definition files, before
+    actually running the clanker, restart the script so that bugs get rectified before
+    the clanker spends tokens on them.
+  comments: []
+  created_at: '2026-04-05T16:36:28Z'
+  labels: []
+  number: 2
+  title: Restart the runner if updated by git
 repo: marenamat/claude-base

@@ -12,12 +12,30 @@ date >> clanker.log
 
 touch clanker.lock
 
+# Used to signal a restart request from inside the flock subshell.
+restart_flag="$selfdir/.clanker-restart-$$"
+
 (
   flock -n 200 || { echo "Clanker probably still runs." >>clanker.log; exit 0; }
+
+  # Snapshot key runner/definition files before git maintenance.
+  # If any change after prep (due to git fast-forward), we restart so we run
+  # the updated code rather than spending tokens on a stale version.
+  _snap() { md5sum "$selfdir/clanker-run" "$selfdir/clanker-prep" "$selfdir/CLAUDE.md" 2>/dev/null || true; }
+  before_snap=$(_snap)
 
   # Run prep: does git maintenance, downloads issues/pipelines, writes context.
   # Prints INVOKE_CLAUDE or NOTHING_TO_DO.
   decision=$(python3 "$selfdir/clanker-prep" 2>>clanker.log)
+
+  # If runner or definition files changed, signal a restart and stop here.
+  after_snap=$(_snap)
+  if [ "$before_snap" != "$after_snap" ]; then
+    echo "Runner files updated by git, restarting..." >>clanker.log
+    touch "$restart_flag"
+    exit 0
+  fi
+
   echo "Prep decision: $decision" >>clanker.log
 
   if [ "$decision" = "INVOKE_CLAUDE" ]; then
@@ -34,3 +52,10 @@ touch clanker.lock
     esac
   fi
 ) 200>clanker.lock
+
+# The flock subshell has released the lock. If a restart was requested,
+# re-exec with the updated runner binary.
+if [ -f "$restart_flag" ]; then
+  rm -f "$restart_flag"
+  exec "$self"
+fi
