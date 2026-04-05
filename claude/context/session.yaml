@@ -1,9 +1,14 @@
 recorded_at: '2026-04-05'
-branch: issue-3-github-pages-website
-status: rebased_and_reviewed
-issue: 3
+branch: issue-5
+status: complete
+issue: 5
 summary: >
-  Rebased issue-3 branch onto origin/main (resolved session.yaml context conflict).
-  Website in docs/ (index.html + style.css) and GitHub Pages workflow
-  (.github/workflows/pages.yml) are complete and ready for review.
-  issue-4 branch is already merged into origin/main.
+  Issue #5: collapse claude/design/ files into CLAUDE.md.
+  All design content moved into CLAUDE.md "Design Goals" section.
+  Stale claude/design/ references cleaned up in docs/index.html (3 spots)
+  and in the CLAUDE.md workflow step "Check for overall design requirements".
+  Website (docs/) updated to reflect design lives in CLAUDE.md, not claude/design/.
+notes:
+  - issues 2, 3, 4 implemented in prior sessions and merged to main
+  - issue 5 branch is ready for human review and merge
+  - after merge, guardian can close issues 2, 3, 4, 5 on GitHub

@@ -1,8 +1,15 @@
 branches:
+- issue-5
 - main
 maintenance_actions:
 - fetched
-- 'rebase_failed: issue-3-github-pages-website'
-- 'pruned: issue-3-github-pages-website'
-- 'manually_deleted: issue-3-github-pages-website (branch was identical to main; clanker-prep prune logged success but deletion had failed because branch was checked out)'
-recorded_at: '2026-04-05T17:30:03.362784+00:00'
+- "main ff failed: clanker-prep couldn't fast-forward due to divergence; Claude manually rebased main onto origin/main"
+- "rebase_failed: issue-5 — Claude manually rebased issue-5 onto new main, resolving design conflicts in favor of claude/design/ approach"
+recorded_at: '2026-04-05T18:00:00.432461+00:00'
+resolved_at: '2026-04-05T18:30:00+00:00'
+resolution: >
+  Rebased local main onto origin/main (b9a60da context commit applied on top).
+  Rebased issue-5 onto new main. Resolved conflicts: kept claude/design/claude-base.md
+  (Maria's approach), removed Design Goals section from CLAUDE.md, reverted
+  docs/index.html to point to claude/design/. issue-5 net change: README.md link
+  to website + context updates.

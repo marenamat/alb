@@ -4,6 +4,9 @@ This is my Claude-Code base repository for central housekeeping of my
 development rules. Feel free to suggest additions by filing issues or pull
 request.
 
+For full documentation, setup guides, and project overview, see the
+[claude-base website](https://marenamat.github.io/claude-base/).
+
 ## Expected workflow
 
 There is a dedicated (virtual) machine running a clanker or a bunch of them.
