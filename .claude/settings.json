@@ -13,7 +13,10 @@
       "Update(Alb/*)",
       "Update(Alb/**)",
       "Update(Alb/**/*)",
-      "Update(template/*)"
+      "Update(template/*)",
+      "Update(claude/*)",
+      "Update(claude/**)",
+      "Update(claude/**/*)"
     ],
     "deny": [
       "Bash(npm *)"
