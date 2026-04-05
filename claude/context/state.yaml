@@ -4,11 +4,9 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - pulled github/main; b920637 (Fix #9) was new
-    - rebased local main onto github/main
-    - fix/9-exif-display was merged; deleted it
-    - rebased fix/10-shift-tab and feature/migrate-tool onto updated main
-    - local main 2 context commits ahead of github/main; human pushes
+    - github/main still at b920637 (human hasn't pushed context commits yet)
+    - local main 3 context commits ahead of github/main
+    - rebased fix/10-shift-tab (b1f8610) and feature/migrate-tool (1f4373d rebased) onto main
 
 github_pipelines:
   status: skipped
@@ -18,15 +16,15 @@ github_pipelines:
 github_issues:
   status: done
   notes:
-    - issue #9: closed (merged as b920637)
-    - issue #10 (open): fix ready in fix/10-shift-tab (d4ad2ce), rebased on current main
+    - issue #10 (open): fix ready in fix/10-shift-tab (b1f8610), rebased on current main
+    - no other open issues
 
 design_check:
   status: done
   notes:
-    - no design file changes requiring new work
+    - no design file changes since last push
 
 branches:
-  - main: 2 context commits ahead of github/main (not yet pushed by human)
-  - fix/10-shift-tab: shift-tab navigation fix (1 commit d4ad2ce, on top of main)
+  - main: 3 context commits ahead of github/main (not yet pushed by human)
+  - fix/10-shift-tab: shift-tab navigation fix (1 commit b1f8610, on top of main)
   - feature/migrate-tool: adds 'alb migrate' command (1 commit, on top of main)
