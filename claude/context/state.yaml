@@ -16,13 +16,17 @@ github_issues:
   status: done
   notes:
     - issue #13: "Select the album cover photo by clicking" - authored by @marenamat
-    - fixed in branch fix/13-cover-photo-button (commit fb40126)
+    - fixed in branch fix/13-cover-photo-button (commit 432d6e7)
     - changes: added "Set as cover" button (disabled until photo selected),
-      green outline on current cover photo, re-apply selection after re-render
-    - issues #8-#12 all closed
+      green outline on current cover photo (img-cover CSS class),
+      re-apply selection highlight after index re-renders,
+      T keyboard shortcut still works
+    - fix calls existing setThumbnail() function (line 288 of main-gui.html.j2)
+    - branch pushed to github
 
 design_check:
   status: done
   notes:
     - design files unchanged since last run
     - no new design changes
+    - questions.md has all answers filled in, no new blocking questions
