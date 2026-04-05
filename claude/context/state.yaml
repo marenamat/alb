@@ -4,26 +4,28 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - pulled github/main (new commit 53285fd "claude: coding style" + 7c99447 context)
-    - local main in sync with github/main
-    - rebased all work branches onto updated main
-    - new CLAUDE.md coding style: JS/Rust/C/Bash/CSS=2 spaces; Python=4 spaces, no tabs
+    - github/main in sync with local main (no new commits)
+    - no merged branches to prune
 
 github_pipelines:
   status: skipped
   notes:
-    - no Github actions configured for this project
+    - no Github actions configured for this project (confirmed in design/base.md)
 
 github_issues:
   status: done
   notes:
-    - issue #11 (new): "Generating 150 images eats all memory" — fixed in fix/11-memory-oom
-      root cause: asyncio.gather launched all ImageMagick processes simultaneously
-      fix: semaphore limited to os.cpu_count()
-    - issue #8 (still open): new comment "no code reformatting into a different coding style!"
-      old fix/8 branch had reformatted Python to tabs — rebuilt from scratch with 4 spaces
-    - fix/9-exif-display: rebased on new fix/8; added style fix for Exif.py (tabs -> 4 spaces)
-    - fix/10-shift-tab: rebased on fix/9
+    - issue #12 (new): "Viewing improvements" — fixed in fix/12-viewing-improvements
+      changes:
+        - dark/light mode via data-bs-theme + inline prefers-color-scheme JS (no FOUC)
+        - all three generated templates updated: album-single, album-index, landing
+        - replaced hardcoded #555/#ccc/#888 with Bootstrap CSS vars
+        - fixed text-dark -> text-body on landing page for dark mode compat
+        - Esc -> thumbnails was already implemented in album-single.html.j2
+    - issue #11 (open): fix/11-memory-oom — OOM fix for large album generation
+    - issue #10 (open): fix/10-shift-tab — shift-tab navigation
+    - issue #9 (open): fix/9-exif-display — EXIF display
+    - issue #8 (open): fix/8-gimp-editing — GIMP mod tracking
 
 design_check:
   status: done
@@ -36,4 +38,5 @@ branches:
   - fix/9-exif-display: EXIF display in single-photo GUI (stacked on fix/8)
   - fix/10-shift-tab: shift-tab navigation (stacked on fix/9)
   - fix/11-memory-oom: OOM fix for large album generation (standalone on main)
+  - fix/12-viewing-improvements: dark/light mode respecting OS setting (standalone on main)
   - feature/migrate-tool: adds 'alb migrate' command (standalone on main)
