@@ -1,8 +1,8 @@
 branches:
-- issue-3-github-pages-website
 - main
 maintenance_actions:
 - fetched
-- 'rebase_failed: issue-3-github-pages-website (resolved: branch is already on top of main)'
-recorded_at: '2026-04-05T17:20:03.062309+00:00'
-session_note: 'rebase failure was stale; branch is 3 commits ahead of main, cleanly rebased'
+- 'rebase_failed: issue-3-github-pages-website'
+- 'pruned: issue-3-github-pages-website'
+- 'manually_deleted: issue-3-github-pages-website (branch was identical to main; clanker-prep prune logged success but deletion had failed because branch was checked out)'
+recorded_at: '2026-04-05T17:30:03.362784+00:00'
