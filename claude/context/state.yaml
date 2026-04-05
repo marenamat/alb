@@ -4,9 +4,9 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - local main is 2 context-update commits ahead of github/main (awaiting push by guardian)
+    - local main is 3 context-update commits ahead of github/main (awaiting push by guardian)
     - feature/migrate-tool rebased onto main (adds 'alb migrate' command)
-    - No merged branches to prune (feature/migrate-tool not yet merged)
+    - No merged branches to prune (no PRs, feature/migrate-tool not yet merged)
 
 github_pipelines:
   status: skipped
@@ -17,14 +17,15 @@ github_issues:
   status: done
   notes:
     - All 7 issues closed (#1-#7), no open issues
-    - issues_closed.json updated with all closed issues
+    - No new issues authored or authorized by @marenamat
 
 design_check:
   status: done
   notes:
     - Design files unchanged (base.md, tools.md, optimizations.md)
     - No new design changes
+    - questions.md: all questions have answers, nothing new
 
 branches:
-  - main: 2 context commits ahead of github/main (f4c7795)
-  - feature/migrate-tool: 'alb migrate' command parses old index.md -> index.yaml
+  - main: 3 context commits ahead of github/main
+  - feature/migrate-tool: rebased onto main (adds 'alb migrate' command)
