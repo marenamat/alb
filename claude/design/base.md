@@ -58,6 +58,10 @@ meta:
 Thumbnails of photos, ordered by time. Click to open larger (max 1024x1024),
 showing descriptions.
 
+Truncated descriptions (2 lines max) are displayed below each thumbnail on the
+album index page. The full description is shown on hover. The `title` attribute
+carries the full text for no-JS fallback.
+
 Prototype at: https://alb.jmq.cz/2025-08-nurnberg/
 
 You may use that website as test data.

@@ -4,26 +4,34 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - No new commits on github/main
-    - Issues #2 and #4 found open
+    - github/main had 3 new commits (27635c0, bb4feb4, 3557ec7)
+    - New commits updated CLAUDE.md (design-from-issues rule, post-work rebase rule)
+    - New file claude/design/optimizations.md (captures issue #5 caching requirement)
+    - Local main fast-forwarded to 3557ec7
+    - All branches rebased onto new main
+    - No branches merged into main yet
 
 github_pipelines:
   status: done
   notes:
-    - No workflows configured
+    - No workflows configured (confirmed in base.md)
 
 github_issues:
   status: done
   notes:
-    - "#2 re-opened: cycling broken (parentNode null bug) + blur-to-save missing"
-    - "#4: ESC in editor should navigate away - fixed in same branch"
-    - Both fixed in fix/issues-2-4-editor
+    - "#4 ESC should return to album: fix ready in fix/issue-4-esc"
+    - "#5 Image view recalculation: fixed in fix/issue-5-view-caching; design captured in optimizations.md"
+    - "#6 Display descriptions on thumbnail page: fixed in fix/issue-6-thumbnail-descriptions; design updated in base.md"
 
 design_check:
   status: done
   notes:
-    - No changes
+    - optimizations.md added on main (covers issue #5 caching)
+    - base.md updated in fix/issue-6 to capture thumbnail description requirement (issue #6)
 
 branches:
-  - main: cb37676 (context update, ahead of github/main by 1)
-  - fix/issues-2-4-editor: cycling fix, blur-to-save, ESC navigates away
+  - main: 3557ec7
+  - fix/issue-4-esc: ESC in dispatchKey closes open editor, else navigates (rebased)
+  - feature/migrate-tool: alb migrate command parses old index.md -> index.yaml (rebased)
+  - fix/issue-5-view-caching: SHA256 hash caching in Generator.py (views/.hashes.yaml) (rebased)
+  - fix/issue-6-thumbnail-descriptions: CSS line-clamp + title attr for hover descriptions; design updated (rebased)
