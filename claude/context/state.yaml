@@ -4,30 +4,36 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
+    - pulled github/main (new commit 53285fd "claude: coding style" + 7c99447 context)
     - local main in sync with github/main
-    - deleted merged branch fix/8-gimp-editing
-    - feature/migrate-tool and fix/9-exif-display and fix/10-shift-tab still open
+    - rebased all work branches onto updated main
+    - new CLAUDE.md coding style: JS/Rust/C/Bash/CSS=2 spaces; Python=4 spaces, no tabs
 
 github_pipelines:
   status: skipped
   notes:
-    - design/base.md confirms: "This project has no Github actions. No need to check them."
+    - no Github actions configured for this project
 
 github_issues:
   status: done
   notes:
-    - 3 open issues authored by @marenamat: #9, #10 (both now fixed in branches), #8 already closed
-    - fix/9-exif-display: committed (870f976) - EXIF display in single-photo GUI
-    - fix/10-shift-tab: committed (e690ebf) - shift-tab navigates back in description editor
+    - issue #11 (new): "Generating 150 images eats all memory" — fixed in fix/11-memory-oom
+      root cause: asyncio.gather launched all ImageMagick processes simultaneously
+      fix: semaphore limited to os.cpu_count()
+    - issue #8 (still open): new comment "no code reformatting into a different coding style!"
+      old fix/8 branch had reformatted Python to tabs — rebuilt from scratch with 4 spaces
+    - fix/9-exif-display: rebased on new fix/8; added style fix for Exif.py (tabs -> 4 spaces)
+    - fix/10-shift-tab: rebased on fix/9
 
 design_check:
   status: done
   notes:
-    - Design files unchanged
-    - No new design changes
+    - No design file changes
 
 branches:
   - main: in sync with github/main
-  - fix/9-exif-display: ready for review/merge (commit 870f976)
-  - fix/10-shift-tab: ready for review/merge (commit e690ebf)
-  - feature/migrate-tool: rebased onto main (adds 'alb migrate' command), not yet merged
+  - fix/8-gimp-editing: GIMP mod tracking, originals side panel, WebSocket broadcast
+  - fix/9-exif-display: EXIF display in single-photo GUI (stacked on fix/8)
+  - fix/10-shift-tab: shift-tab navigation (stacked on fix/9)
+  - fix/11-memory-oom: OOM fix for large album generation (standalone on main)
+  - feature/migrate-tool: adds 'alb migrate' command (standalone on main)
