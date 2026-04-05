@@ -4,6 +4,7 @@ status: implemented
 issue: 1
 summary: >
   Implemented clanker-prep Python script that does git maintenance and GitHub
-  API fetches before invoking Claude. clanker-run updated to use it.
+  API fetches before invoking Claude. clanker-run updated to use it and
+  incorporates Maria's improved exit-status logging (7b44ebb).
   CLAUDE.md updated to read from context files instead of re-fetching.
-  Awaiting human review and merge.
+  Branch rebased onto main (7b44ebb). Awaiting human review and merge.
