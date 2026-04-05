@@ -4,11 +4,11 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - local main 2 context commits ahead of github/main (95a746c, 2a8caf4); human pushes
-    - fix/9-exif-display: 1 clean commit (b920637) on top of main
-    - fix/10-shift-tab: 1 amended commit (e522d31) on top of fix/9
-    - feature/migrate-tool: 1 commit (3482a12) on top of main
-    - no merged branches to prune
+    - pulled github/main; b920637 (Fix #9) was new
+    - rebased local main onto github/main
+    - fix/9-exif-display was merged; deleted it
+    - rebased fix/10-shift-tab and feature/migrate-tool onto updated main
+    - local main 2 context commits ahead of github/main; human pushes
 
 github_pipelines:
   status: skipped
@@ -18,9 +18,8 @@ github_pipelines:
 github_issues:
   status: done
   notes:
-    - issue #9 (open): fix in fix/9-exif-display (b920637)
-    - issue #10 (open): fix in fix/10-shift-tab (e522d31); @marenamat comment asked to squash
-      coding style fixup — done (spaces→tabs in the shift-tab block, amended into e522d31)
+    - issue #9: closed (merged as b920637)
+    - issue #10 (open): fix ready in fix/10-shift-tab (d4ad2ce), rebased on current main
 
 design_check:
   status: done
@@ -29,6 +28,5 @@ design_check:
 
 branches:
   - main: 2 context commits ahead of github/main (not yet pushed by human)
-  - fix/9-exif-display: EXIF display in single-photo GUI (1 commit on main)
-  - fix/10-shift-tab: shift-tab navigation (1 amended commit, stacked on fix/9)
-  - feature/migrate-tool: adds 'alb migrate' command (1 commit on main)
+  - fix/10-shift-tab: shift-tab navigation fix (1 commit d4ad2ce, on top of main)
+  - feature/migrate-tool: adds 'alb migrate' command (1 commit, on top of main)
