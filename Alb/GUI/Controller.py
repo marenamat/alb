@@ -1,6 +1,7 @@
 from . import WebApp, View
 from aiohttp import web, WSMsgType as msgtype
 from ..Generator import Generator
+from .. import Exif
 
 import asyncio
 import jinja2
@@ -161,6 +162,21 @@ class GimpRevert(CC):
         return self.app.index.data
 
 Controller.register(GimpRevert)
+
+class ReadExif(CC):
+    """Return EXIF data for an image (reads the active version: mod if any, else original)."""
+    name = "exif"
+
+    async def run(self, id):
+        img = self.app.index.data["images"][id]
+        mods = img.get("gimp_mods", [])
+        if mods:
+            fpath = self.app.index.path / mods[-1]
+        else:
+            fpath = self.app.index.path / img["orig"]
+        return Exif.read(fpath)
+
+Controller.register(ReadExif)
 
 class ToggleDelete(CC):
     # Mark or unmark a photo for omission (does not delete the file)

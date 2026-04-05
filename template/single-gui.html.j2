@@ -102,6 +102,39 @@ a:visited {
   font-size: 0.8em;
 }
 
+/* EXIF data panel */
+#exif-panel {
+  display: none;
+  margin-top: 0.5em;
+  border: 1px solid #999;
+  padding: 0.4em;
+  background: #f8f8f8;
+  font-size: 0.8em;
+  max-width: 18em;
+  line-height: 1.4;
+}
+
+#exif-panel table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#exif-panel td {
+  padding: 0.1em 0.3em;
+  vertical-align: top;
+}
+
+#exif-panel td:first-child {
+  color: #555;
+  white-space: nowrap;
+  padding-right: 0.6em;
+}
+
+#exif-panel .exif-gps-links a {
+  margin-right: 0.4em;
+  font-size: 0.9em;
+}
+
 .editable-text:hover::after {
   content: " ✏️";
 }
@@ -234,6 +267,11 @@ a:visited {
   <div id="gimp-versions">
     <div id="gimp-versions-title">Originals</div>
     <div id="gimp-versions-list"></div>
+  </div>
+  <!-- EXIF data panel -->
+  <div id="exif-panel">
+    <table id="exif-table"></table>
+    <div id="exif-gps" class="exif-gps-links"></div>
   </div>
 </div>
 <div id="showfoto-block">
@@ -422,6 +460,61 @@ a:visited {
     list.appendChild(entry)
   }
 
+  // Fetch and display EXIF data for the current image.
+  function loadExif() {
+    sSend({ "_": "exif", "id": img_id }, function(data) {
+      var exif = JSON.parse(data)
+      var panel = document.getElementById("exif-panel")
+      var tbl = document.getElementById("exif-table")
+      var gpsDiv = document.getElementById("exif-gps")
+      CL(tbl)
+      CL(gpsDiv)
+
+      // Ordered rows to display
+      var rows = [
+        ["Camera",    exif.camera],
+        ["Lens",      exif.lens],
+        ["Aperture",  exif.aperture],
+        ["Shutter",   exif.shutter],
+        ["ISO",       exif.iso],
+        ["Focal",     exif.focal_length],
+        ["Exp. bias", exif.exposure_bias],
+        ["Date",      exif.datetime],
+      ]
+
+      var hasAny = false
+      for (var r of rows) {
+        if (!r[1]) continue
+        hasAny = true
+        var tr = EL("tr")
+        var th = EL("td"); th.appendChild(TN(r[0])); tr.appendChild(th)
+        var td = EL("td"); td.appendChild(TN(r[1])); tr.appendChild(td)
+        tbl.appendChild(tr)
+      }
+
+      if (exif.gps) {
+        hasAny = true
+        var lat = exif.gps.lat.toFixed(6)
+        var lon = exif.gps.lon.toFixed(6)
+        var links = [
+          ["Mapy.com",          "https://mapy.com/?q=" + lat + "," + lon],
+          ["OpenStreetMap",     "https://www.openstreetmap.org/?mlat=" + lat + "&mlon=" + lon + "&zoom=15"],
+          ["OpenRailwayMap",    "https://www.openrailwaymap.org/?lat=" + lat + "&lon=" + lon + "&zoom=15"],
+        ]
+        for (var lnk of links) {
+          var a = EL("a")
+          a.href = lnk[1]
+          a.target = "_blank"
+          a.rel = "noopener"
+          a.appendChild(TN(lnk[0]))
+          gpsDiv.appendChild(a)
+        }
+      }
+
+      panel.style.display = hasAny ? "" : "none"
+    })
+  }
+
   function receiveIndex(data) {
     index = JSON.parse(data)
 
@@ -478,6 +571,8 @@ a:visited {
     socket.onopen = function () {
       logMsg("Connection succesful")
       loadIndex()
+      // Load EXIF after the index; queued automatically via sSend
+      after_update_queue.push(loadExif)
     }
     socket.onerror = function () {
       logMsg("Connection failed. Reload to retry.")
@@ -487,6 +582,8 @@ a:visited {
 	// Unsolicited message = broadcast from server (e.g. GIMP output detected)
 	try {
 	  receiveIndex(m.data)
+	  // Reload EXIF in case the active image file changed (GIMP mod)
+	  after_update_queue.push(loadExif)
 	} catch(e) {
 	  logMsg("<" + m.data)
 	}

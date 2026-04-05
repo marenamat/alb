@@ -17,4 +17,9 @@ flock -n clanker.lock \
 	"proceed as the workflow specifies in CLAUDE.md" \
 	</dev/null >>clanker.log 2>&1
 
-if [ "$?" == 1 ]; then echo "Clanker probably still runs." >>clanker.log; fi
+case "$?" in
+  0)  date >>clanker.log ;;
+  1)  echo "Clanker probably still runs." >>clanker.log ;;
+  *)  date >>clanker.log 
+      echo "exit status $?" >>clanker.log ;;
+esac

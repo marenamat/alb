@@ -68,10 +68,11 @@ recursively.
 The following Alpine packages are required to run `alb`:
 
 ```
-apk add py3-yaml py3-jinja2 py3-aiohttp
+apk add py3-yaml py3-jinja2 py3-aiohttp py3-pillow
 ```
 
 These provide:
 - `py3-yaml` — YAML loading/saving (`import yaml`)
 - `py3-jinja2` — HTML template rendering (`import jinja2`)
 - `py3-aiohttp` — async HTTP server + WebSocket (`import aiohttp`)
+- `py3-pillow` — EXIF reading (`from PIL import Image, ExifTags`) for issue #9
