@@ -4,9 +4,9 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - local main is 3 context-update commits ahead of github/main (awaiting push by guardian)
-    - feature/migrate-tool rebased onto main (adds 'alb migrate' command)
-    - No merged branches to prune (no PRs, feature/migrate-tool not yet merged)
+    - local main in sync with github/main
+    - deleted merged branch fix/8-gimp-editing
+    - feature/migrate-tool and fix/9-exif-display and fix/10-shift-tab still open
 
 github_pipelines:
   status: skipped
@@ -16,16 +16,18 @@ github_pipelines:
 github_issues:
   status: done
   notes:
-    - All 7 issues closed (#1-#7), no open issues
-    - No new issues authored or authorized by @marenamat
+    - 3 open issues authored by @marenamat: #9, #10 (both now fixed in branches), #8 already closed
+    - fix/9-exif-display: committed (870f976) - EXIF display in single-photo GUI
+    - fix/10-shift-tab: committed (e690ebf) - shift-tab navigates back in description editor
 
 design_check:
   status: done
   notes:
-    - Design files unchanged (base.md, tools.md, optimizations.md)
+    - Design files unchanged
     - No new design changes
-    - questions.md: all questions have answers, nothing new
 
 branches:
-  - main: 3 context commits ahead of github/main
-  - feature/migrate-tool: rebased onto main (adds 'alb migrate' command)
+  - main: in sync with github/main
+  - fix/9-exif-display: ready for review/merge (commit 870f976)
+  - fix/10-shift-tab: ready for review/merge (commit e690ebf)
+  - feature/migrate-tool: rebased onto main (adds 'alb migrate' command), not yet merged
