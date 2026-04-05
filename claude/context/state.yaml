@@ -4,33 +4,31 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - local main was 1 commit ahead of github/main (context update only)
-    - rebased fix/9-exif-display onto main (clean)
-    - rebased fix/10-shift-tab onto rebased fix/9 (clean)
-    - rebased feature/migrate-tool onto main (clean)
+    - local main 2 context commits ahead of github/main (95a746c, 2a8caf4); human pushes
+    - fix/9-exif-display: 1 clean commit (b920637) on top of main
+    - fix/10-shift-tab: 1 amended commit (e522d31) on top of fix/9
+    - feature/migrate-tool: 1 commit (3482a12) on top of main
     - no merged branches to prune
 
 github_pipelines:
   status: skipped
   notes:
-    - no Github actions configured (design/base.md says no CI needed)
+    - no Github actions configured for this project (0 workflows)
 
 github_issues:
   status: done
   notes:
-    - issue #9 (open): fix ready in fix/9-exif-display — EXIF panel with camera/lens/aperture/shutter/ISO/focal/GPS+map links
-    - issue #10 (open): fix ready in fix/10-shift-tab — shift-tab navigates back in description editor
-    - no new issues; no comments requiring further action
+    - issue #9 (open): fix in fix/9-exif-display (b920637)
+    - issue #10 (open): fix in fix/10-shift-tab (e522d31); @marenamat comment asked to squash
+      coding style fixup — done (spaces→tabs in the shift-tab block, amended into e522d31)
 
 design_check:
   status: done
   notes:
-    - no design file changes since last review
-    - tools.md: migrate command covered by feature/migrate-tool branch
-    - optimizations.md: views cached — noted, no action needed
+    - no design file changes requiring new work
 
 branches:
-  - main: local is 1 commit ahead of github/main (context update); both in sync otherwise
-  - fix/9-exif-display: EXIF display panel (1 commit on main), awaiting human push/merge
-  - fix/10-shift-tab: shift-tab navigation (1 commit on fix/9), awaiting human push/merge
-  - feature/migrate-tool: alb migrate command (1 commit on main), awaiting human push/merge
+  - main: 2 context commits ahead of github/main (not yet pushed by human)
+  - fix/9-exif-display: EXIF display in single-photo GUI (1 commit on main)
+  - fix/10-shift-tab: shift-tab navigation (1 amended commit, stacked on fix/9)
+  - feature/migrate-tool: adds 'alb migrate' command (1 commit on main)
