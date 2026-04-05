@@ -3,11 +3,6 @@ branches:
 - main
 maintenance_actions:
 - fetched
-- main fast-forwarded
 - 'rebase_failed: issue-6'
-- 'pruned: issue-6'
-recorded_at: '2026-04-05T20:00:00.568383+00:00'
-notes:
-- issue-6 branch work (setup-remotes, do_template_merge) is already merged into main
-  (commit 1eca56c). Branch only has context commits ahead of main.
-- rebase_failed is expected: remote issue-6 branch was pruned after merge.
+- 'note: issue-6 is 2 context-only commits ahead of main; work already merged; ready to close'
+recorded_at: '2026-04-05T20:20:00.610837+00:00'
