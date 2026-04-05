@@ -4,35 +4,35 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - github/main advanced to 1ab1e21 (Fix #4: ESC closes open editor or navigates to album index)
-    - fix/issue-4-esc was merged into main and pruned locally
-    - All remaining branches rebased onto new main (fix/issue-5-view-caching, fix/issue-6-thumbnail-descriptions, feature/migrate-tool)
-    - clanker-run has uncommitted local modifications (--no-session-persistence, removed --allowed-tools)
-    - clank file present (patch for clanker-run and clanker-setup improvements)
+    - github/main advanced to aec7c34 (update rebasing requirements); rebased local main onto it
+    - Stale context commits (5e5e282, 7e10887) skipped during rebase (obsolete state)
+    - fix/issue-6-thumbnail-descriptions was merged into main; deleted locally
+    - fix/issue-5-view-caching and feature/migrate-tool rebased onto new main
+    - clanker-run: committed log separator/date improvements (9204f47)
 
 github_pipelines:
   status: done
   notes:
     - No workflows configured (0 workflow runs)
+    - design/base.md confirms: "This project has no Github actions. No need to check them."
 
 github_issues:
   status: done
   notes:
-    - "#4 ESC: merged into main"
-    - "#5 Image view recalculation: fix ready in fix/issue-5-view-caching (SHA256 caching)"
-    - "#6 Display descriptions on thumbnail page: fix ready in fix/issue-6-thumbnail-descriptions (CSS line-clamp + hover)"
+    - "#5 Image view recalculation: fix ready in fix/issue-5-view-caching (SHA256 in index.yaml)"
+    - "#7 Title page menu visibility (NEW): fix ready in fix/issue-7-fixed-controls (position:fixed for #log and #metadata)"
 
 design_check:
   status: done
   notes:
-    - Design files match github/main (no divergence)
-    - No new design changes since last run
+    - Design files unchanged since last run (346996f)
+    - No new design changes
 
 open_prs:
   status: none
 
 branches:
-  - main: 1ab1e21
+  - main: 9204f47
   - feature/migrate-tool: alb migrate command parses old index.md -> index.yaml
-  - fix/issue-5-view-caching: SHA256 hash caching in Generator.py (views/.hashes.yaml)
-  - fix/issue-6-thumbnail-descriptions: CSS line-clamp + title attr for hover descriptions
+  - fix/issue-5-view-caching: SHA256 hashes stored per-image in index.yaml
+  - fix/issue-7-fixed-controls: position:fixed for #log and #metadata in main-gui.html.j2
