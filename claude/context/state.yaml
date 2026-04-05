@@ -4,7 +4,7 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - local main was already at github/main (f9d1ac6)
+    - local main was 1 commit ahead of github/main (context update commit, normal)
     - no extra branches to rebase or prune
 
 github_pipelines:
@@ -13,14 +13,16 @@ github_pipelines:
     - no Github actions configured for this project (stated in design/base.md)
 
 github_issues:
-  status: partial
+  status: done
   notes:
-    - GitHub API rate limited (unauthenticated), could not refresh
-    - last known state (from issues.json): no open issues
-    - last known closed issues up to #10 (shift-tab fix), all resolved
+    - issue #13: "Select the album cover photo by clicking" - authored by @marenamat
+    - fixed in branch fix/13-cover-photo-button (commit fb40126)
+    - changes: added "Set as cover" button (disabled until photo selected),
+      green outline on current cover photo, re-apply selection after re-render
+    - issues #8-#12 all closed
 
 design_check:
   status: done
   notes:
-    - last design change was 346996f on 2026-04-05 (thumbnail descriptions)
-    - no new design changes since last workflow run
+    - design files unchanged since last run
+    - no new design changes
