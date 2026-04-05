@@ -143,3 +143,5 @@ to a configured server by `make install`, and `make edit` to re-run the editor.
 # Miscellaneous
 
 - This project has no Github actions. No need to check them.
+- Do not create github actions even if the claude-base repository requires
+  them, it's irrelevant for this project.
