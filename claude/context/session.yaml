@@ -1,0 +1,9 @@
+recorded_at: '2026-04-05'
+branch: issue-1-claude-run-script
+status: implemented
+issue: 1
+summary: >
+  Implemented clanker-prep Python script that does git maintenance and GitHub
+  API fetches before invoking Claude. clanker-run updated to use it.
+  CLAUDE.md updated to read from context files instead of re-fetching.
+  Awaiting human review and merge.
