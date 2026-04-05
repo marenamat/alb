@@ -4,6 +4,7 @@ from .Resizer import Resizer
 import asyncio
 import hashlib
 import logging
+import os
 import pathlib
 import shutil
 
@@ -126,7 +127,16 @@ class Generator:
 
         if resize_tasks:
             logger.info(f"Resizing {len(resize_tasks)} images...")
-            await asyncio.gather(*resize_tasks)
+            # Limit concurrency: each convert process decodes a full image into RAM,
+            # so launching all at once with 150 photos saturates memory and freezes.
+            concurrency = max(1, os.cpu_count() or 4)
+            sem = asyncio.Semaphore(concurrency)
+
+            async def _run(coro):
+                async with sem:
+                    await coro
+
+            await asyncio.gather(*[_run(t) for t in resize_tasks])
 
         # Persist updated hashes to index.yaml if anything changed
         if index_dirty:
