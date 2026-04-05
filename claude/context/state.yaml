@@ -4,10 +4,10 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - github/main unchanged since last run (c9deef0)
-    - Local main 2 context-update commits ahead of github/main (expected)
-    - Rebased feature/migrate-tool, fix/issue-5-view-caching onto updated main
-    - No merged branches to prune
+    - github/main had 2 new commits (Fix #5 merged - our fix/issue-5-view-caching work)
+    - Rebased local main onto github/main (now at 6cd2ac9)
+    - Deleted fix/issue-5-view-caching (was merged into github/main)
+    - Rebased feature/migrate-tool onto updated main
 
 github_pipelines:
   status: skipped
@@ -17,9 +17,8 @@ github_pipelines:
 github_issues:
   status: done
   notes:
-    - "#5 Image view recalculation: still open. Comment from marenamat: store hashes in index.yaml."
-    - "fix/issue-5-view-caching already implements this: SHA256 hashes stored per-image in index.yaml. Awaiting push/merge by marenamat."
-    - "No new issues beyond #5"
+    - All 7 issues are now closed (#1-#7)
+    - No new open issues
 
 design_check:
   status: done
@@ -28,6 +27,5 @@ design_check:
     - No new design changes
 
 branches:
-  - main: 3fcb2c8 (2 commits ahead of github/main, context updates only)
+  - main: up to date with github/main (6cd2ac9)
   - feature/migrate-tool: 'alb migrate' command parses old index.md -> index.yaml
-  - fix/issue-5-view-caching: SHA256 hashes stored per-image in index.yaml, cached view generation (addresses issue #5 + comment)
