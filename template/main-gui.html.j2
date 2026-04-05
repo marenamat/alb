@@ -61,6 +61,8 @@ a:visited {
 .img-selected { outline: 3px solid blue; }
 /* Original photos superseded by GIMP edits (hidden=true) */
 .img-hidden { opacity: 0.5; outline: 3px solid orange; }
+/* Current album cover photo */
+.img-cover { outline: 3px solid green; }
 
 #log {
   font-family: monospace;
@@ -101,6 +103,7 @@ a:visited {
 <div id="log">
   <button id="btn-generate">Generate website</button>
   <button id="btn-show-originals">Show originals</button>
+  <button id="btn-set-cover" disabled>Set as cover</button>
 </div>
 <table id="metadata">
   <tbody>
@@ -194,6 +197,7 @@ a:visited {
   }
 
   var selected_id = null  // currently focused image index
+  var btn_set_cover = document.getElementById("btn-set-cover")
 
   function receiveIndex(data) {
     index = JSON.parse(data)
@@ -217,6 +221,9 @@ a:visited {
         it.classList.add("img-deleted")
       if (img.hidden)
         it.classList.add("img-hidden")
+      // Mark the current cover photo
+      if (img.orig === index.meta.thumbnail)
+        it.classList.add("img-cover")
       for (item in img)
 	it.dataset[item] = img[item]
 
@@ -226,6 +233,7 @@ a:visited {
         for (let el of document.getElementsByClassName("img-selected"))
           el.classList.remove("img-selected")
         this.classList.add("img-selected")
+        btn_set_cover.disabled = false
       })
       it.addEventListener("dblclick", function(ev) {
         window.location.href = "single-" + this.id.replace("img-", "")
@@ -234,6 +242,13 @@ a:visited {
       var a = EL("a")
       a.appendChild(it)
       img_container.appendChild(a)
+    }
+
+    // Re-apply selection highlight after re-render
+    if (selected_id !== null) {
+      var sel = document.getElementById("img-" + selected_id)
+      if (sel)
+        sel.classList.add("img-selected")
     }
 
     for (let elem of editables) {
@@ -285,6 +300,12 @@ a:visited {
   }
 
   document.getElementById("btn-generate").addEventListener("click", generateWebsite)
+
+  // Set selected photo as album cover
+  btn_set_cover.addEventListener("click", function() {
+    if (selected_id !== null)
+      setThumbnail(selected_id)
+  })
 
   // Toggle showing hidden (GIMP original) photos
   document.getElementById("btn-show-originals").addEventListener("click", function() {
