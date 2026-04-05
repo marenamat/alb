@@ -22,6 +22,7 @@ touch clanker.lock
 
   if [ "$decision" = "INVOKE_CLAUDE" ]; then
     ~/.local/bin/claude \
+      -n "$selfdir" \
       --no-session-persistence \
       "proceed as the workflow specifies in CLAUDE.md" \
       </dev/null >>clanker.log 2>&1 || exit_code=$?
