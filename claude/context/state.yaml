@@ -4,9 +4,10 @@ workflow_step: complete
 maintenance:
   status: done
   notes:
-    - github/main still at b920637 (human hasn't pushed context commits yet)
-    - local main 4 context commits ahead of github/main
-    - fix/10-shift-tab (b1f8610) and feature/migrate-tool (17e1119) still on top of main
+    - github/main updated to a9245df (human pushed fix/10-shift-tab and feature/migrate-tool)
+    - local main rebased onto github/main (ecba3fb)
+    - fix/10-shift-tab and feature/migrate-tool deleted (both merged into github/main)
+    - no branches remain besides main
 
 github_pipelines:
   status: skipped
@@ -16,15 +17,12 @@ github_pipelines:
 github_issues:
   status: done
   notes:
-    - issue #10 (open): fix ready in fix/10-shift-tab (b1f8610), rebased on current main
-    - no other open issues
+    - no open issues
 
 design_check:
   status: done
   notes:
-    - no design file changes since last push
+    - no design file changes from human since last run
 
 branches:
-  - main: 4 context commits ahead of github/main (not yet pushed by human)
-  - fix/10-shift-tab: shift-tab navigation fix (1 commit b1f8610, on top of main)
-  - feature/migrate-tool: adds 'alb migrate' command (1 commit 17e1119, on top of main)
+  - main: 2 context commits ahead of github/main (ecba3fb, 0ea36b7)
