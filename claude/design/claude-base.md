@@ -1,7 +1,18 @@
-# Documentation
+# Design goals for the base repository
 
-This is a template repository. Document everything needed to fork it and start
-a new Claude-assisted project from scratch.
+User: Remove this file when templating.
+
+Claude: Ignore this file if left in a repository not called `claude-base`.
+
+## Self-improvements
+
+Look into your own setup and think whether something can be made more
+efficient. Check projects forking or elsehow using this setup, look for changes
+to incorporate, and suggest updates.
+
+## Documentation
+
+Document everything needed to fork it and start a new Claude-assisted project from scratch.
 
 ## Website (GitHub Pages)
 
