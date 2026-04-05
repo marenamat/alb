@@ -1,0 +1,15 @@
+fetched_at: '2026-04-05T16:20:00.305021+00:00'
+issues:
+- author: marenamat
+  body: 'Implement most of the repeated workflow as Python or Bash script. Call the
+    clanker only whenever the input is really needed.
+
+
+    That means: That script should do the git fetching, issue downloading, preparing
+    everything for the clanker locally.'
+  comments: []
+  created_at: '2026-04-05T16:09:59Z'
+  labels: []
+  number: 1
+  title: Propose a better claude-run script
+repo: marenamat/claude-base
