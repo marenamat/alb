@@ -1,15 +1,14 @@
 branches:
 - issue-5
+- issue-6
 - main
 maintenance_actions:
 - fetched
-- "main ff failed: clanker-prep couldn't fast-forward due to divergence; Claude manually rebased main onto origin/main"
-- "rebase_failed: issue-5 — Claude manually rebased issue-5 onto new main, resolving design conflicts in favor of claude/design/ approach"
-recorded_at: '2026-04-05T18:00:00.432461+00:00'
-resolved_at: '2026-04-05T18:30:00+00:00'
-resolution: >
-  Rebased local main onto origin/main (b9a60da context commit applied on top).
-  Rebased issue-5 onto new main. Resolved conflicts: kept claude/design/claude-base.md
-  (Maria's approach), removed Design Goals section from CLAUDE.md, reverted
-  docs/index.html to point to claude/design/. issue-5 net change: README.md link
-  to website + context updates.
+- main fast-forwarded to origin/main (dae1fb0)
+- issue-5 rebased onto main (context file conflicts resolved, kept main's fresher versions)
+- created issue-6 branch from main for GitHub issue #6
+recorded_at: '2026-04-05T20:22:00+00:00'
+notes: >
+  clanker-prep had left unstaged context files from the previous run, which
+  caused the rebase to fail. Committed those first, then fast-forwarded main
+  and rebased issue-5 cleanly. issue-6 branch created for remote-setup work.
