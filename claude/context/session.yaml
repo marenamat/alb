@@ -1,11 +1,9 @@
 recorded_at: '2026-04-05'
-branch: issue-2-restart-if-updated
+branch: issue-4-rebase-run-clanker
 status: implemented
-issue: 2
+issue: 4
 summary: >
-  Modified clanker-run to snapshot md5sums of clanker-run, clanker-prep,
-  and CLAUDE.md before git maintenance. After clanker-prep runs (which
-  fast-forwards main), if any of those files changed, a restart flag file
-  is created and the flock subshell exits cleanly. The outer script then
-  re-execs itself with the updated code. This prevents spending Claude
-  tokens with a stale runner after a git update.
+  Fixed clanker-prep to add rebase_failed actions to the reasons list,
+  ensuring INVOKE_CLAUDE is emitted when a branch rebase fails.
+  Previously rebase failures were recorded in git_actions but never
+  triggered Claude invocation, leaving conflicts unresolved.

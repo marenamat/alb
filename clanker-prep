@@ -199,6 +199,11 @@ def main():
     with open(context_dir / "git_status.yaml", "w") as f:
         yaml.dump(git_ctx, f, default_flow_style=False, allow_unicode=True)
 
+    # Rebase failures need Claude to resolve conflicts
+    for action in git_actions:
+        if action.startswith("rebase_failed:"):
+            reasons.append(action)
+
     # --- Detect repo ---
     repo = get_repo()
     if not repo:
