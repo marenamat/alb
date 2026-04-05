@@ -1,14 +1,11 @@
 branches:
-- issue-5
 - issue-6
 - main
 maintenance_actions:
 - fetched
-- main fast-forwarded to origin/main (dae1fb0)
-- issue-5 rebased onto main (context file conflicts resolved, kept main's fresher versions)
-- created issue-6 branch from main for GitHub issue #6
-recorded_at: '2026-04-05T20:22:00+00:00'
+- issue-6 at same commit as main (work merged, remote branch pruned)
+recorded_at: '2026-04-05T18:40:00.503995+00:00'
 notes: >
-  clanker-prep had left unstaged context files from the previous run, which
-  caused the rebase to fail. Committed those first, then fast-forwarded main
-  and rebased issue-5 cleanly. issue-6 branch created for remote-setup work.
+  issue-6 implementation (setup-remotes script, clanker-prep template auto-merge,
+  docs update) is complete and merged into main. Issue #6 is ready to be closed.
+  Local issue-6 branch remains for context only.
