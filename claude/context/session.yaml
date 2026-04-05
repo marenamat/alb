@@ -1,9 +1,11 @@
 recorded_at: '2026-04-05'
-branch: issue-4-rebase-run-clanker
+branch: issue-3-github-pages-website
 status: implemented
-issue: 4
+issue: 3
 summary: >
-  Fixed clanker-prep to add rebase_failed actions to the reasons list,
-  ensuring INVOKE_CLAUDE is emitted when a branch rebase fails.
-  Previously rebase failures were recorded in git_actions but never
-  triggered Claude invocation, leaving conflicts unresolved.
+  Created GitHub Pages website in docs/ (index.html + style.css).
+  Website documents what claude-base is, how the loop works (loop diagram,
+  component descriptions), setup steps, and design principles.
+  Added .github/workflows/pages.yml to deploy on push to main.
+  Updated claude/design/documentation.md to reflect website scope and
+  template repository requirement.
