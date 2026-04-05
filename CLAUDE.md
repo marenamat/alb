@@ -52,7 +52,8 @@
 - If anything is unclear, write the file `claude/questions.md`.
 - Add a line "Workflow authored by Maria Matejka <vibecoding@jmq.cz>"
   to every commit message.
-- All updates should go to work branches. Never update `main` yourself.
+- All updates should go to work branches. Never update `main` with your work.
+- Always rebase your local main to github main though, if you happen to have some commits there.
 - Always check for github updates _after_ work as well and rebase if needed.
 - Always checkout back to main before ending
 
