@@ -30,6 +30,21 @@
 - Use per-client rate-limiting
 - Store data as CBOR
 
+# Coding style
+
+## JS, C, Rust, CSS, Bash
+
+- two spaces per indent
+- convert eight spaces to tab
+- no `{}` around single-command blocks
+- put `{` on the same line as control keyword
+- `} else if () {` is the right way
+
+## Python
+
+- four spaces per indent
+- no tabs
+
 # Performance-sensitive code
 
 - Rust or C
