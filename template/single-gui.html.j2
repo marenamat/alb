@@ -69,6 +69,39 @@ a:visited {
   padding: 0.5em 1.5em;
 }
 
+/* GIMP versions side panel */
+#gimp-versions {
+  display: none;
+  margin-top: 0.5em;
+  border: 1px solid #999;
+  padding: 0.4em;
+  background: #f8f8f8;
+}
+
+#gimp-versions-title {
+  font-size: 0.8em;
+  color: #555;
+  margin-bottom: 0.3em;
+}
+
+.gimp-version-entry {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  margin-bottom: 0.3em;
+}
+
+.gimp-version-entry img {
+  max-width: 64px;
+  max-height: 64px;
+  border: 1px solid #ccc;
+}
+
+.gimp-version-entry button {
+  padding: 0.2em 0.6em;
+  font-size: 0.8em;
+}
+
 .editable-text:hover::after {
   content: " ✏️";
 }
@@ -197,6 +230,11 @@ a:visited {
 <div id="controls">
   <button id="open-gimp">GIMP</button>
   <button id="btn-undelete" style="display:none">Undelete</button>
+  <!-- GIMP versions panel: shows the original(s) when a mod is active -->
+  <div id="gimp-versions">
+    <div id="gimp-versions-title">Originals</div>
+    <div id="gimp-versions-list"></div>
+  </div>
 </div>
 <div id="showfoto-block">
   <div id="showfoto-block-img">
@@ -348,6 +386,42 @@ a:visited {
     }
   }
 
+  // Update the GIMP versions side panel.
+  // Shows a mini-thumbnail of the original with a Revert button when
+  // the current image has active GIMP mods.
+  function updateGimpVersions() {
+    var panel = document.getElementById("gimp-versions")
+    var list = document.getElementById("gimp-versions-list")
+    CL(list)
+
+    var mods = this_image && this_image.gimp_mods
+    if (!mods || mods.length === 0) {
+      panel.style.display = "none"
+      return
+    }
+
+    panel.style.display = ""
+
+    // Offer "Revert to original" — gimp_orig bypasses the mod redirect
+    var entry = EL("div")
+    entry.className = "gimp-version-entry"
+
+    var thumb = EL("img")
+    thumb.src = "/img/gimp_orig-" + img_id + "?v=" + Date.now()
+    thumb.title = "Original"
+    entry.appendChild(thumb)
+
+    var btn = EL("button")
+    btn.textContent = "Revert"
+    btn.title = "Revert to original (remove GIMP edit)"
+    btn.addEventListener("click", function() {
+      sSend({ "_": "gimp_revert", "id": img_id }, receiveIndex)
+    })
+    entry.appendChild(btn)
+
+    list.appendChild(entry)
+  }
+
   function receiveIndex(data) {
     index = JSON.parse(data)
 
@@ -358,9 +432,13 @@ a:visited {
       next_a.href = "/single-" + (img_id + 1)
 
     index.this_image = index.images[img_id]
-    img_element.src = "/img/orig-" + img_id
+    this_image = index.this_image
+
+    // Use a cache-busting param so the browser re-fetches after a GIMP edit
+    img_element.src = "/img/orig-" + img_id + "?v=" + Date.now()
 
     updateDeletedState()
+    updateGimpVersions()
 
     for (elem of editables) {
       var loc = index
@@ -405,9 +483,14 @@ a:visited {
       logMsg("Connection failed. Reload to retry.")
     }
     socket.onmessage = function (m) {
-      if (response_handler === null)
-	logMsg("<" + m.data)
-      else
+      if (response_handler === null) {
+        // Unsolicited message = broadcast from server (e.g. GIMP output detected)
+        try {
+          receiveIndex(m.data)
+        } catch(e) {
+          logMsg("<" + m.data)
+        }
+      } else
       {
 	response_handler(m.data)
 	response_handler = null

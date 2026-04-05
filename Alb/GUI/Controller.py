@@ -24,19 +24,24 @@ class Controller(View):
         ws = web.WebSocketResponse()
         await ws.prepare(request)
 
-        async for msg in ws:
-            if msg.type == msgtype.TEXT:
-                logger.debug(f"Got message: {msg.data}")
-                try:
-                    data = json.loads(msg.data)
-                    cmd = data["_"]
-                    del data["_"]
-                    await ws.send_str(json.dumps(await self.commands[cmd](self.app).run(**data)))
-                except KeyError:
-                    await ws.send_str("bad request!" + msg.data)
-            elif msg.type == msgtype.ERROR:
-                logger.warn('ws connection closed with exception %s' %
-                      ws.exception())
+        # Register this client so we can broadcast to it later
+        self.app.ws_clients.add(ws)
+        try:
+            async for msg in ws:
+                if msg.type == msgtype.TEXT:
+                    logger.debug(f"Got message: {msg.data}")
+                    try:
+                        data = json.loads(msg.data)
+                        cmd = data["_"]
+                        del data["_"]
+                        await ws.send_str(json.dumps(await self.commands[cmd](self.app).run(**data)))
+                    except KeyError:
+                        await ws.send_str("bad request!" + msg.data)
+                elif msg.type == msgtype.ERROR:
+                    logger.warn('ws connection closed with exception %s' %
+                          ws.exception())
+        finally:
+            self.app.ws_clients.discard(ws)
 
         logger.info('websocket connection closed')
 
@@ -89,15 +94,24 @@ class Gimp(CC):
         """
         Poll the album directory for new files that look like GIMP-modified
         versions of orig_path (e.g. photo-orez.jpg, photo-rot.jpg).
-        When found, mark the original as hidden in the index.
+        When found, record the mod filename in gimp_mods[] and broadcast.
         """
-        # Stem without extension, e.g. "IMG_1234"
         stem = orig_path.stem
         suffix = orig_path.suffix.lower()
         album_dir = orig_path.parent
 
         # Collect files present before GIMP starts
         before = set(album_dir.iterdir())
+
+        async def register_mod(f):
+            logger.info(f"GIMP output detected: {f.name}")
+            img = self.app.index.data["images"][img_id]
+            mods = img.setdefault("gimp_mods", [])
+            rel = str(f.relative_to(album_dir))
+            if rel not in mods:
+                mods.append(rel)
+            await self.app.index.store()
+            await self.app.broadcast_index()
 
         # Poll every 2 seconds while GIMP is running (max 2 hours)
         for _ in range(3600):
@@ -110,11 +124,7 @@ class Gimp(CC):
                 if (f.stem.startswith(stem + "-")
                         and f.suffix.lower() == suffix
                         and f.is_file()):
-                    logger.info(f"GIMP output detected: {f.name}; hiding original {orig_path.name}")
-                    # Mark original as hidden
-                    self.app.index.data["images"][img_id]["hidden"] = True
-                    await self.app.index.store()
-                    # Done - stop watching
+                    await register_mod(f)
                     return
 
             if proc.returncode is not None:
@@ -126,15 +136,31 @@ class Gimp(CC):
                     if (f.stem.startswith(stem + "-")
                             and f.suffix.lower() == suffix
                             and f.is_file()):
-                        logger.info(f"GIMP output detected on exit: {f.name}; hiding original {orig_path.name}")
-                        self.app.index.data["images"][img_id]["hidden"] = True
-                        await self.app.index.store()
+                        await register_mod(f)
+                        return
                 return
 
         logger.warning(f"GIMP watcher timed out for {orig_path.name}")
 
 
 Controller.register(Gimp)
+
+class GimpRevert(CC):
+    """Remove the latest GIMP mod from an image, restoring the previous version."""
+    name = "gimp_revert"
+
+    async def run(self, id):
+        img = self.app.index.data["images"][id]
+        mods = img.get("gimp_mods", [])
+        if mods:
+            mods.pop()
+        if not mods:
+            img.pop("gimp_mods", None)
+        await self.app.index.store()
+        await self.app.broadcast_index()
+        return self.app.index.data
+
+Controller.register(GimpRevert)
 
 class ToggleDelete(CC):
     # Mark or unmark a photo for omission (does not delete the file)

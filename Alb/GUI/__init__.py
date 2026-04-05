@@ -9,12 +9,23 @@ class WebApp:
 
     def __init__(self, index):
         self.index = index
+        self.ws_clients = set()  # all currently connected WebSocket clients
         self.app = web.Application()
         for c in self.components:
             ep = c(self)
             self.app.router.add_get(ep.urlbase, ep.get)
             self.app.router.add_post(ep.urlbase, ep.post)
         self.app.on_startup.append(self.open_browser)
+
+    async def broadcast_index(self):
+        """Push the current index to every connected WebSocket client."""
+        import json
+        payload = json.dumps(self.index.data)
+        for ws in list(self.ws_clients):
+            try:
+                await ws.send_str(payload)
+            except Exception:
+                self.ws_clients.discard(ws)
 
     @classmethod
     def register(cls, component):

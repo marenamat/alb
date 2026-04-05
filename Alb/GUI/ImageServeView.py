@@ -17,6 +17,14 @@ class ImageServeView(View):
             raise web.HTTPNotFound() from e
 
         if img_size == "orig":
+            # If this image has GIMP mods, serve the latest one
+            mods = img_info.get("gimp_mods", [])
+            if mods:
+                fpath = self.app.index.path / mods[-1]
+            else:
+                fpath = self.app.index.path / img_info["orig"]
+        elif img_size == "gimp_orig":
+            # Always serve the actual original file, ignoring any GIMP mods
             fpath = self.app.index.path / img_info["orig"]
         else:
             try:
@@ -32,7 +40,7 @@ class ImageServeView(View):
         try:
             bytesize = fpath.stat().st_size
         except FileNotFoundError as e:
-            if img_size == "orig":
+            if img_size in ("orig", "gimp_orig"):
                 raise web.HTTPNotFound() from e
             else:
                 raise web.HTTPTemporaryRedirect(location=f"/img/orig-{img_id}") from e
