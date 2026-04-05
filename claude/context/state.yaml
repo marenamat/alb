@@ -19,7 +19,7 @@ github_issues:
       changes:
         - dark/light mode via data-bs-theme + inline prefers-color-scheme JS (no FOUC)
         - all three generated templates updated: album-single, album-index, landing
-        - replaced hardcoded #555/#ccc/#888 with Bootstrap CSS vars
+        - replaced hardcoded #555/#ccc/#888 with Bootstrap CSS vars (--bs-secondary-color, --bs-border-color)
         - fixed text-dark -> text-body on landing page for dark mode compat
         - Esc -> thumbnails was already implemented in album-single.html.j2
     - issue #11 (open): fix/11-memory-oom — OOM fix for large album generation
