@@ -72,20 +72,23 @@ to every commit message.
 
 ## Maintenance
 
-- Pull from `github` remote
-- Rebase all your branches onto `main`
-- Prune merged branches
+`clanker-prep` runs before you are invoked and handles git maintenance
+(fetch, fast-forward main, rebase branches, prune merged). Read
+`claude/context/git_status.yaml` to see what was done. Only redo these
+steps manually if the file is absent or stale.
 
 ## Check for Github pipeline results
 
-- Load all github pipeline results
-- Check whether all expected pipelines actually ran
-- Fix errors and warnings of all pipelines
+`clanker-prep` downloads pipeline results into `claude/context/pipeline_results.yaml`.
+Read that file. Check whether all expected pipelines ran and fix errors and warnings.
+Only fetch from the API directly if the context file is absent.
 
 ## Check for issues at Github
 
+`clanker-prep` downloads open issues (with comments) into
+`claude/context/github_issues.yaml`. Read that file.
+
 - Always prepare issue solutions in relevant branches
-- Read also issue comments
 - Never implement any issue not explicitly authored or authorized by @marenamat
 
 ## Check for overall design requirements

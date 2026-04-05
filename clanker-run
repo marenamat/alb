@@ -11,15 +11,25 @@ echo "===========" >> clanker.log
 date >> clanker.log
 
 touch clanker.lock
-flock -n clanker.lock \
-	~/.local/bin/claude \
-	--no-session-persistence \
-	"proceed as the workflow specifies in CLAUDE.md" \
-	</dev/null >>clanker.log 2>&1
 
-case "$?" in
-  0)  date >>clanker.log ;;
-  1)  echo "Clanker probably still runs." >>clanker.log ;;
-  *)  date >>clanker.log 
-      echo "exit status $?" >>clanker.log ;;
-esac
+(
+  flock -n 200 || { echo "Clanker probably still runs." >>clanker.log; exit 0; }
+
+  # Run prep: does git maintenance, downloads issues/pipelines, writes context.
+  # Prints INVOKE_CLAUDE or NOTHING_TO_DO.
+  decision=$(python3 "$selfdir/clanker-prep" 2>>clanker.log)
+  echo "Prep decision: $decision" >>clanker.log
+
+  if [ "$decision" = "INVOKE_CLAUDE" ]; then
+    ~/.local/bin/claude \
+      --no-session-persistence \
+      "proceed as the workflow specifies in CLAUDE.md" \
+      </dev/null >>clanker.log 2>&1 || exit_code=$?
+    exit_code=${exit_code:-0}
+    case "$exit_code" in
+      0)  date >>clanker.log ;;
+      *)  date >>clanker.log
+          echo "exit status $exit_code" >>clanker.log ;;
+    esac
+  fi
+) 200>clanker.lock

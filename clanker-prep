@@ -1,0 +1,250 @@
+#!/usr/bin/env python3
+# clanker-prep: Prepare Claude context from git and GitHub, decide if invocation needed.
+# Prints INVOKE_CLAUDE or NOTHING_TO_DO to stdout.
+# All diagnostic output goes to stderr.
+
+import subprocess
+import json
+import os
+import sys
+import urllib.request
+import urllib.error
+from pathlib import Path
+from datetime import datetime, timezone
+
+try:
+    import yaml
+except ImportError:
+    print("ERROR: PyYAML not installed (pip install pyyaml)", file=sys.stderr)
+    # Fail safe: invoke Claude so it can report the problem
+    print("INVOKE_CLAUDE")
+    sys.exit(0)
+
+AUTHORIZED_USER = "marenamat"
+
+
+def run(cmd):
+    """Run shell command, return (stdout, stderr, returncode)."""
+    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    return result.stdout.strip(), result.stderr.strip(), result.returncode
+
+
+def github_api(path):
+    """Fetch from GitHub public API. Returns (data, error_string)."""
+    url = f"https://api.github.com/{path}"
+    headers = {
+        "User-Agent": "clanker-prep/1.0",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+    req = urllib.request.Request(url, headers=headers)
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return json.loads(resp.read()), None
+    except urllib.error.HTTPError as e:
+        return None, f"HTTP {e.code}: {e.reason}"
+    except Exception as e:
+        return None, str(e)
+
+
+def get_repo():
+    """Detect GitHub repo owner/name from git remote origin."""
+    out, _, _ = run("git remote get-url origin")
+    if not out:
+        return None
+    url = out.strip()
+    if url.startswith("https://github.com/"):
+        path = url[len("https://github.com/"):]
+    elif "github.com:" in url:
+        path = url.split("github.com:")[1]
+    else:
+        return None
+    return path.removesuffix(".git").strip("/")
+
+
+def do_git_maintenance():
+    """
+    Fetch from origin, fast-forward main, rebase feature branches, prune merged.
+    Returns list of action strings for context.
+    """
+    actions = []
+
+    # Fetch and prune stale remote refs
+    out, err, rc = run("git fetch origin --prune 2>&1")
+    if rc != 0:
+        print(f"git fetch failed: {out} {err}", file=sys.stderr)
+        actions.append(f"fetch_failed: {err}")
+    else:
+        actions.append("fetched")
+
+    # Fast-forward local main if origin/main is ahead
+    local, _, _ = run("git rev-parse main")
+    remote, _, _ = run("git rev-parse origin/main")
+    if local != remote:
+        current, _, _ = run("git branch --show-current")
+        run("git checkout main")
+        _, err, rc = run("git merge --ff-only origin/main")
+        if rc == 0:
+            actions.append("main fast-forwarded")
+        else:
+            actions.append(f"main ff failed: {err}")
+        if current and current != "main":
+            run(f"git checkout {current}")
+
+    # Rebase all local branches (except main) onto origin/main
+    branches_out, _, _ = run("git branch --format=%(refname:short)")
+    branches = [b for b in branches_out.splitlines() if b and b != "main"]
+    if branches:
+        current, _, _ = run("git branch --show-current")
+        for branch in branches:
+            run(f"git checkout {branch}")
+            _, err, rc = run("git rebase origin/main")
+            if rc != 0:
+                print(f"Rebase of {branch} failed, aborting", file=sys.stderr)
+                run("git rebase --abort")
+                actions.append(f"rebase_failed: {branch}")
+            else:
+                actions.append(f"rebased: {branch}")
+        # Return to original branch
+        restore = current if current else "main"
+        run(f"git checkout {restore}")
+
+    # Prune local branches fully merged into origin/main
+    merged_out, _, _ = run("git branch --merged origin/main --format=%(refname:short)")
+    for branch in merged_out.splitlines():
+        branch = branch.strip()
+        if branch and branch != "main":
+            run(f"git branch -d {branch}")
+            actions.append(f"pruned: {branch}")
+
+    return actions
+
+
+def fetch_issues(repo):
+    """Fetch open issues + comments from GitHub. Returns list of issue dicts."""
+    issues, err = github_api(f"repos/{repo}/issues?state=open&per_page=50")
+    if err:
+        print(f"Issues fetch error: {err}", file=sys.stderr)
+        return None, err
+
+    authorized = [i for i in issues if i["user"]["login"] == AUTHORIZED_USER]
+    result = []
+    for i in authorized:
+        entry = {
+            "number": i["number"],
+            "title": i["title"],
+            "author": i["user"]["login"],
+            "body": i["body"] or "",
+            "created_at": i["created_at"],
+            "labels": [lb["name"] for lb in i.get("labels", [])],
+            "comments": [],
+        }
+        comments, cerr = github_api(f"repos/{repo}/issues/{i['number']}/comments")
+        if cerr:
+            print(f"Comments fetch error for #{i['number']}: {cerr}", file=sys.stderr)
+        elif comments:
+            entry["comments"] = [
+                {"author": c["user"]["login"], "body": c["body"]}
+                for c in comments
+            ]
+        result.append(entry)
+    return result, None
+
+
+def fetch_pipelines(repo):
+    """Fetch recent workflow runs from GitHub. Returns list of run dicts."""
+    data, err = github_api(f"repos/{repo}/actions/runs?per_page=20")
+    if err:
+        print(f"Pipeline fetch error: {err}", file=sys.stderr)
+        return None, err
+    runs = data.get("workflow_runs", [])
+    return [
+        {
+            "id": r["id"],
+            "name": r["name"],
+            "status": r["status"],
+            "conclusion": r["conclusion"],
+            "branch": r["head_branch"],
+            "created_at": r["created_at"],
+        }
+        for r in runs
+    ], None
+
+
+def main():
+    selfdir = Path(__file__).parent.resolve()
+    os.chdir(selfdir)
+
+    context_dir = selfdir / "claude" / "context"
+    context_dir.mkdir(parents=True, exist_ok=True)
+
+    now = datetime.now(timezone.utc).isoformat()
+    reasons = []
+
+    # --- Git maintenance ---
+    print("Running git maintenance...", file=sys.stderr)
+    git_actions = do_git_maintenance()
+    print(f"Git actions: {git_actions}", file=sys.stderr)
+
+    branches_out, _, _ = run("git branch --format=%(refname:short)")
+    existing_branches = set(branches_out.splitlines())
+
+    git_ctx = {
+        "recorded_at": now,
+        "maintenance_actions": git_actions,
+        "branches": sorted(existing_branches),
+    }
+    with open(context_dir / "git_status.yaml", "w") as f:
+        yaml.dump(git_ctx, f, default_flow_style=False, allow_unicode=True)
+
+    # --- Detect repo ---
+    repo = get_repo()
+    if not repo:
+        print("Cannot detect GitHub repo from origin remote", file=sys.stderr)
+        reasons.append("cannot detect GitHub repo - manual check needed")
+
+    # --- Issues ---
+    issues_ctx = {"fetched_at": now, "repo": repo, "issues": []}
+    if repo:
+        print(f"Fetching issues for {repo}...", file=sys.stderr)
+        issues, err = fetch_issues(repo)
+        if err:
+            reasons.append(f"issue fetch failed: {err}")
+        elif issues is not None:
+            issues_ctx["issues"] = issues
+            for issue in issues:
+                num = issue["number"]
+                # If no branch references this issue number, it's unhandled
+                if not any(str(num) in b for b in existing_branches):
+                    reasons.append(f"unhandled issue #{num}: {issue['title']}")
+
+    with open(context_dir / "github_issues.yaml", "w") as f:
+        yaml.dump(issues_ctx, f, default_flow_style=False, allow_unicode=True)
+
+    # --- Pipelines ---
+    pipeline_ctx = {"fetched_at": now, "repo": repo, "runs": []}
+    if repo:
+        print("Fetching pipeline results...", file=sys.stderr)
+        runs, err = fetch_pipelines(repo)
+        if err:
+            print(f"Pipeline fetch skipped: {err}", file=sys.stderr)
+        elif runs is not None:
+            pipeline_ctx["runs"] = runs
+            for r in runs:
+                if r["conclusion"] in ("failure", "action_required") and r["branch"] == "main":
+                    reasons.append(f"pipeline failure on main: {r['name']}")
+
+    with open(context_dir / "pipeline_results.yaml", "w") as f:
+        yaml.dump(pipeline_ctx, f, default_flow_style=False, allow_unicode=True)
+
+    # --- Decision ---
+    if reasons:
+        print(f"Invoking Claude. Reasons: {reasons}", file=sys.stderr)
+        print("INVOKE_CLAUDE")
+    else:
+        print("Nothing actionable. Skipping Claude.", file=sys.stderr)
+        print("NOTHING_TO_DO")
+
+
+if __name__ == "__main__":
+    main()
