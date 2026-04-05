@@ -158,11 +158,30 @@ class Generator:
             for img_id in visible_ids
         ]
 
+        # Build meta dict for album index, deriving og:image from thumbnail if needed
+        meta = dict(self.index.data["meta"])
+        og_image = meta.get("og-image", "")
+        if not og_image or og_image == "TODO":
+            base_url = meta.get("url", "").rstrip("/")
+            thumb = meta.get("thumbnail", "")
+            if base_url and thumb:
+                meta["og-image"] = f"{base_url}/thumbnail/{thumb}"
+        # Derive og:image:alt from thumbnail caption if not set
+        og_alt = meta.get("og-image-alt", "")
+        if (not og_alt or og_alt == "TODO") and meta.get("thumbnail"):
+            # Find the thumbnail image and use its caption as alt
+            for img in self.index.data["images"]:
+                if img.get("orig") == meta["thumbnail"]:
+                    caption = img.get(lang, img.get("en", ""))
+                    if caption and caption != "TODO":
+                        meta["og-image-alt"] = caption
+                    break
+
         # Render album index page
         idx_tmpl = env.get_template("album-index.html.j2")
         idx_html = idx_tmpl.render(
             images=visible_list,
-            meta=self.index.data["meta"],
+            meta=meta,
             lang=lang,
         )
         (views / "index.html").write_text(idx_html, encoding="utf-8")

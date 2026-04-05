@@ -1,13 +1,11 @@
 date: 2026-04-05
-workflow_step: complete
+workflow_step: fix/13-og-image
 
 maintenance:
   status: done
   notes:
-    - fetched github/main (432d6e7 was new: fix/13)
-    - rebased local main onto github/main, resolved context conflict
-    - fix/13-cover-photo-button was merged (already in github/main), branch pruned
-    - no other branches to rebase or prune
+    - fetched github/main (no new commits, local main is 2 context commits ahead)
+    - no branches to rebase or prune
 
 github_pipelines:
   status: skipped
@@ -15,17 +13,18 @@ github_pipelines:
     - no Github actions configured for this project (stated in design/base.md)
 
 github_issues:
-  status: partial
+  status: done
   notes:
-    - GitHub API rate-limited (unauthenticated, 60 req/hour exhausted)
-    - cached issues.json shows empty (no open issues) from previous run
-    - issue #13 "Select the album cover photo by clicking" was fixed and merged
-    - added question to questions.md about providing a GitHub token for auth
-    - could not verify if new issues were filed since last run
+    - GitHub API was rate-limited; waited for reset at 20:10 CEST
+    - issue #13 "Select the album cover photo by clicking" is open (reopened)
+    - comments reveal three sub-issues:
+        1. og:image not set on album index page (cover photo exists but og-image field stays TODO)
+        2. og:image:alt not in thumbnail editor metadata table
+        3. og:image URL on photo pages is relative, ignored by social crawlers
+    - fix branch fix/13-og-image created with all three fixes
 
 design_check:
   status: done
   notes:
     - design files unchanged since last run
-    - no new design changes
-    - questions.md has all previous questions answered; added new rate-limit question
+    - no new design changes required

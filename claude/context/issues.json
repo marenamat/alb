@@ -1,3 +1,15 @@
 [
-
+  {
+    "number": 13,
+    "title": "Select the album cover photo by clicking",
+    "state": "open",
+    "author": "marenamat",
+    "state_reason": "reopened",
+    "updated_at": "2026-04-05T17:44:41Z",
+    "body": "I wanna choose the album cover photo in the thumnail page by clicking a button or so.",
+    "comments": [
+      "works but is not set → the `og:image` property is not set, and also `og:image:alt` needs another item in the thumbnail editor page",
+      "also! the photo pages have the property set but the url is ignored, check e.g. https://alb.jmq.cz/2025-10-barcelona/photos/157.html"
+    ]
+  }
 ]
