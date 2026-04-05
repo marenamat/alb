@@ -1,11 +1,9 @@
 recorded_at: '2026-04-05'
 branch: issue-3-github-pages-website
-status: implemented
+status: rebased_and_reviewed
 issue: 3
 summary: >
-  Created GitHub Pages website in docs/ (index.html + style.css).
-  Website documents what claude-base is, how the loop works (loop diagram,
-  component descriptions), setup steps, and design principles.
-  Added .github/workflows/pages.yml to deploy on push to main.
-  Updated claude/design/documentation.md to reflect website scope and
-  template repository requirement.
+  Rebased issue-3 branch onto origin/main (resolved session.yaml context conflict).
+  Website in docs/ (index.html + style.css) and GitHub Pages workflow
+  (.github/workflows/pages.yml) are complete and ready for review.
+  issue-4 branch is already merged into origin/main.

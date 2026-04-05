@@ -1,13 +1,9 @@
 branches:
-- issue-1-claude-run-script
-- issue-2-restart-if-updated
 - issue-3-github-pages-website
+- issue-4-rebase-run-clanker
 - main
 maintenance_actions:
 - fetched
-- 'rebase_failed: issue-1-claude-run-script'
-- 'rebase_failed: issue-2-restart-if-updated'
-- 'rebase_failed: issue-3-github-pages-website'
-- 'pruned: issue-1-claude-run-script'
-- 'pruned: issue-2-restart-if-updated'
-recorded_at: '2026-04-05T17:00:00.364166+00:00'
+- 'rebase_failed: issue-3-github-pages-website (resolved manually: session.yaml context conflict)'
+- 'rebase_failed: issue-4-rebase-run-clanker (already at origin/main, merged)'
+recorded_at: '2026-04-05T17:15:00.000000+00:00'
