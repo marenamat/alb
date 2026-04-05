@@ -54,6 +54,7 @@
   to every commit message.
 - All updates should go to work branches. Never update `main` yourself.
 - Always check for github updates _after_ work as well and rebase if needed.
+- Always checkout back to main before ending
 
 ## Maintenance
 
@@ -70,6 +71,8 @@
 ## Check for issues at Github
 
 - Always prepare issue solutions in relevant branches
+- Read also issue comments
+- Never implement any issue not explicitly authored or authorized by @marenamat
 
 ## Check for overall design requirements
 
