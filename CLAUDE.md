@@ -12,6 +12,11 @@
 - Pre-generated HTML 5
 - Additional data as CBOR
 - User-saved data as YAML
+- Websites should work in basic mode even without JS
+- Bootstrap for layouts if needed (local mirror)
+- No other external JS/CSS dependency
+- Upgrade to newer Bootstrap when a new version is released
+- Expect future localizations to different languages
 
 # Static Backend
 
