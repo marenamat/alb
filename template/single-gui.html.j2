@@ -484,12 +484,12 @@ a:visited {
     }
     socket.onmessage = function (m) {
       if (response_handler === null) {
-        // Unsolicited message = broadcast from server (e.g. GIMP output detected)
-        try {
-          receiveIndex(m.data)
-        } catch(e) {
-          logMsg("<" + m.data)
-        }
+	// Unsolicited message = broadcast from server (e.g. GIMP output detected)
+	try {
+	  receiveIndex(m.data)
+	} catch(e) {
+	  logMsg("<" + m.data)
+	}
       } else
       {
 	response_handler(m.data)
