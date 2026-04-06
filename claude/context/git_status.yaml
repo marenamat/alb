@@ -1,13 +1,9 @@
 branches:
-- issue-6
 - main
 maintenance_actions:
-- fetched
-- main fast-forwarded
-- rebase_failed resolved: issue-6 context commits merged into main via fast-forward
-- issue-6 now at same tip as main (21e7c91)
-- main is 6 commits ahead of origin/main (unpushed, awaiting guardian push)
-recorded_at: '2026-04-06T02:00:00Z'
+- issue-6 deleted (fully merged)
+recorded_at: '2026-04-06T00:00:00+00:00'
 notes:
-- issue-6 work complete (setup-remotes + template merge in clanker-prep + website docs)
-- questions.md has curl command to close issue #6
+- issue-6 work merged into main; branch cleaned up
+- main is 7 commits ahead of origin/main (not yet pushed)
+- GitHub issue #6 still open; guardian should close it

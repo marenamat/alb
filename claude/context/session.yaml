@@ -1,14 +1,12 @@
-recorded_at: '2026-04-05'
-branch: issue-5
-status: complete
-issue: 5
+recorded_at: '2026-04-06'
+branch: main
+status: clean
+issue: null
 summary: >
-  Issue #5: collapse claude/design/ files into CLAUDE.md.
-  All design content moved into CLAUDE.md "Design Goals" section.
-  Stale claude/design/ references cleaned up in docs/index.html (3 spots)
-  and in the CLAUDE.md workflow step "Check for overall design requirements".
-  Website (docs/) updated to reflect design lives in CLAUDE.md, not claude/design/.
+  Workflow check session. All pipelines passing. Issue #6 (setup-remotes guide)
+  work was already merged into main. Deleted stale issue-6 branch.
+  No new issues to work on. Design goals for website and documentation are met.
 notes:
-  - issues 2, 3, 4 implemented in prior sessions and merged to main
-  - issue 5 branch is ready for human review and merge
-  - after merge, guardian can close issues 2, 3, 4, 5 on GitHub
+  - Issue #6 on GitHub still open; guardian can close it (needs GitHub auth to close via API)
+  - main is ahead of origin/main by 7+ commits; guardian pushes when ready
+  - Template repository designation on GitHub is a UI setting for guardian to enable
