@@ -4,5 +4,5 @@ branches:
 maintenance_actions:
 - fetched
 - main fast-forwarded
-- created branch issue-6 for fix to get_repo() remote detection
-recorded_at: '2026-04-06T01:30:00.853529+00:00'
+- 'rebase_failed: issue-6'
+recorded_at: '2026-04-06T01:40:00.889694+00:00'
