@@ -1,12 +1,16 @@
 recorded_at: '2026-04-06'
-branch: main
-status: clean
-issue: null
+branch: issue-6
+status: complete
+issue: 6
 summary: >
-  Workflow check session. All pipelines passing. Issue #6 (setup-remotes guide)
-  work was already merged into main. Deleted stale issue-6 branch.
-  No new issues to work on. Design goals for website and documentation are met.
+  Fixed clanker-prep rebase bug (rebasing onto remote/main instead of local main).
+  When local main is ahead of origin/main (not yet pushed), rebasing feature branches
+  onto origin/main caused spurious conflicts in context YAML files.
+  Fix: rebase onto local main, which is always >= remote/main after the fast-forward step.
+  All issue-6 deliverables remain in place: setup-remotes script, do_template_merge()
+  in clanker-prep, website docs in docs/index.html.
 notes:
-  - Issue #6 on GitHub still open; guardian can close it (needs GitHub auth to close via API)
-  - main is ahead of origin/main by 7+ commits; guardian pushes when ready
+  - Issue #6 on GitHub still open; guardian can close it after merging
+  - issue-6 branch is ahead of main by 5 commits, ready to merge
+  - main is ahead of origin/main; guardian pushes when ready
   - Template repository designation on GitHub is a UI setting for guardian to enable
