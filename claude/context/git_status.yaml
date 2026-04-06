@@ -6,3 +6,8 @@ maintenance_actions:
 - main fast-forwarded
 - 'rebase_failed: issue-6'
 recorded_at: '2026-04-06T01:40:00.889694+00:00'
+session_notes:
+- issue-6 rebased cleanly onto main after committing context
+- 'fix: detect github repo from github remote (c206fad) already on issue-6'
+- 'fix: do_git_maintenance() now remote-agnostic via get_fetch_remote() (8b7c0a7)'
+- issue-6 ready for merge - closes #6
