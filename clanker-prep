@@ -66,28 +66,46 @@ def get_repo():
     return None
 
 
+def get_fetch_remote():
+    """Detect the fetch remote name: tries 'github' first (setup-remotes layout), then 'origin'."""
+    for remote in ("github", "origin"):
+        _, _, rc = run(f"git remote get-url {remote}")
+        if rc == 0:
+            return remote
+    return None
+
+
 def do_git_maintenance():
     """
-    Fetch from origin, fast-forward main, rebase feature branches, prune merged.
+    Fetch from the detected remote, fast-forward main, rebase feature branches, prune merged.
     Returns list of action strings for context.
     """
     actions = []
 
+    remote = get_fetch_remote()
+    if not remote:
+        actions.append("fetch_failed: no usable remote (tried github, origin)")
+        return actions
+
     # Fetch and prune stale remote refs
-    out, err, rc = run("git fetch origin --prune 2>&1")
+    out, err, rc = run(f"git fetch {remote} --prune 2>&1")
     if rc != 0:
         print(f"git fetch failed: {out} {err}", file=sys.stderr)
         actions.append(f"fetch_failed: {err}")
     else:
         actions.append("fetched")
 
-    # Fast-forward local main if origin/main is ahead
+    # Fast-forward local main if remote/main is ahead
     local, _, _ = run("git rev-parse main")
-    remote, _, _ = run("git rev-parse origin/main")
-    if local != remote:
+    remote_main, _, rc = run(f"git rev-parse {remote}/main")
+    if rc != 0:
+        actions.append(f"fetch_failed: cannot resolve {remote}/main")
+        return actions
+
+    if local != remote_main:
         current, _, _ = run("git branch --show-current")
         run("git checkout main")
-        _, err, rc = run("git merge --ff-only origin/main")
+        _, err, rc = run(f"git merge --ff-only {remote}/main")
         if rc == 0:
             actions.append("main fast-forwarded")
         else:
@@ -95,7 +113,7 @@ def do_git_maintenance():
         if current and current != "main":
             run(f"git checkout {current}")
 
-    # Rebase all local branches (except main) onto origin/main
+    # Rebase all local branches (except main) onto remote/main
     branches_out, _, _ = run("git branch")
     branches = [line.strip().lstrip("*").strip() for line in branches_out.splitlines()
                 if line.strip() and line.strip().lstrip("*").strip() not in ("", "main")]
@@ -103,7 +121,7 @@ def do_git_maintenance():
         current, _, _ = run("git branch --show-current")
         for branch in branches:
             run(f"git checkout {branch}")
-            _, err, rc = run("git rebase origin/main")
+            _, err, rc = run(f"git rebase {remote}/main")
             if rc != 0:
                 print(f"Rebase of {branch} failed, aborting", file=sys.stderr)
                 run("git rebase --abort")
@@ -114,8 +132,8 @@ def do_git_maintenance():
         restore = current if current else "main"
         run(f"git checkout {restore}")
 
-    # Prune local branches fully merged into origin/main
-    merged_out, _, _ = run("git branch --merged origin/main")
+    # Prune local branches fully merged into remote/main
+    merged_out, _, _ = run(f"git branch --merged {remote}/main")
     for branch in merged_out.splitlines():
         branch = branch.strip().lstrip("*").strip()
         if branch and branch != "main":
