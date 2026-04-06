@@ -69,7 +69,7 @@ class Help(Command):
     def header(self):
         print(f"This is Alb, a photo album generator. It has these basic commands:")
 
-    def plain(self):
+    def plain(self, items):
         self.header()
         for line in items:
             print()
