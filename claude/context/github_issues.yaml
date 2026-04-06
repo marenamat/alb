@@ -1,35 +1,11 @@
-fetched_at: '2026-04-06T16:10:00.766863+00:00'
+fetched_at: '2026-04-06T16:31:00.779503+00:00'
 issues:
 - author: marenamat
-  body: "There are now two projects using this base, i.e. `marenamat/claude-dashboard`\
-    \ and `marenamat/alb`; it looks like they get stuck inside a call-the-claude loop\
-    \ which eats my tokens too quickly. Check why that is happening.\n\nRelevant logs:\n\
-    \n```\n===========\nMon Apr  6 13:40:00 CEST 2026\nRunning git maintenance...\n\
-    Git actions: ['fetched', 'main fast-forwarded']\nChecking upstream template (claude-base)...\n\
-    Template actions: []\nFetching issues for marenamat/alb...\nFetching pipeline\
-    \ results...\nInvoking Claude. Reasons: ['pipeline failure on main: Deploy GitHub\
-    \ Pages']\nPrep decision: INVOKE_CLAUDE\nAll clear:\n\n- **Git**: fetched, main\
-    \ fast-forwarded (done by `clanker-prep`)\n- **Pipeline**: one failure (`Deploy\
-    \ GitHub Pages`) — irrelevant per `design/base.md`\n- **Issues**: none open\n\
-    - **Design**: no changes\n\nNothing to implement this cycle.\nMon Apr  6 13:40:44\
-    \ CEST 2026\n```\n\nand\n\n```\n===========\nMon Apr  6 13:20:00 CEST 2026\nRunning\
-    \ git maintenance...\nGit actions: ['fetched', 'main ff failed: hint: Diverging\
-    \ branches can\\'t be fast-forwarded, yo\nu need to either:\\nhint:\\nhint: \\\
-    tgit merge --no-ff\\nhint:\\nhint: or:\\nhint:\\nhint: \\tgit rebas\ne\\nhint:\\\
-    nhint: Disable this message with \"git config set advice.diverging false\"\\nfatal:\
-    \ Not p\nossible to fast-forward, aborting.', 'up-to-date: issue-2-separate-nginx']\n\
-    Checking upstream template (claude-base)...\nTemplate actions: []\nFetching issues\
-    \ for marenamat/claude-dashboard...\nFetching pipeline results...\nInvoking Claude.\
-    \ Reasons: ['pipeline failure on main: pages build and deployment', 'pipeline\
-    \ fa\nilure on main: Build', 'pipeline failure on main: Deploy', 'pipeline failure\
-    \ on main: Deploy', \n'pipeline failure on main: Build', 'pipeline failure on\
-    \ main: Build', 'pipeline failure on main\n: Build', 'pipeline failure on main:\
-    \ Build', 'pipeline failure on main: Build', 'pipeline failu\nre on main: Deploy\
-    \ GitHub Pages', 'pipeline failure on main: Build', 'pipeline failure on main:\n\
-    \ Build']\nPrep decision: INVOKE_CLAUDE\n```"
+  body: Commit the claude-base updates in dependent projects as actual merges with
+    the relevant commit IDs
   comments: []
-  created_at: '2026-04-06T13:04:08Z'
+  created_at: '2026-04-06T16:16:34Z'
   labels: []
-  number: 8
-  title: Check existing projects
+  number: 9
+  title: merge claude-base instead of picking files
 repo: marenamat/claude-base
