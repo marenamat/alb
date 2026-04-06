@@ -1,11 +1,12 @@
-date: 2026-04-05
-workflow_step: fix/13-og-image
+date: 2026-04-06
+workflow_step: idle
 
 maintenance:
-  status: done
+  status: partial
   notes:
-    - fetched github/main (no new commits, local main is 2 context commits ahead)
-    - no branches to rebase or prune
+    - clanker-prep failed to reach GitHub (fetch_failed, main ff failed)
+    - local main is 3 context commits ahead of github/main
+    - fix/13-og-image work is committed and merged into main (commit b1649d0)
 
 github_pipelines:
   status: skipped
@@ -13,15 +14,10 @@ github_pipelines:
     - no Github actions configured for this project (stated in design/base.md)
 
 github_issues:
-  status: done
+  status: unavailable
   notes:
-    - GitHub API was rate-limited; waited for reset at 20:10 CEST
-    - issue #13 "Select the album cover photo by clicking" is open (reopened)
-    - comments reveal three sub-issues:
-        1. og:image not set on album index page (cover photo exists but og-image field stays TODO)
-        2. og:image:alt not in thumbnail editor metadata table
-        3. og:image URL on photo pages is relative, ignored by social crawlers
-    - fix branch fix/13-og-image created with all three fixes
+    - GitHub API unreachable during clanker-prep (repo: null)
+    - no issues to process
 
 design_check:
   status: done
