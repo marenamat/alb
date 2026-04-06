@@ -2,7 +2,7 @@ date: 2026-04-06
 workflow_step: in-progress
 
 maintenance:
-  status: partial
+  status: done
   notes:
     - clanker-prep ran; main fast-forward failed (diverged from remote)
     - template_merge also failed
