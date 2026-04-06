@@ -5,7 +5,8 @@ maintenance:
   status: partial
   notes:
     - clanker-prep failed to reach GitHub (fetch_failed, main ff failed)
-    - local main is ahead of github/main (fix/13-og-image merged at b1649d0, plus context commits)
+    - local main is 3 context commits ahead of github/main
+    - fix/13-og-image work is committed and merged into main (commit b1649d0)
 
 github_pipelines:
   status: skipped
@@ -16,8 +17,7 @@ github_issues:
   status: unavailable
   notes:
     - GitHub API unreachable during clanker-prep (repo: null)
-    - cached issues.json shows issue #13 still open/reopened
-    - fix for #13 already committed at b1649d0, awaiting human push/review
+    - no issues to process
 
 design_check:
   status: done

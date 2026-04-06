@@ -1,0 +1,9 @@
+recorded_at: '2026-04-05'
+branch: issue-3-github-pages-website
+status: rebased_and_reviewed
+issue: 3
+summary: >
+  Rebased issue-3 branch onto origin/main (resolved session.yaml context conflict).
+  Website in docs/ (index.html + style.css) and GitHub Pages workflow
+  (.github/workflows/pages.yml) are complete and ready for review.
+  issue-4 branch is already merged into origin/main.
