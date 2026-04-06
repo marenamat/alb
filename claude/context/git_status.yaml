@@ -1,13 +1,15 @@
 branches:
 - fix/9-exif-static
+- fix/14-counter-deleted-photos
+- fix/15-gimped-photos
 - main
 maintenance_actions:
 - fetched
-- "main ff failed: hint: Diverging branches can't be fast-forwarded, you need to either:\n\
-  hint:\nhint: \tgit merge --no-ff\nhint:\nhint: or:\nhint:\nhint: \tgit rebase\n\
-  hint:\nhint: Disable this message with \"git config set advice.diverging false\"\
-  \nfatal: Not possible to fast-forward, aborting."
+- "main ff failed: diverging branches"
 - 'rebased: fix/9-exif-static'
 - template_fetched
 - 'template_merge_failed: '
-recorded_at: '2026-04-06T17:43:00.838105+00:00'
+work_done:
+- "fix/14-counter-deleted-photos: Fix #14 - counter uses pos (visible position) instead of img_id (full array index)"
+- "fix/15-gimped-photos: Fix #15 - resizer uses latest gimp_mods entry as source if present"
+recorded_at: '2026-04-06T18:00:00+00:00'
