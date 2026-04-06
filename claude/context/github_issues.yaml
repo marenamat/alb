@@ -1,12 +1,5 @@
-fetched_at: '2026-04-06T17:43:00.838105+00:00'
+fetched_at: '2026-04-06T18:18:03.407011+00:00'
 issues:
-- author: marenamat
-  body: the album generator does not look like actually using gimped photos
-  comments: []
-  created_at: '2026-04-06T17:39:06Z'
-  labels: []
-  number: 15
-  title: missing gimped photos
 - author: marenamat
   body: counter on top includes deleted photos; while the total sum is correct, the
     ID is wrong
@@ -15,4 +8,5 @@ issues:
   labels: []
   number: 14
   title: counter should ignore deleted photos
+  status: fix prepared on fix/14-counter-deleted-photos branch
 repo: marenamat/alb

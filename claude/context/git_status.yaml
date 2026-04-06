@@ -1,15 +1,9 @@
 branches:
-- fix/9-exif-static
 - fix/14-counter-deleted-photos
-- fix/15-gimped-photos
 - main
 maintenance_actions:
 - fetched
-- "main ff failed: diverging branches"
-- 'rebased: fix/9-exif-static'
-- template_fetched
-- 'template_merge_failed: '
-work_done:
-- "fix/14-counter-deleted-photos: Fix #14 - counter uses pos (visible position) instead of img_id (full array index)"
-- "fix/15-gimped-photos: Fix #15 - resizer uses latest gimp_mods entry as source if present"
-recorded_at: '2026-04-06T18:00:00+00:00'
+- main fast-forwarded
+- stale branches deleted: fix/15-gimped-photos, fix/9-exif-static (already merged into main)
+- fix/14-counter-deleted-photos reset to main and fix applied
+recorded_at: '2026-04-06T18:18:03.407011+00:00'
