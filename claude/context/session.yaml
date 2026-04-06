@@ -3,14 +3,18 @@ branch: issue-6
 status: complete
 issue: 6
 summary: >
-  Fixed clanker-prep rebase bug (rebasing onto remote/main instead of local main).
-  When local main is ahead of origin/main (not yet pushed), rebasing feature branches
-  onto origin/main caused spurious conflicts in context YAML files.
-  Fix: rebase onto local main, which is always >= remote/main after the fast-forward step.
+  Fixed recurring rebase_failed caused by dirty context files.
+  clanker-prep writes context files after do_git_maintenance(), but those
+  files would be left dirty if Claude didn't commit them. Next clanker-prep
+  run's rebase would then fail with "unstaged changes".
+  Fix: git stash before rebase loop, git stash pop after (on the original branch).
   All issue-6 deliverables remain in place: setup-remotes script, do_template_merge()
   in clanker-prep, website docs in docs/index.html.
 notes:
   - Issue #6 on GitHub still open; guardian can close it after merging
-  - issue-6 branch is ahead of main by 5 commits, ready to merge
+  - issue-6 branch is ahead of main by 6 commits, ready to merge
   - main is ahead of origin/main; guardian pushes when ready
   - Template repository designation on GitHub is a UI setting for guardian to enable
+  - Always commit ALL context files (git_status.yaml, github_issues.yaml,
+    pipeline_results.yaml, session.yaml) at end of every session to avoid dirty-file
+    rebase failures on next clanker-prep run
