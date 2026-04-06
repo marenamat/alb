@@ -100,7 +100,9 @@ class Generator:
                 continue
             visible_images.append(img)
 
-            src = self.index.path / img["orig"]
+            # Use latest gimped version as source if available, else original
+            mods = img.get("gimp_mods", [])
+            src = self.index.path / (mods[-1] if mods else img["orig"])
 
             # Compute source hash once per image
             src_hash = _sha256(src)
