@@ -40,7 +40,7 @@
 <div class="container-fluid py-3">
   <div class="d-flex justify-content-between align-items-center mb-2">
     <a href="../index.html" class="nav-btn" title="Back to album">&larr;</a>
-    <span class="text-muted small">{{ img_id + 1 }} / {{ total }}</span>
+    <span class="text-muted small">{{ pos + 1 }} / {{ total }}</span>
     <div>
       {% if prev_id is not none %}
       <a href="{{ prev_id }}.html" class="nav-btn" title="Previous">&laquo;</a>

@@ -212,6 +212,7 @@ class Generator:
             html = single_tmpl.render(
                 img=img,
                 img_id=img_id,
+                pos=pos,      # 0-based position among visible images only
                 total=len(visible_ids),
                 prev_id=prev_id,
                 next_id=next_id,
