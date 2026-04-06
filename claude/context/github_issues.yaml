@@ -1,19 +1,15 @@
-fetched_at: '2026-04-06T06:20:01.132829+00:00'
+fetched_at: '2026-04-06T11:00:00.518052+00:00'
 issues:
 - author: marenamat
-  body: "My `alb` project has this remote collection:\n\n```\nclanker\tclaude:claude/alb\
-    \ (fetch)\nclanker\tclaude:claude/alb (push)\nclaude-base\thttps://github.com/marenamat/claude-base\
-    \ (fetch)\nclaude-base\thttps://github.com/marenamat/claude-base (push)\ngithub\t\
-    https://github.com/marenamat/alb.git (fetch)\ngithub\tgit@github.com:marenamat/alb.git\
-    \ (push)\n```\n\nMy workflow is:\n\n- merge from `claude-base` if better instructions\
-    \ are available\n- fetch and merge work from `clanker`\n- push to `github`\n\n\
-    Make user guide or ideally a script setting this easily up"
-  comments:
-  - author: marenamat
-    body: also we probably need a merging script / goal, ideally in `clanker-prep`,
-      so that template is automatically merged in
-  created_at: '2026-04-05T18:03:54Z'
+  body: 'Client projects should periodically check for new claude-base versions and
+    auto-merge them.
+
+
+    While that merge should improve their processes, it must not stomp over their
+    specifics. Propose a solution.'
+  comments: []
+  created_at: '2026-04-06T09:09:58Z'
   labels: []
-  number: 6
-  title: Make user guide how to setup remotes the right way
+  number: 7
+  title: Auto-merge new versions of claude-base
 repo: marenamat/claude-base
