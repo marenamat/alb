@@ -7,3 +7,4 @@ runs:
   id: 24007344204
   name: Deploy GitHub Pages
   status: completed
+  note: Irrelevant - design/base.md states "This project has no Github actions. No need to check them."
