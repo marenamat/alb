@@ -31,6 +31,9 @@
     .caption { font-size: 1.1rem; margin-top: 0.5rem; }
     .caption-cs { font-style: italic; font-size: 0.95rem; color: var(--bs-secondary-color); }
     footer { border-top: 1px solid var(--bs-border-color); margin-top: 1rem; padding-top: 0.5rem; font-size: 0.8rem; color: var(--bs-secondary-color); }
+    .exif-table { font-size: 0.82rem; color: var(--bs-secondary-color); margin-top: 0.6rem; }
+    .exif-table td:first-child { padding-right: 0.6em; white-space: nowrap; }
+    .exif-gps-links a { margin-right: 0.5em; font-size: 0.82rem; }
   </style>
 </head>
 <body>
@@ -59,6 +62,28 @@
   {% endif %}
   {% if cs_caption and cs_caption != 'TODO' and cs_caption != en_caption %}
   <div class="caption-cs text-center">{{ cs_caption }}</div>
+  {% endif %}
+
+  {% if exif %}
+  <div class="text-center">
+    <table class="exif-table d-inline-block text-start">
+      {% if exif.camera %}<tr><td>Camera</td><td>{{ exif.camera }}</td></tr>{% endif %}
+      {% if exif.lens %}<tr><td>Lens</td><td>{{ exif.lens }}</td></tr>{% endif %}
+      {% if exif.aperture %}<tr><td>Aperture</td><td>{{ exif.aperture }}</td></tr>{% endif %}
+      {% if exif.focal_length %}<tr><td>Focal length</td><td>{{ exif.focal_length }}</td></tr>{% endif %}
+      {% if exif.shutter %}<tr><td>Shutter</td><td>{{ exif.shutter }}</td></tr>{% endif %}
+      {% if exif.iso %}<tr><td>ISO</td><td>{{ exif.iso }}</td></tr>{% endif %}
+      {% if exif.exposure_bias %}<tr><td>Exp. bias</td><td>{{ exif.exposure_bias }}</td></tr>{% endif %}
+      {% if exif.datetime %}<tr><td>Date</td><td>{{ exif.datetime }}</td></tr>{% endif %}
+    </table>
+    {% if exif.gps %}
+    <div class="exif-gps-links mt-1">
+      <a href="https://mapy.com/?q={{ '%.6f' | format(exif.gps.lat) }},{{ '%.6f' | format(exif.gps.lon) }}" target="_blank" rel="noopener">Mapy.com</a>
+      <a href="https://www.openstreetmap.org/?mlat={{ '%.6f' | format(exif.gps.lat) }}&amp;mlon={{ '%.6f' | format(exif.gps.lon) }}&amp;zoom=15" target="_blank" rel="noopener">OpenStreetMap</a>
+      <a href="https://www.openrailwaymap.org/?lat={{ '%.6f' | format(exif.gps.lat) }}&amp;lon={{ '%.6f' | format(exif.gps.lon) }}&amp;zoom=15" target="_blank" rel="noopener">OpenRailwayMap</a>
+    </div>
+    {% endif %}
+  </div>
   {% endif %}
 
   <footer class="text-center">

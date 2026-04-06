@@ -1,5 +1,6 @@
 from . import AlbException
 from .Resizer import Resizer
+from . import Exif
 
 import asyncio
 import hashlib
@@ -198,6 +199,14 @@ class Generator:
             prev_id = visible_ids[pos - 1] if pos > 0 else None
             next_id = visible_ids[pos + 1] if pos < len(visible_ids) - 1 else None
 
+            # Read EXIF for this image (use latest GIMP mod if any, else original)
+            mods = img.get("gimp_mods", [])
+            if mods:
+                exif_path = self.index.path / mods[-1]
+            else:
+                exif_path = self.index.path / img["orig"]
+            exif = Exif.read(exif_path)
+
             html = single_tmpl.render(
                 img=img,
                 img_id=img_id,
@@ -206,6 +215,7 @@ class Generator:
                 next_id=next_id,
                 meta=self.index.data["meta"],
                 lang=lang,
+                exif=exif,
             )
             (photos_dir / f"{img_id}.html").write_text(html, encoding="utf-8")
 

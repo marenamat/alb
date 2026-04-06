@@ -1,26 +1,32 @@
 date: 2026-04-06
-workflow_step: idle
+workflow_step: in-progress
 
 maintenance:
   status: partial
   notes:
-    - clanker-prep failed to reach GitHub (fetch_failed, main ff failed)
-    - local main is 3 context commits ahead of github/main
-    - fix/13-og-image work is committed and merged into main (commit b1649d0)
+    - clanker-prep ran; main fast-forward failed (diverged from remote)
+    - template_merge also failed
+    - working on fix/9-exif-static branch
 
 github_pipelines:
   status: skipped
   notes:
     - no Github actions configured for this project (stated in design/base.md)
+    - pipeline_results.yaml shows "Deploy GitHub Pages" failure but that's irrelevant
 
 github_issues:
-  status: unavailable
+  status: in-progress
   notes:
-    - GitHub API unreachable during clanker-prep (repo: null)
-    - no issues to process
+    - issue #9 still open: Display EXIF data
+    - EXIF was implemented in GUI editor (single-gui.html.j2) but NOT in static generated album
+    - fix/9-exif-static branch: adds EXIF to Generator.py and album-single.html.j2
 
 design_check:
   status: done
   notes:
-    - design files unchanged since last run
-    - no new design changes required
+    - design files unchanged
+    - access control deferred (everything public for v1)
+
+pending:
+  - GitHub PAT for API rate limiting not yet provided (see claude/questions.md)
+  - packages py3-yaml py3-jinja2 py3-aiohttp py3-pillow need to be installed
