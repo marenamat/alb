@@ -1,9 +1,8 @@
 branches:
+- issue-6
 - main
 maintenance_actions:
-- issue-6 deleted (fully merged)
-recorded_at: '2026-04-06T00:00:00+00:00'
-notes:
-- issue-6 work merged into main; branch cleaned up
-- main is 7 commits ahead of origin/main (not yet pushed)
-- GitHub issue #6 still open; guardian should close it
+- fetched
+- main fast-forwarded
+- created branch issue-6 for fix to get_repo() remote detection
+recorded_at: '2026-04-06T01:30:00.853529+00:00'

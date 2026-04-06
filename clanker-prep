@@ -48,18 +48,22 @@ def github_api(path):
 
 
 def get_repo():
-    """Detect GitHub repo owner/name from git remote origin."""
-    out, _, _ = run("git remote get-url origin")
-    if not out:
-        return None
-    url = out.strip()
-    if url.startswith("https://github.com/"):
-        path = url[len("https://github.com/"):]
-    elif "github.com:" in url:
-        path = url.split("github.com:")[1]
-    else:
-        return None
-    return path.removesuffix(".git").strip("/")
+    """Detect GitHub repo owner/name from git remotes.
+    Tries 'github' first (setup-remotes layout), then falls back to 'origin'.
+    """
+    for remote in ("github", "origin"):
+        out, _, rc = run(f"git remote get-url {remote}")
+        if rc != 0 or not out:
+            continue
+        url = out.strip()
+        if url.startswith("https://github.com/"):
+            path = url[len("https://github.com/"):]
+        elif "github.com:" in url:
+            path = url.split("github.com:")[1]
+        else:
+            continue
+        return path.removesuffix(".git").strip("/")
+    return None
 
 
 def do_git_maintenance():
@@ -261,7 +265,7 @@ def main():
     # --- Detect repo ---
     repo = get_repo()
     if not repo:
-        print("Cannot detect GitHub repo from origin remote", file=sys.stderr)
+        print("Cannot detect GitHub repo from remotes (tried: github, origin)", file=sys.stderr)
         reasons.append("cannot detect GitHub repo - manual check needed")
 
     # --- Issues ---
