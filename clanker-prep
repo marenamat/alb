@@ -113,7 +113,9 @@ def do_git_maintenance():
         if current and current != "main":
             run(f"git checkout {current}")
 
-    # Rebase all local branches (except main) onto remote/main
+    # Rebase all local branches (except main) onto local main.
+    # Local main is always >= remote/main after the fast-forward above,
+    # so rebasing onto it avoids replaying already-merged commits.
     branches_out, _, _ = run("git branch")
     branches = [line.strip().lstrip("*").strip() for line in branches_out.splitlines()
                 if line.strip() and line.strip().lstrip("*").strip() not in ("", "main")]
@@ -121,7 +123,7 @@ def do_git_maintenance():
         current, _, _ = run("git branch --show-current")
         for branch in branches:
             run(f"git checkout {branch}")
-            _, err, rc = run(f"git rebase {remote}/main")
+            _, err, rc = run("git rebase main")
             if rc != 0:
                 print(f"Rebase of {branch} failed, aborting", file=sys.stderr)
                 run("git rebase --abort")
