@@ -6,6 +6,7 @@ Requires Pillow (py3-pillow on Alpine).
 import logging
 import math
 import pathlib
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -63,6 +64,17 @@ def _format_shutter(val):
     # Express as 1/N
     n = round(1 / f)
     return f"1/{n} s"
+
+def _format_datetime(val):
+    """Parse EXIF datetime string (YYYY:MM:DD HH:MM:SS) into ISO-style YYYY-MM-DD HH:MM:SS."""
+    if not val:
+        return None
+    try:
+        dt = datetime.strptime(str(val).strip(), "%Y:%m:%d %H:%M:%S")
+        return dt.strftime("%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        # Return as-is if format is unexpected
+        return str(val).strip()
 
 def _parse_gps(gps_raw):
     """
@@ -158,7 +170,7 @@ def read(path: pathlib.Path) -> dict:
     # Prefer DateTimeOriginal (when the shutter fired) over DateTime (file write)
     for dt_key in ("DateTimeOriginal", "DateTime"):
         if dt_key in tag_map:
-            result["datetime"] = tag_map[dt_key]
+            result["datetime"] = _format_datetime(tag_map[dt_key])
             break
 
     if "GPSInfo" in tag_map:
