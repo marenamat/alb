@@ -434,6 +434,7 @@ def main():
 
     # --- Issues ---
     issues_ctx = {"fetched_at": now, "repo": repo, "issues": []}
+    fetched_issue_ids = []
     if repo:
         print(f"Fetching issues for {repo}...", file=sys.stderr)
         issues, err = fetch_issues(repo)
@@ -441,6 +442,7 @@ def main():
             reasons.append(f"issue fetch failed: {err}")
         elif issues is not None:
             issues_ctx["issues"] = issues
+            fetched_issue_ids = [i["number"] for i in issues]
             for issue in issues:
                 num = issue["number"]
                 # If no branch references this issue number, it's unhandled
@@ -461,6 +463,7 @@ def main():
         seen_ids = set()
 
     pipeline_ctx = {"fetched_at": now, "repo": repo, "runs": []}
+    fetched_pipeline_ids = []
     if repo:
         print("Fetching pipeline results...", file=sys.stderr)
         runs, err = fetch_pipelines(repo)
@@ -468,6 +471,7 @@ def main():
             print(f"Pipeline fetch skipped: {err}", file=sys.stderr)
         elif runs is not None:
             pipeline_ctx["runs"] = runs
+            fetched_pipeline_ids = [r["id"] for r in runs]
             for r in runs:
                 if r["id"] not in seen_ids:
                     # Only trigger on failures we haven't seen before
@@ -486,6 +490,21 @@ def main():
         yaml.dump({"seen_ids": seen_list}, f, default_flow_style=False)
 
     # --- Decision ---
+    decision = "INVOKE_CLAUDE" if reasons else "NOTHING_TO_DO"
+
+    # Write machine-readable prep summary (overwritten each run)
+    prep_summary = {
+        "recorded_at": now,
+        "decision": decision,
+        "reasons": reasons,
+        "fetched_issues": fetched_issue_ids,
+        "fetched_pipelines": fetched_pipeline_ids,
+        "git_actions": git_actions,
+    }
+    with open(selfdir / "clanker-prep.json", "w") as f:
+        json.dump(prep_summary, f, indent=2)
+        f.write("\n")
+
     if reasons:
         print(f"Invoking Claude. Reasons: {reasons}", file=sys.stderr)
         print("INVOKE_CLAUDE")
