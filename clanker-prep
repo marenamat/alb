@@ -443,10 +443,15 @@ def main():
         elif issues is not None:
             issues_ctx["issues"] = issues
             fetched_issue_ids = [i["number"] for i in issues]
+            # Check which issues are referenced in recent main commits
+            recent_log, _, _ = run("git log main --oneline -100")
             for issue in issues:
                 num = issue["number"]
-                # If no branch references this issue number, it's unhandled
-                if not any(str(num) in b for b in existing_branches):
+                # Handled if a branch references the issue number
+                branch_handled = any(str(num) in b for b in existing_branches)
+                # Also handled if a recent main commit references the issue number
+                commit_handled = f"#{num}" in recent_log or f"issue-{num}" in recent_log
+                if not branch_handled and not commit_handled:
                     reasons.append(f"unhandled issue #{num}: {issue['title']}")
 
     with open(context_dir / "github_issues.yaml", "w") as f:
