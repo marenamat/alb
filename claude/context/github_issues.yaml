@@ -1,3 +1,14 @@
-fetched_at: '2026-04-07T06:01:00.374905+00:00'
-issues: []
+fetched_at: '2026-04-07T08:08:14.553297+00:00'
+issues:
+- author: marenamat
+  body: 'Bug: Dependent projects no longer merge upstream (origin).
+
+
+    They should, ideally, rebase on that, but when not possible, they have to merge
+    upstream. Otherwise, they don''t get updates from other sources.'
+  comments: []
+  created_at: '2026-04-06T18:29:24Z'
+  labels: []
+  number: 10
+  title: Upstream merging
 repo: marenamat/claude-base

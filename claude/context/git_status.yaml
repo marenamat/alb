@@ -4,8 +4,6 @@ branches:
 maintenance_actions:
 - fetched
 - main fast-forwarded
-- 'rebased: issue-10'
-- 'pruned: issue-10'
-recorded_at: '2026-04-07T06:01:00.374905+00:00'
-session_note: 'Implementing machine-readable outputs per design doc (issue #6): clanker-run
-  now writes clanker-runs.jsonl; clanker-prep now writes clanker-prep.json'
+- 'rebased: machine-readable-output'
+- 'pruned: machine-readable-output'
+recorded_at: '2026-04-07T08:08:14.553297+00:00'
