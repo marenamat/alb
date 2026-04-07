@@ -57,6 +57,7 @@ restart_flag="$selfdir/.clanker-restart-$$"
       -n "$selfdir" \
       --no-session-persistence \
       --output-format=stream-json \
+      --verbose \
       "proceed as the workflow specifies in CLAUDE.md" \
       </dev/null >"$tmp_out" 2>&1 || exit_code=$?
     exit_code=${exit_code:-0}
