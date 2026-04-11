@@ -109,7 +109,14 @@ def do_git_maintenance():
         if rc == 0:
             actions.append("main fast-forwarded")
         else:
-            actions.append(f"main ff failed: {err}")
+            # ff-only failed (diverging histories) — try rebase instead
+            print(f"ff-only failed, trying rebase of main onto {remote}/main", file=sys.stderr)
+            _, err2, rc2 = run(f"git rebase {remote}/main")
+            if rc2 == 0:
+                actions.append(f"main rebased onto {remote}/main")
+            else:
+                run("git rebase --abort")
+                actions.append(f"main_rebase_failed: {err2}")
         if current and current != "main":
             run(f"git checkout {current}")
 
@@ -423,7 +430,8 @@ def main():
 
     # Rebase failures need Claude to resolve conflicts
     for action in git_actions:
-        if action.startswith("rebase_failed:") or action.startswith("template_merge_failed:"):
+        if (action.startswith("rebase_failed:") or action.startswith("template_merge_failed:")
+                or action.startswith("main_rebase_failed:")):
             reasons.append(action)
 
     # --- Detect repo ---
