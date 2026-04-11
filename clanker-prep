@@ -361,7 +361,7 @@ def fetch_issues(repo):
             print(f"Comments fetch error for #{i['number']}: {cerr}", file=sys.stderr)
         elif comments:
             entry["comments"] = [
-                {"author": c["user"]["login"], "body": c["body"]}
+                {"id": c["id"], "author": c["user"]["login"], "body": c["body"]}
                 for c in comments
             ]
         result.append(entry)
@@ -433,6 +433,16 @@ def main():
         reasons.append("cannot detect GitHub repo - manual check needed")
 
     # --- Issues ---
+    # Load previously seen comment IDs to detect new comments on handled issues.
+    seen_comments_path = context_dir / "seen_issue_comment_ids.yaml"
+    if seen_comments_path.exists():
+        with open(seen_comments_path) as f:
+            seen_comments_data = yaml.safe_load(f) or {}
+        # Keys are stored as ints in YAML but may load as strings; normalise to int.
+        seen_comment_ids = {int(k): set(v) for k, v in seen_comments_data.get("seen_ids", {}).items()}
+    else:
+        seen_comment_ids = {}
+
     issues_ctx = {"fetched_at": now, "repo": repo, "issues": []}
     fetched_issue_ids = []
     if repo:
@@ -451,8 +461,24 @@ def main():
                 branch_handled = any(str(num) in b for b in existing_branches)
                 # Also handled if a recent main commit references the issue number
                 commit_handled = f"#{num}" in recent_log or f"issue-{num}" in recent_log
+
+                # Check for new comments regardless of handled state
+                current_cids = {c["id"] for c in issue.get("comments", [])}
+                prev_cids = seen_comment_ids.get(num, set())
+                new_cids = current_cids - prev_cids
+                # Remember all comment IDs seen this run
+                seen_comment_ids[num] = current_cids
+
                 if not branch_handled and not commit_handled:
                     reasons.append(f"unhandled issue #{num}: {issue['title']}")
+                elif new_cids:
+                    # Issue has a branch or commit, but new comments were posted
+                    reasons.append(f"new comment(s) on issue #{num}: {issue['title']}")
+
+    # Persist seen comment IDs so future runs only trigger on truly new comments.
+    seen_ids_to_save = {k: sorted(v) for k, v in seen_comment_ids.items()}
+    with open(seen_comments_path, "w") as f:
+        yaml.dump({"seen_ids": seen_ids_to_save}, f, default_flow_style=False)
 
     with open(context_dir / "github_issues.yaml", "w") as f:
         yaml.dump(issues_ctx, f, default_flow_style=False, allow_unicode=True)
