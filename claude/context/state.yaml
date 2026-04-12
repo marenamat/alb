@@ -26,4 +26,3 @@ design_check:
 
 pending:
   - GitHub PAT for API rate limiting not yet provided (see claude/questions.md)
-  - packages py3-yaml py3-jinja2 py3-aiohttp py3-pillow need to be installed
