@@ -122,9 +122,10 @@ Resolved items belong in the design docs, not in questions.md.
 
 ## Housekeeping workflow
 
-When invoked via `clanker-housekeeping` (daily cron), Claude performs the
-regular workflow above **plus** the following checks, then writes a
-machine-readable report to `clanker-housekeeping.json` in the repo root.
+When invoked via `clanker-housekeeping` (daily cron), Claude performs **only**
+the following health checks (no regular work, no issue branches, no commits
+except the context update and the JSON report), then writes a machine-readable
+report to `clanker-housekeeping.json` in the repo root.
 
 ### Checks
 

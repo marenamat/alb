@@ -31,6 +31,12 @@ CLANKER_TASK="housekeeping"
 The live session record in `clanker-current.json` includes `"task": "housekeeping"`
 so the dashboard can distinguish housekeeping runs from regular ones.
 
+**Important**: during a housekeeping run Claude does *not* perform regular work
+(no issue branches, no feature commits, no code changes).  It only runs the
+health checks below and writes the report.  The only git change allowed is a
+single context-update commit containing the updated YAML context files and
+`clanker-housekeeping.json`.
+
 ---
 
 ## Schedule
