@@ -2,22 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="$og-prefix$index.html" />
-  <meta property="og:description" content="$og-description$" />
-  <meta property="og:site_name" content="Maria's photo dumps" />
-  <meta property="og:image" content="$og-prefix$$og-image$" />
-  <meta property="og:image:url" content="$og-prefix$$og-image$" />
-  <meta property="og:image:alt" content="$og-image-alt$" />
-
-  <meta name="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="$og-prefix$index.html">
-  <meta name="twitter:title" content="$if(og-pagetitle)$$og-pagetitle$$else$$pagetitle$$endif$">
-  <meta name="twitter:description" content="$og-description$">
-  <meta name="twitter:image" content="$og-prefix$$og-image$">
-
   <title>E | {{ meta.title }}</title>
   <style>
 html {
@@ -290,7 +275,6 @@ a:visited {
 
 <script>
   var log_div = document.getElementById("log")
-  var img_container = document.getElementById("img-container")
   var img_element = document.getElementById("showfoto-img")
   var img_id = Number(img_element.dataset.imgid)
 
@@ -363,8 +347,21 @@ a:visited {
       return
     }
 
-    if (ev.key == "Enter" && ev.ctrlKey) {
+    // Plain Enter commits the description
+    if (ev.key == "Enter" && !ev.shiftKey && !ev.ctrlKey && !ev.altKey) {
+      ev.preventDefault()
       editableSave(ev.target)
+      return
+    }
+
+    // ctrl+Enter inserts an explicit newline (shift+Enter is handled natively by textarea)
+    if (ev.key == "Enter" && ev.ctrlKey) {
+      ev.preventDefault()
+      let ta = ev.target
+      let s = ta.selectionStart
+      let e = ta.selectionEnd
+      ta.value = ta.value.slice(0, s) + "\n" + ta.value.slice(e)
+      ta.selectionStart = ta.selectionEnd = s + 1
       return
     }
 
@@ -716,23 +713,14 @@ a:visited {
     var absX = Math.abs(difX)
     var absY = Math.abs(difY)
 
-    if (absX > absY*2)
-    { // Certainly left-right
+    // Only navigate on clear horizontal swipes (2× wider than tall)
+    if (absX > absY*2 && absX > 50) {
       if (difX < 0)
-	showfoto_img(document.getElementById(overlay_next.dataset.target))
+        next_foto()
       else
-	showfoto_img(document.getElementById(overlay_prev.dataset.target))
+        prev_foto()
     }
 
-    else if (absY > absX*2)
-    {
-      // Certainly up-down
-      if (difY < 0)
-	showfoto_img(document.getElementById(overlay_next.dataset.target))
-      else
-	showfoto_img(document.getElementById(overlay_prev.dataset.target))
-    }
-    
     tsX = null
     tsY = null
   }

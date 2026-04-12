@@ -1,4 +1,4 @@
-from . import Command, InvalidArgumentsException
+from . import Command, CommandRuntimeException, InvalidArgumentsException
 from ..GUI import WebApp
 from ..Index import Index, IndexException
 
@@ -21,9 +21,16 @@ class GUI(Command):
 
     async def run(self):
         try:
-            w = [ WebApp(Index(p)) for p in self.dirs ]
+            indices = [ Index(p) for p in self.dirs ]
+            # Auto-initialise any directory that has no index.yaml yet
+            for idx in indices:
+                idx_file = idx.path / "index.yaml"
+                if not idx_file.exists():
+                    logger.info(f"No index.yaml in {idx.path}, initialising...")
+                    await idx.new()
+            w = [ WebApp(idx) for idx in indices ]
             await asyncio.gather(*[ a.run() for a in w ])
         except IndexException as e:
-            raise CommandRuntimeException("Failed to open GUI for {e.path}: {''.join(e.args)}") from e
+            raise CommandRuntimeException(f"Failed to open GUI for {e.path}: {''.join(e.args)}") from e
 
 GUI.register()
