@@ -1,12 +1,11 @@
-date: 2026-04-06
-workflow_step: in-progress
+date: 2026-04-12
+workflow_step: complete
 
 maintenance:
   status: done
   notes:
-    - clanker-prep ran; main fast-forward failed (diverged from remote)
-    - template_merge also failed
-    - working on fix/9-exif-static branch
+    - clanker-prep ran; main fast-forwarded, template up to date
+    - only one branch: main
 
 github_pipelines:
   status: skipped
@@ -15,11 +14,9 @@ github_pipelines:
     - pipeline_results.yaml shows "Deploy GitHub Pages" failure but that's irrelevant
 
 github_issues:
-  status: in-progress
+  status: done
   notes:
-    - issue #9 still open: Display EXIF data
-    - EXIF was implemented in GUI editor (single-gui.html.j2) but NOT in static generated album
-    - fix/9-exif-static branch: adds EXIF to Generator.py and album-single.html.j2
+    - no open issues
 
 design_check:
   status: done
