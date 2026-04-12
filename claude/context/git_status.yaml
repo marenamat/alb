@@ -1,12 +1,13 @@
 branches:
-- issue-14
 - issue-15
 - issue-18
 - main
 maintenance_actions:
 - fetched
-- main fast-forwarded
 - 'rebased: issue-14'
 - 'rebased: issue-15'
+- 'rebased: issue-17'
 - 'rebased: issue-18'
-recorded_at: '2026-04-12T21:12:16.394361+00:00'
+- 'pruned: issue-14'
+- 'pruned: issue-17'
+recorded_at: '2026-04-12T21:31:00.392322+00:00'
