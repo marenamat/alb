@@ -538,8 +538,11 @@ def main():
     with open(seen_ids_path, "w") as f:
         yaml.dump({"seen_ids": seen_list}, f, default_flow_style=False)
 
-    # --- Dirty workdir check (issue #16) ---
+    # --- Dirty workdir check (issues #16, #14) ---
     # clanker-prep itself writes these files; they're always dirty after a run.
+    # Any other dirty file (including claude/questions.md) means Claude must run.
+    # Using dirty-file detection instead of a questions.md non-empty check avoids
+    # re-triggering when there are unanswered questions left in place (issue #14).
     PREP_OUTPUTS = {
         "claude/context/git_status.yaml",
         "claude/context/github_issues.yaml",
