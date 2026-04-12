@@ -1,4 +1,4 @@
-fetched_at: '2026-04-12T09:01:00.745004+00:00'
+fetched_at: '2026-04-12T11:33:56.641473+00:00'
 issues:
 - author: marenamat
   body: there may be something worth pulling
@@ -7,15 +7,6 @@ issues:
   labels: []
   number: 13
   title: check for updates in dashboard
-- author: marenamat
-  body: propose a method how to stream information from running sessions, in cooperation
-    with marenamat/claude-dashboard, so that one can see which sessions are currently
-    running, and possibly current log output and spent tokens
-  comments: []
-  created_at: '2026-04-11T22:15:32Z'
-  labels: []
-  number: 12
-  title: streaming in-progress work info
 - author: marenamat
   body: 'Bug: Dependent projects no longer merge upstream (origin).
 
