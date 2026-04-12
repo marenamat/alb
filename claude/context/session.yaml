@@ -1,20 +1,17 @@
-recorded_at: '2026-04-06'
-branch: issue-6
-status: complete
-issue: 6
+recorded_at: '2026-04-12'
+branch: issue-12
+status: in_progress
+issue: 12
 summary: >
-  Fixed recurring rebase_failed caused by dirty context files.
-  clanker-prep writes context files after do_git_maintenance(), but those
-  files would be left dirty if Claude didn't commit them. Next clanker-prep
-  run's rebase would then fail with "unstaged changes".
-  Fix: git stash before rebase loop, git stash pop after (on the original branch).
-  All issue-6 deliverables remain in place: setup-remotes script, do_template_merge()
-  in clanker-prep, website docs in docs/index.html.
+  Design proposal for streaming in-progress session info to claude-dashboard.
+  Wrote claude/design/streaming-sessions.md with a file-based approach:
+  clanker-run writes clanker-current.json while Claude runs (with pid, start,
+  log_file path, live token counts), dashboard polls project dirs for this file.
+  Three open questions remain for the guardian (remote vs local dashboard,
+  central vs per-project location, poll interval).
 notes:
-  - Issue #6 on GitHub still open; guardian can close it after merging
-  - issue-6 branch is ahead of main by 6 commits, ready to merge
-  - main is ahead of origin/main; guardian pushes when ready
-  - Template repository designation on GitHub is a UI setting for guardian to enable
-  - Always commit ALL context files (git_status.yaml, github_issues.yaml,
-    pipeline_results.yaml, session.yaml) at end of every session to avoid dirty-file
-    rebase failures on next clanker-prep run
+  - Issue #10 fix (636487a) already in main; no further action needed unless
+    guardian reports the rebase still fails in practice
+  - Issue #12 needs guardian review of the design before implementation begins
+  - Questions for guardian are at the end of claude/design/streaming-sessions.md
+  - Issue #6 close request still pending (see claude/questions.md)
