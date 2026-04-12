@@ -162,8 +162,16 @@ bash, jq or inline Python for JSON update).
 1. Is the dashboard local-only (file access is fine) or does it need to
    work over HTTP/SSH to a remote machine?  If remote, we need a small
    HTTP server or SSH-based file fetch rather than direct file reads.
+
+   *Dashboard always runs at the same machine as the workers.*
+
 2. Should `clanker-current.json` be written to `$selfdir` (project dir)
    or to a central location (e.g. `~/.clanker/`)?  Central location
    simplifies dashboard discovery but requires coordination between
    multiple concurrent projects.
+
+   *Dashboard does not need discovery, it has explicitly configured projects to watch.*
+
 3. Desired poll interval for the dashboard?
+
+   *ideally between 3s and 10s*
