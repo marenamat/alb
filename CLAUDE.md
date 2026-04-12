@@ -120,6 +120,48 @@ Read `claude/questions.md`. For each open question:
 `claude/questions.md` must contain **only open, unanswered questions**.
 Resolved items belong in the design docs, not in questions.md.
 
+## Housekeeping workflow
+
+When invoked via `clanker-housekeeping` (daily cron), Claude performs the
+regular workflow above **plus** the following checks, then writes a
+machine-readable report to `clanker-housekeeping.json` in the repo root.
+
+### Checks
+
+1. **Issues**: for each open issue, determine its state:
+   - `pending_review` — a branch exists for this issue AND has commits not
+     yet merged into main (work done, waiting for guardian to merge).
+   - `needing_attention` — no branch and no recent main commit references it
+     (Claude has not started working on it yet).
+
+2. **Branches**: list any local branch that is behind main (needs rebasing).
+
+3. **Questions**: check whether `claude/questions.md` has any content.
+
+### Output format: `clanker-housekeeping.json`
+
+```json
+{
+  "recorded_at": "2026-04-12T03:00:00+00:00",
+  "issues_pending_review": [
+    {"number": 13, "title": "...", "branch": "issue-13"}
+  ],
+  "issues_needing_attention": [
+    {"number": 14, "title": "...", "reason": "no branch or commit"}
+  ],
+  "branches_behind_main": [],
+  "questions_open": false,
+  "all_clean": true
+}
+```
+
+Write this file and commit it together with any other context changes.
+
+The dashboard reads `clanker-housekeeping.json` to display:
+- Issues awaiting review
+- Issues needing Claude attention
+- Whether there are open questions
+
 # Limits
 
 - Never touch `hacks/` but you may read it.
