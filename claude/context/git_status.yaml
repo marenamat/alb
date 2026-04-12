@@ -1,15 +1,8 @@
 branches:
-- issue-10
 - issue-11
-- machine-readable-output
 - main
 maintenance_actions:
 - fetched
-- main fast-forwarded (to e5ad210)
-- created issue-10 branch
-- created issue-11 branch
-recorded_at: '2026-04-12T00:00:00+00:00'
-notes: |
-  issue-10: fix rebase local main when ff-only fails
-  issue-11: fix trigger on new comments in handled issues
-  machine-readable-output: stale local branch (remote pruned, not yet deleted locally)
+- 'rebased: issue-11'
+- 'pruned: issue-11'
+recorded_at: '2026-04-12T00:01:00.308337+00:00'
