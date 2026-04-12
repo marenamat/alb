@@ -8,6 +8,12 @@ There are definitely some questions to be clarified. Ask.
 
 Index of albums, ordered by time, with thumbnails and descriptions.
 
+The photo library lives in a directory (e.g. `~/foto`). In that directory, there
+is an `albums.yaml` which `alb` aggregates from per-album `index.yaml` files in
+subdirectories. The generated landing page `index.html` is written to that same
+directory. A top-level `Makefile` provides `make install` to recursively rsync
+everything to the configured server.
+
 There should be multiple landing pages pre-generated, based on what capabilities
 are allowed by the current user, showing only that.
 
@@ -68,32 +74,14 @@ You may use that website as test data.
 
 ## Access control
 
-Another YAML, example:
+For the first version, everything is public. The `access` list in `albums.yaml`
+controls only whether an album appears on the landing page:
 
-```yaml
-users:
-  marenamat:
-    - nsfw
-    - family
-    - public
-  kmck:
-    - nsfw
-    - public
-  dedecek:
-    - family
-    - public
-```
+- If an album has `public` in its `access` list, it is listed on the public landing page.
+- If `public` is absent from `access`, the album is unlisted (not shown on landing page),
+  but still accessible by direct URL.
 
-Every user can have a bunch of capabilities, and that triggers access allowed or
-denied. If all capabilities stated in `access` are matched in the user's
-capability list, user has access to that resources.
-
-If no access is specified, nobody is allowed to access.
-
-All the website is served by NGINX, design a minimalist cookie-based
-and link-based authentication and generate appropriate config files.
-
-This section needs further refinements.
+Full per-user capability-based access control is deferred to a future version.
 
 # Owner workflow
 
@@ -111,9 +99,11 @@ By default, open CS and EN descriptions; commit the description by ENTER,
 allow adding explicit newline by shift+ENTER and ctrl+enter. The description
 should be interpreted as markdown.
 
-By pressing shift+G, open `gimp` with that photo. Supersede every photo named
-`<something>.jpg` by `<something>-<mod>.jpg`. Allow displaying photos before
-modification.
+By pressing shift+G, open `gimp` with that photo. Watch for new files created
+in the album directory while GIMP is open. A modified photo will be saved under
+a name like `<something>-orez.jpg` or `<something>-rot.jpg` (various suffixes).
+When such a file appears, automatically mark the original `<something>.jpg` as
+hidden (but do not delete it). Allow displaying photos before modification.
 
 Save all data to `index.yaml` into the camera dump folder. Every five minutes,
 copy `index.yaml` to `backup-yyyy-mm-dd--hh-mm.yaml` if something goes wrong.
@@ -128,12 +118,13 @@ When tools starts again, re-load `index.yaml`.
 On clicking a button, the tool should generate a subdirectory `views` with `index.html`.
 Use common CSS and JS for all albums.
 
-There should be also a `Makefile` allowing for `make install` to `rsync` the directory
-to a configured server by `make install`, and `make edit` to re-run the editor.
+There should be also a `Makefile` allowing for:
+- `make install` to `rsync` the directory to a configured server
+- `make edit` to re-run the editor
 
 # Details
 
-- Use Bootstrap to create the layouts
+- Use Bootstrap 5.x for layouts; self-hosted, served from the album as a separate file
 - Use Garamond serif fonts
 - No other external JS/CSS dependency
 - The website should work in basic mode even without JS
