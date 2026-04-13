@@ -1,15 +1,12 @@
 recorded_at: '2026-04-13'
 branch: issue-15
-status: done
-issue: 15
+status: pending_review
 summary: >
-  Housekeeping feature implemented. clanker-housekeeping wrapper script invokes
-  clanker-run with CLANKER_PROMPT="perform housekeeping as specified in CLAUDE.md"
-  and CLANKER_TASK="housekeeping". CLAUDE.md has a Housekeeping workflow section
-  describing checks (issues, branches, questions) and the clanker-housekeeping.json
-  output format. clanker-setup adds a daily cron entry for clanker-housekeeping.
-  Design doc at claude/design/housekeeping.md.
+  No new work this session. Both open issues are pending guardian review.
+  Issue #18 (gitignore clanker-prep context files) has one commit ahead of main.
+  Issue #15 (housekeeping) has four commits ahead of main (includes #18 fix).
+  Guardian should merge in order: issue-18, then issue-15.
 notes:
-  - Branch successfully rebased onto issue-18 (gitignore fix).
-  - Issue #18 must be merged to main first; issue-15 is based on issue-18.
-  - Guardian should review both branches and merge in order: issue-18, then issue-15.
+  - Pipeline: all success on main.
+  - Questions: none open.
+  - Branches: issue-15 and issue-18 both rebased onto main by clanker-prep.
