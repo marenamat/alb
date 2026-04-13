@@ -1,3 +1,5 @@
 __pycache__
 clanker.log
 clanker.lock
+clanker-*.json
+clanker-runs.jsonl
