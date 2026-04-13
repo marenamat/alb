@@ -4,7 +4,7 @@ status: pending_review
 summary: >
   No new work this session. Both open issues are pending guardian review.
   Issue #18 (gitignore clanker-prep context files) has one commit ahead of main.
-  Issue #15 (housekeeping) has four commits ahead of main (includes #18 fix).
+  Issue #15 (housekeeping) has five commits ahead of main (includes #18 fix).
   Guardian should merge in order: issue-18, then issue-15.
 notes:
   - Pipeline: all success on main.
