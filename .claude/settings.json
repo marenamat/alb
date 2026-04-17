@@ -11,7 +11,12 @@
       "Bash(pip3 *:*)",
       "Bash(apk list:*)",
       "Bash(apk search:*)",
-      "Bash(cargo *)"
+      "Bash(cargo *)",
+      "Bash(ls *)",
+      "Bash(sed *)",
+      "Bash(grep *)",
+      "Bash(awk *)",
+      "Bash(cat *)"
     ],
     "deny": [
       "Bash(npm *)"
