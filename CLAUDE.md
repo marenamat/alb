@@ -104,6 +104,11 @@ That is where the overall project goal is stored.
 If a design requirement is added or modified by means of github issue, update
 the design documents accordingly.
 
+The file `claude/design/claude-base.md` is specific for the `claude-base` project
+and it's kept mostly as a reference for the children, not to act on that. While
+children should generally ignore that file, the `claude-base` project must never
+create other desing files.
+
 ## Handle open questions
 
 Read `claude/questions.md`. For each open question:
