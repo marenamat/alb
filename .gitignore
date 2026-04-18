@@ -11,3 +11,4 @@ claude/context/github_issues.yaml
 claude/context/pipeline_results.yaml
 claude/context/seen_issue_comment_ids.yaml
 claude/context/seen_pipeline_run_ids.yaml
+claude/context/seen_remote_main_head.yaml
