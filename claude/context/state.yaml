@@ -1,10 +1,10 @@
-date: 2026-04-12
+date: 2026-04-18
 workflow_step: complete
 
 maintenance:
   status: done
   notes:
-    - clanker-prep ran; main fast-forwarded, template up to date
+    - clanker-prep ran; main fetched, template up to date
     - only one branch: main
 
 github_pipelines:
@@ -26,3 +26,4 @@ design_check:
 
 pending:
   - GitHub PAT for API rate limiting not yet provided (see claude/questions.md)
+  - Python markdown library not yet installed (see claude/questions.md)
