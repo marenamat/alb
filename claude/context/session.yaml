@@ -2,14 +2,12 @@ recorded_at: '2026-04-18'
 branch: issue-22
 status: pending_review
 summary: >
-  Workflow check: all three open issues (#20, #21, #22) are implemented and
-  merged into main. Pipelines all green. No open questions. Awaiting guardian
-  to close issues on GitHub.
+  Cleanup: deleted stale issue-21 branch (only had a context-only commit;
+  all code for #21 is on main). All three open issues (#20, #21, #22) are
+  implemented and merged into main. Awaiting guardian to close issues on GitHub.
 notes:
   - Issue #20: detect pipeline failures on in-progress runs — merged in main.
   - Issue #21: trigger Claude when guardian pushes to remote/main — merged in main.
   - Issue #22: log denied tool calls from stream-json output — merged in main.
-  - issue-21 local branch has a stale context-only commit (86cde00) that failed
-    to rebase due to conflict with issue-22 context update. No code difference;
-    safe to delete once guardian closes the issue.
+  - Deleted issue-21 local branch to stop repeated rebase_failed triggers.
   - No new issues to work on. No open questions.
