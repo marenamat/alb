@@ -1,12 +1,17 @@
-recorded_at: '2026-04-17'
-branch: issue-19
+recorded_at: '2026-04-18'
+branch: issue-22
 status: pending_review
 summary: >
-  Implemented issue #19: clanker-prep now reads clanker-runs.jsonl and checks
-  if the last run had limit_hit=true. If so, it adds a reason to invoke Claude
-  again ("last run hit usage limit — retrying now"), ensuring no work is lost
-  when a session is cut short by the usage limit.
+  Implemented issue #22: clanker-run now parses stream-json for denied tool
+  calls and writes "Denied: ToolName(detail)" lines to clanker.log immediately
+  before the raw stream output. Detection works by tracking tool_use blocks
+  from assistant messages and matching them to tool_result blocks with
+  is_error=true and "denied" in the content.
 notes:
-  - Change is in clanker-prep, in the new "Limit retry check" block.
-  - No other issues open. Pipeline all green.
-  - Questions: none open.
+  - Change is in clanker-run, new Python snippet between claude exit and cat.
+  - Supports Bash (shows command), Read/Write/Edit/Glob (file/pattern),
+    Grep (pattern), and generic fallback (first input field).
+  - Silently skips on parse errors to not break the run.
+  - Issues #20 and #21 remain open on GitHub (guardian should close them).
+  - Pipeline all green on main.
+  - No open questions.
