@@ -613,6 +613,7 @@ def main():
         "claude/context/seen_issue_comment_ids.yaml",
         "claude/context/seen_pipeline_run_ids.yaml",
         "claude/context/seen_remote_main_head.yaml",
+        "clanker-prep.json",
     }
     dirty_out, _, _ = run("git status --porcelain")
     dirty_files = []
