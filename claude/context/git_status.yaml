@@ -1,9 +1,9 @@
 branches:
 - main
 maintenance_actions:
+- 'wip_committed: dirty workdir saved as temporary commit on main'
 - fetched
 - main fast-forwarded
 - template_fetched
-- 'template_merged: clanker-prep, clanker-run, clanker-setup, .claude-base-files,
-  CLAUDE.md'
-recorded_at: '2026-04-19T20:12:00.251958+00:00'
+- template_up_to_date
+recorded_at: '2026-04-19T20:12:03.066918+00:00'
