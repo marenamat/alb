@@ -1,0 +1,9 @@
+branches:
+- issue-22
+- main
+maintenance_actions:
+- fetched
+- main fast-forwarded
+- 'rebased: issue-22'
+- 'pruned: issue-22'
+recorded_at: '2026-04-19T19:53:00.211631+00:00'

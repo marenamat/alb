@@ -3,12 +3,12 @@ branch: issue-22
 status: pending_review
 summary: >
   All three open issues (#20, #21, #22) are implemented and merged into main.
-  Awaiting guardian to close issues on GitHub and merge issue-22 branch.
+  Awaiting guardian to close issues on GitHub.
 notes:
   - Issue #20: detect pipeline failures on in-progress runs — merged in main.
   - Issue #21: trigger Claude when guardian pushes to remote/main — merged in main.
   - Issue #22: log denied tool calls from stream-json output — merged in main.
-  - issue-22 branch has one pending docs sync commit (df96f22).
+  - issue-22 branch equals main (all work merged).
   - All pipelines on main passing as of 2026-04-19.
   - No open questions, no design changes needed.
-  - Waiting for guardian review/close.
+  - Waiting for guardian to close issues #20 and #21 on GitHub.
