@@ -108,12 +108,22 @@
       human guardian.
     </p>
 
+    <h3>Housekeeping</h3>
+    <p>
+      A separate daily run via <code>clanker-housekeeping</code> (03:00 local)
+      performs health checks only: which issues have a branch pending review,
+      which have no branch yet, whether any branch is behind main, and whether
+      <code>claude/questions.md</code> has open items. Results go to
+      <code>clanker-housekeeping.json</code> for the dashboard.
+    </p>
+
     <h3>Context</h3>
     <p>
       Everything Claude learns lives in <code>claude/context/</code> and is
       committed to git. Design goals live in <code>claude/design/</code>.
       Questions for the human go to <code>claude/questions.md</code>.
-      This keeps the agent grounded and auditable.
+      While a session is running, <code>clanker-current.json</code> holds
+      live token/cost counters for the dashboard; it is deleted on exit.
     </p>
   </section>
 
@@ -136,9 +146,12 @@
         <pre><code>pip install pyyaml</code></pre>
       </li>
       <li>
-        <strong>Configure the authorized user</strong>
+        <strong>Configure the authorized user and GitHub token</strong>
         Edit <code>clanker-prep</code> and set <code>AUTHORIZED_USER</code>
         to your GitHub username. Only issues from this user will be acted on.
+        Then store a GitHub personal access token so clanker-prep can read
+        issues and pipeline results without hitting the anonymous rate limit:
+        <pre><code>git config github.token &lt;your-token&gt;</code></pre>
       </li>
       <li>
         <strong>Configure CLAUDE.md</strong>
@@ -152,10 +165,13 @@
         the workflow. See <a href="#remotes">Remote setup</a> below.
       </li>
       <li>
-        <strong>Add a cron job</strong>
-        <pre><code># runs every 15 minutes
-*/15 * * * * /path/to/repo/clanker-run</code></pre>
-        The script is idempotent and lock-protected — safe to run frequently.
+        <strong>Install the timers</strong>
+        <pre><code>./clanker-setup</code></pre>
+        On systemd systems this creates two user units: a worker that fires
+        every 4 minutes when idle, and a daily housekeeping run at 03:00.
+        On plain cron it installs equivalent <code>*/10</code> and
+        <code>0 3 * * *</code> entries. The worker is lock-protected and
+        idempotent — safe to run frequently.
       </li>
       <li>
         <strong>Open an issue</strong>
