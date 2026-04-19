@@ -2,6 +2,8 @@ branches:
 - main
 maintenance_actions:
 - fetched
+- main fast-forwarded
 - template_fetched
-- template_up_to_date
-recorded_at: '2026-04-18T16:02:00.765097+00:00'
+- 'template_merged: clanker-prep, clanker-run, clanker-setup, .claude-base-files,
+  CLAUDE.md'
+recorded_at: '2026-04-19T20:12:00.251958+00:00'
