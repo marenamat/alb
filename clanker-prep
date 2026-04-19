@@ -632,6 +632,14 @@ def main():
     if dirty_files:
         reasons.append(f"uncommitted workdir changes: {', '.join(dirty_files)}")
 
+    # --- Tracked-but-ignored files check ---
+    # Files that are both committed and gitignored cause clanker-prep to see them
+    # as dirty on every run (since they're regenerated but not in PREP_OUTPUTS).
+    ignored_tracked_out, _, _ = run("git ls-files --ignored --exclude-standard")
+    ignored_tracked = [f for f in ignored_tracked_out.splitlines() if f.strip()]
+    if ignored_tracked:
+        reasons.append(f"tracked files should be gitignored (run git rm --cached): {', '.join(ignored_tracked)}")
+
     # --- Decision ---
     decision = "INVOKE_CLAUDE" if reasons else "NOTHING_TO_DO"
 
