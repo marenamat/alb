@@ -1,20 +1,14 @@
 recorded_at: '2026-04-19'
-branch: issue-22
-status: pending_review
+status: in_progress
 summary: >
-  Fixes on issue-22: WIP commit approach, prune-while-checked-out bug,
-  CLAUDE.md housekeeping fix. Issues #20 and #21 fixed in main; awaiting
-  guardian to close. Issue #22 fixed in main; branch stale.
+  Issues #20 and #21 addressed. Issue #20: timed_out CI conclusion now
+  treated as a failure on branch issue-20. Issue #21: remote/main advancement
+  detection already in main (b79533e), fully addresses it.
 notes:
-  - Issue #20: detect pipeline failures on in-progress runs — merged in main.
-  - Issue #21: trigger Claude when guardian pushes to remote/main — merged in main.
-  - Issue #22: tighten issue handled detection (regex vs substring) — merged in main.
-  - Commit 8b05bd7: replace stash with WIP commit in do_git_maintenance().
-  - New fix (this session): switch to main before pruning branches, so currently
-    checked-out branches can be deleted. Previously git branch -d would fail silently
-    when we were still on the branch being pruned, leaving stale branches indefinitely.
-  - Fixed CLAUDE.md housekeeping section: removed incorrect "commit it" instruction
-    for clanker-housekeeping.json (file is gitignored, read from filesystem).
+  - Issue #20: original fix (detect in-progress runs) is in main. New branch
+    issue-20 adds timed_out conclusion to failure conditions — a remaining gap.
+  - Issue #21: fully fixed by b79533e (seen_remote_main_head.yaml). No further
+    work needed; awaiting guardian to close the issue.
   - All pipelines on main passing as of 2026-04-19.
   - No open questions.
-  - Waiting for guardian to review and merge issue-22, then close issues #20 and #21.
+  - Waiting for guardian to review issue-20 branch and merge, then close #20 and #21.
