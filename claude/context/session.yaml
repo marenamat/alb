@@ -2,17 +2,17 @@ recorded_at: '2026-04-19'
 branch: issue-22
 status: pending_review
 summary: >
-  New commit on issue-22: replace stash with WIP commit approach in clanker-prep
-  git maintenance. Also fixed CLAUDE.md to say clanker-housekeeping.json is not
-  committed (consistent with .gitignore and design doc). Issues #20 and #21
-  implementation is merged in main; awaiting guardian to close.
+  Fixes on issue-22: WIP commit approach, prune-while-checked-out bug,
+  CLAUDE.md housekeeping fix. Issues #20 and #21 fixed in main; awaiting
+  guardian to close. Issue #22 fixed in main; branch stale.
 notes:
   - Issue #20: detect pipeline failures on in-progress runs — merged in main.
   - Issue #21: trigger Claude when guardian pushes to remote/main — merged in main.
-  - Issue #22: log denied tool calls from stream-json output — merged in main.
-  - New fix on issue-22: replace stash with WIP commit in do_git_maintenance()
-    (commit 8b05bd7). The WIP commit survives rebases; stash pop was fragile.
-  - Also always switch to main before running maintenance (was conditional).
+  - Issue #22: tighten issue handled detection (regex vs substring) — merged in main.
+  - Commit 8b05bd7: replace stash with WIP commit in do_git_maintenance().
+  - New fix (this session): switch to main before pruning branches, so currently
+    checked-out branches can be deleted. Previously git branch -d would fail silently
+    when we were still on the branch being pruned, leaving stale branches indefinitely.
   - Fixed CLAUDE.md housekeeping section: removed incorrect "commit it" instruction
     for clanker-housekeeping.json (file is gitignored, read from filesystem).
   - All pipelines on main passing as of 2026-04-19.
